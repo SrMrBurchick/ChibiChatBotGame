@@ -1,5 +1,11 @@
 <RCC>
    <qresource prefix="/">
         <file alias="main_window.qml">qml/main_window.qml</file>
+        <!-- Components -->
+        <file>qml/Base/qmldir</file>
+        <file>qml/Base/Style.qml</file>
+
+        <file>qml/Buttons/qmldir</file>
+        <file>qml/Buttons/ImageSelect.qml</file>
     </qresource>
 </RCC>

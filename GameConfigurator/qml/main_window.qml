@@ -1,7 +1,12 @@
-import QtQuick 2.2
-import QtQuick.Window 2.2
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import Buttons
 
-Window {
-    id: root
+ApplicationWindow {
     visible: true
+
+    Row {
+        ImageSelect {}
+    }
 }
