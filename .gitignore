@@ -1,3 +1,5 @@
 credentials.json
 *target/
 *Cargo.lock
+*build/
+*.cache
