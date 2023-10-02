@@ -6,9 +6,14 @@ QT += core quick quickcontrols2
 CONFIG += c++21
 TEMPLATE = app
 TARGET = GameConfigurator
-INCLUDEPATH += .
+INCLUDEPATH += ./Sources/Public
 
-SOURCES += GameConfigurator.cpp
+HEADERS += Sources/Public/Configuration/ConfigLoader.h                          \
+           Sources/Public/Configuration/ConfigObject.h
+
+SOURCES += Sources/GameConfigurator.cpp                                         \
+           Sources/Private/Configuration/ConfigLoad.cpp                         \
+           Sources/Private/Configuration/ConfigObject.cpp
 
 RESOURCES += qml.qrc
 
