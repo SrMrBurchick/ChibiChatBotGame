@@ -7,5 +7,10 @@
 
         <file>qml/Buttons/qmldir</file>
         <file>qml/Buttons/ImageSelect.qml</file>
+        <file>qml/Buttons/BaseButton.qml</file>
+
+        <file>qml/Pages/qmldir</file>
+        <file>qml/Pages/MainPage.qml</file>
+
     </qresource>
 </RCC>

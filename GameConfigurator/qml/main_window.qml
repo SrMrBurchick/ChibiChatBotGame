@@ -1,12 +1,14 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import Buttons
+import Pages
 
 ApplicationWindow {
     visible: true
 
-    Row {
-        ImageSelect {}
+    StackView {
+        anchors.fill: parent
+        initialItem: MainPage {}
+
     }
 }
