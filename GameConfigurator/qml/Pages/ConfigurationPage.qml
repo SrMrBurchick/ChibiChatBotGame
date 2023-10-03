@@ -15,6 +15,7 @@ Item {
 
         BaseButton {
             text: "Setup Actions"
+            onClicked: goActionsConfiguration()
         }
 
         BaseButton {
@@ -28,5 +29,6 @@ Item {
     }
 
     signal goBack()
+    signal goActionsConfiguration()
 }
 

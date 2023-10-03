@@ -1,3 +1,4 @@
 module Pages
 MainPage 1.0 MainPage.qml
 ConfigurationPage 1.0 ConfigurationPage.qml
+ActionsConfigurationPage 1.0 ActionsConfigurationPage.qml
