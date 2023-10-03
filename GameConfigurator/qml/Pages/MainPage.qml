@@ -3,11 +3,12 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
 
-Page {
+Item {
     id: menu
     anchors.fill: parent
     anchors.centerIn: parent
 
+    signal openConfig()
 
     ColumnLayout {
         anchors.centerIn: parent
@@ -22,7 +23,9 @@ Page {
         }
 
         BaseButton {
+            id: configuration
             text: "Configure"
+            onClicked: openConfig()
         }
 
         BaseButton {
@@ -30,6 +33,7 @@ Page {
             onClicked: {
                 Qt.quit()
             }
+
         }
     }
 }

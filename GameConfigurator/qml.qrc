@@ -11,6 +11,7 @@
 
         <file>qml/Pages/qmldir</file>
         <file>qml/Pages/MainPage.qml</file>
+        <file>qml/Pages/ConfigurationPage.qml</file>
 
     </qresource>
 </RCC>
