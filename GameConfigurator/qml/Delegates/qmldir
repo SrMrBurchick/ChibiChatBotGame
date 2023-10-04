@@ -1,0 +1,3 @@
+module Delegates
+SpriteItemDelegate 1.0 SpriteItemDelegate.qml
+ActionSpriteDelegate 1.0 ActionSpriteDelegate.qml

@@ -1,97 +1,109 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Delegates
 
 Item {
     id: root
     anchors.fill: parent
-    anchors.margins: 5
 
     Rectangle {
-        Layout.fillWidth: true
-        Layout.fillHeight: true
+        id: panel
+        anchors.fill: root
 
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 3
+        Text {
+            id: title
+            anchors.margins: 5
+            anchors.horizontalCenter: panel.horizontalCenter
+            text: "Sprite sheet"
+        }
 
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Sprite sheet"
-            }
+        Rectangle {
+            id: spritesGrid
+            anchors.top: title.bottom
+            anchors.bottom: panel.bottom
 
-            GridView {
-                id: spritesGrid
-                // TODO: height and width link to image size
-                width: 500
-                height: 500
-                // cellWidth: 80; cellHeight: 80
+            width: panel.width
 
-                // TODO: move model to c++
-                model: ListModel {
-                    ListElement {
-                        column: 0
-                        row: 0
+            border.color: "black"
+            border.width: 2
+            color: "white"
+
+            ScrollView {
+                clip: true
+                anchors.fill: spritesGrid
+                anchors.margins: 5
+
+                GridView {
+                    anchors.fill: parent
+                    // height: panel.height
+                    // cellWidth: 80; cellHeight: 80
+
+                    // TODO: move model to c++
+                    model: ListModel {
+                        ListElement {
+                            column: 0
+                            row: 0
+                        }
+                        ListElement {
+                            column: 1
+                            row: 0
+                        }
+                        ListElement {
+                            column: 2
+                            row: 0
+                        }
+                        ListElement {
+                            column: 3
+                            row: 0
+                        }
+
+                        ListElement {
+                            column: 4
+                            row: 0
+                        }
+
+                        ListElement {
+                            column: 5
+                            row: 0
+                        }
+
+                        ListElement {
+                            column: 0
+                            row: 1
+                        }
+
+                        ListElement {
+                            column: 1
+                            row: 1
+                        }
+
+                        ListElement {
+                            column: 2
+                            row: 1
+                        }
+
+                        ListElement {
+                            column: 3
+                            row: 1
+                        }
+
                     }
-                    ListElement {
-                        column: 1
-                        row: 0
-                    }
-                    ListElement {
-                        column: 2
-                        row: 0
-                    }
-                    ListElement {
-                        column: 3
-                        row: 0
-                    }
 
-                    ListElement {
-                        column: 4
-                        row: 0
-                    }
+                    delegate: SpriteItemDelegate {
 
-                    ListElement {
-                        column: 5
-                        row: 0
                     }
-
-                    ListElement {
-                        column: 0
-                        row: 1
-                    }
-
-                    ListElement {
-                        column: 1
-                        row: 1
-                    }
-
-                    ListElement {
-                        column: 2
-                        row: 1
-                    }
-
-                    ListElement {
-                        column: 3
-                        row: 1
-                    }
-
                 }
 
-                delegate: Rectangle {
-                    // TODO: Move width and height to c++
-                    border.color: "black"
-                    border.width: 2
-                    height: 80
-                    width: 80
-
-                    Text {
-                        text: "(" + column + " : " + row + ")"
-                    }
-                }
             }
 
         }
+
+            // Text {
+            //     text: root.width + "x" + root.height
+            // }
+
+
 
     }
 }

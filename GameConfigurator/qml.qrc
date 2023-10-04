@@ -20,6 +20,11 @@
         <file>qml/Panels/Components/LeftPanelComponents/ActionsListComponent.qml</file>
         <file>qml/Panels/Components/LeftPanelComponents/SettingsList.qml</file>
         <file>qml/Panels/Components/MiddlePanelComponents/SpriteSheetGrid.qml</file>
+        <file>qml/Panels/Components/MiddlePanelComponents/ActionSpriteSequence.qml</file>
+
+        <file>qml/Delegates/qmldir</file>
+        <file>qml/Delegates/ActionSpriteDelegate.qml</file>
+        <file>qml/Delegates/SpriteItemDelegate.qml</file>
 
     </qresource>
 </RCC>

@@ -16,6 +16,7 @@ Item {
 
     // Main layout
     RowLayout {
+        id: main
         anchors.fill: parent
 
         // Left panel
@@ -34,14 +35,35 @@ Item {
 
         // Middle panel
         ColumnLayout {
+            id: middle_root
+
             Rectangle {
+                id: sprite_grid
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
                 SpriteSheetGrid {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.minimumHeight: 200
+                border.color: "black"
+                border.width: 2
+                color: "white"
+
+                // Text {
+                //     text: middle.height + "x" + middle.width
+                // }
+                // height: parent.height / 3
+
+                ActionSpriteSequence {
 
                 }
             }
+
         }
 
         // Right panel
