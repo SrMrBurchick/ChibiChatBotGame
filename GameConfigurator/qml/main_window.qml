@@ -9,7 +9,7 @@ ApplicationWindow {
     StackView {
         id: stack
         anchors.fill: parent
-        initialItem: actions_config
+        initialItem: main_menu
     }
 
     Component {

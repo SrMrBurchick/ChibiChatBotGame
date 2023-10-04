@@ -73,13 +73,9 @@ Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                color: "blue"
+                RightPanel {
 
-                Text {
-                    anchors.centerIn: parent
-                    text: "Right"
                 }
-
             }
         }
     }

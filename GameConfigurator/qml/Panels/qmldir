@@ -1,5 +1,6 @@
 module Panels
 LeftPanel 1.0 LeftPanel.qml
+RightPanel 1.0 RightPanel.qml
 
 ActionsListComponent 1.0 Components/LeftPanelComponents/ActionsListComponent.qml
 SettingsList 1.0 Components/LeftPanelComponents/SettingsList.qml
