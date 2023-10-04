@@ -38,13 +38,9 @@ Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                color: "green"
+                SpriteSheetGrid {
 
-                Text {
-                    anchors.centerIn: parent
-                    text: "Middle panel"
                 }
-
             }
         }
 

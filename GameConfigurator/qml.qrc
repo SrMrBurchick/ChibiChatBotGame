@@ -16,8 +16,10 @@
 
         <file>qml/Panels/qmldir</file>
         <file>qml/Panels/LeftPanel.qml</file>
+
         <file>qml/Panels/Components/LeftPanelComponents/ActionsListComponent.qml</file>
         <file>qml/Panels/Components/LeftPanelComponents/SettingsList.qml</file>
+        <file>qml/Panels/Components/MiddlePanelComponents/SpriteSheetGrid.qml</file>
 
     </qresource>
 </RCC>
