@@ -2,10 +2,15 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
+import Panels
 
 Item {
     id: root
     anchors.fill: parent
+
+    signal goBack()
+    signal save()
+    signal loadSpriteSheet()
 
     // Main layout
     RowLayout {
@@ -13,18 +18,16 @@ Item {
 
         // Left panel
         ColumnLayout {
-            Layout.maximumWidth: 400
+            Layout.maximumWidth: 300
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
-                color: "red"
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "Left panel"
+                LeftPanel {
+                    onGoBack: {
+                        console.log("Tobi pizda")
+                        goBack()
+                    }
                 }
-
             }
         }
 
@@ -46,7 +49,7 @@ Item {
 
         // Right panel
         ColumnLayout {
-            Layout.maximumWidth: 400
+            Layout.maximumWidth: 300
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -61,9 +64,5 @@ Item {
             }
         }
     }
-
-    signal goBack()
-    signal save()
-    signal loadSpriteSheet()
 }
 
