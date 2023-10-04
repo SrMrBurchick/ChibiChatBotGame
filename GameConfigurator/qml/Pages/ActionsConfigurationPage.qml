@@ -8,6 +8,8 @@ Item {
     id: root
     anchors.fill: parent
 
+    property StackView rootStack: StackView.view
+
     signal goBack()
     signal save()
     signal loadSpriteSheet()
@@ -24,8 +26,7 @@ Item {
                 Layout.fillHeight: true
                 LeftPanel {
                     onGoBack: {
-                        console.log("Tobi pizda")
-                        goBack()
+                        rootStack.pop()
                     }
                 }
             }

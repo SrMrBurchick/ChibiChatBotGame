@@ -36,9 +36,7 @@ ApplicationWindow {
     Component {
         id: actions_config
         ActionsConfigurationPage {
-            onGoBack: {
-                stack.pop()
-            }
+            rootStack: stack
         }
     }
 }
