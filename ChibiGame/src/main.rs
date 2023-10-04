@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+pub mod components;
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
