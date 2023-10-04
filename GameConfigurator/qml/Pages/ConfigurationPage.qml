@@ -20,6 +20,7 @@ Item {
 
         BaseButton {
             text: "Setup ChatBot"
+            onClicked: goChatBotConfiguration()
         }
 
         BaseButton {
@@ -30,5 +31,6 @@ Item {
 
     signal goBack()
     signal goActionsConfiguration()
+    signal goChatBotConfiguration()
 }
 

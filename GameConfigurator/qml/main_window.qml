@@ -30,6 +30,9 @@ ApplicationWindow {
             onGoActionsConfiguration: {
                 stack.push(actions_config)
             }
+            onGoChatBotConfiguration: {
+                stack.push(chatBotConfig)
+            }
         }
     }
 
@@ -39,4 +42,12 @@ ApplicationWindow {
             rootStack: stack
         }
     }
+
+    Component {
+        id: chatBotConfig
+        ChatBotConfigurationPage {
+            rootStack: stack
+        }
+    }
+
 }

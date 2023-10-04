@@ -13,6 +13,7 @@
         <file>qml/Pages/MainPage.qml</file>
         <file>qml/Pages/ConfigurationPage.qml</file>
         <file>qml/Pages/ActionsConfigurationPage.qml</file>
+        <file>qml/Pages/ChatBotConfigurationPage.qml</file>
 
         <file>qml/Panels/qmldir</file>
         <file>qml/Panels/LeftPanel.qml</file>
