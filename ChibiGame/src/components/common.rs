@@ -1,6 +1,7 @@
 use bevy::utils::HashMap;
 
 pub mod sprite_index;
+pub mod events;
 
 use crate::components::{
     actions::Actions,
