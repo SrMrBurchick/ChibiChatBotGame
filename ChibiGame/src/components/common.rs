@@ -1,4 +1,5 @@
 use bevy::utils::HashMap;
+use bevy::prelude::*;
 
 pub mod sprite_index;
 pub mod events;
@@ -21,4 +22,17 @@ pub struct TableSize {
 pub struct SpriteSize {
     pub height: u32,
     pub width: u32
+}
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+pub enum BorderType {
+    TopBorder,
+    BottomBorder,
+    LeftBorder,
+    RightBorder
+}
+
+#[derive(Component)]
+pub struct Border {
+    pub border_type: BorderType
 }

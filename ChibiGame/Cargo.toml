@@ -9,7 +9,7 @@ edition = "2021"
 bevy = "0.11.3" # make sure this is the latest version
 rand = "*"
 rfd = "*"
-bevy_rapier2d = "0.20.0"
+bevy_rapier2d = { git = "https://github.com/devil-ira/bevy_rapier", branch = "bevy-0.11" }
 crossbeam-channel = "*"
 json = "*"
 wasm-bindgen = "*"
