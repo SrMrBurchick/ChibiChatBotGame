@@ -9,11 +9,13 @@ TARGET = GameConfigurator
 INCLUDEPATH += ./Sources/Public
 
 HEADERS += Sources/Public/Configuration/ConfigLoader.h                          \
-           Sources/Public/Configuration/ConfigObject.h
+           Sources/Public/Configuration/ConfigObject.h                          \
+           Sources/Public/Models/ActionsListModel.h
 
 SOURCES += Sources/GameConfigurator.cpp                                         \
            Sources/Private/Configuration/ConfigLoad.cpp                         \
-           Sources/Private/Configuration/ConfigObject.cpp
+           Sources/Private/Configuration/ConfigObject.cpp                       \
+           Sources/Private/Models/ActionsListModel.cpp
 
 RESOURCES += qml.qrc
 
