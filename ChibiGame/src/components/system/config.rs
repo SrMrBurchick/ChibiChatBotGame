@@ -17,11 +17,18 @@ use wasm_bindgen_futures::JsFuture;
 
 use web_sys::{Request, RequestInit, RequestMode, Response};
 
+#[derive(Debug, Default, Component, Clone)]
+pub struct SystemConfigData {
+    pub chat_bot_url: String,
+    pub chat_bot_port: u32
+}
+
 #[derive(Debug, Component)]
 pub struct Config {
     content: JsonValue,
     animations_map: AnimationsMap,
-    loaded: bool
+    loaded: bool,
+    pub system_config: SystemConfigData
 }
 
 pub fn init_sprite_size(obj: &JsonValue) -> Result<SpriteSize, Box<dyn Error>> {
@@ -96,7 +103,8 @@ impl Config {
         Config {
             content: JsonValue::Null,
             animations_map: AnimationsMap::default(),
-            loaded: false
+            loaded: false,
+            system_config: SystemConfigData::default()
         }
     }
 

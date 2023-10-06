@@ -20,7 +20,7 @@ pub enum Events {
     SystemEvents(SystemEvents)
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Event)]
 pub struct Event {
     pub event_type: Events
 }

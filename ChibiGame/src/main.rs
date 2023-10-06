@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 pub mod components;
+pub mod listeners;
 
 fn main() {
     App::new()
