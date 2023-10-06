@@ -50,3 +50,22 @@ pub fn action_to_string(action: &Actions) -> &str {
         _ => "",
     }
 }
+
+#[derive(Component, PartialEq, Debug)]
+pub struct ActionComponent {
+    pub current_action: Actions,
+}
+
+impl ActionComponent {
+    pub fn on_action_changed(
+        &mut self,
+    ) {}
+}
+
+impl Default for ActionComponent {
+    fn default() -> Self {
+        Self {
+            current_action: Actions::Unknown,
+        }
+    }
+}
