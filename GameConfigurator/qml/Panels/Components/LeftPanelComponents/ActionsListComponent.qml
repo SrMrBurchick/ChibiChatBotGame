@@ -14,6 +14,11 @@ ScrollView {
             id: actionsModel
         }
 
+        Item {
+            id: delegateManager
+            property int currentIndex
+        }
+
         delegate: ActionListDelegate {
             actionIndex: index
             width: parent.width
@@ -23,6 +28,9 @@ ScrollView {
             }
             onChangeElement: {
                 actionsModel.changeElement(index, action)
+            }
+            onElementSelected: {
+                delegateManager.currentIndex = index
             }
         }
     }

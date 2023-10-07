@@ -16,6 +16,10 @@ Rectangle {
     Text {
         text: "(" + column + " : " + row + ")"
     }
+
+    MouseArea {
+        anchors.fill: root
+    }
     //
     // Sprite {
     //     // anchors.fill: root

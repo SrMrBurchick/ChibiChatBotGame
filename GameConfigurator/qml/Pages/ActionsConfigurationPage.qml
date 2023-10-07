@@ -11,6 +11,7 @@ Item {
     anchors.fill: parent
 
     property StackView rootStack: StackView.view
+    property string spriteSheetPath
 
     signal goBack()
     signal save()
@@ -22,7 +23,8 @@ Item {
         nameFilters: ["Image files (*.png *.jpg)"]
         onAccepted: {
             // image.source = selectedFile
-            console.log(selectedFile)
+            spriteSheetPath = selectedFile
+            console.log(spriteSheetPath)
 
         }
     }

@@ -7,7 +7,7 @@ Rectangle {
     id: root
     property int actionIndex: 0
 
-    border.color: "black"
+    border.color: actionIndex == delegateManager.currentIndex ? "lightblue" : "black"
     border.width: 2
 
     RowLayout {
@@ -40,6 +40,13 @@ Rectangle {
 
         Rectangle {
             Layout.fillWidth: true
+            Layout.fillHeight: true
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    elementSelected(actionIndex)
+                }
+            }
         }
 
         Rectangle {
@@ -59,6 +66,7 @@ Rectangle {
         }
     }
 
-    signal removeElement(int index);
+    signal removeElement(int index)
     signal changeElement(int index, string action)
+    signal elementSelected(int index)
 }
