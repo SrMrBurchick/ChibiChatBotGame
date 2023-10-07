@@ -12,4 +12,11 @@ Rectangle {
     Text {
         text: "(" + column + " : " + row + ")"
     }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            console.log("Clicked")
+        }
+    }
 }

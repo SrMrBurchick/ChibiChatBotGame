@@ -50,4 +50,11 @@ ApplicationWindow {
         }
     }
 
+    Component {
+        id: testPage
+        TestPage {
+
+        }
+    }
+
 }

@@ -10,12 +10,15 @@ INCLUDEPATH += ./Sources/Public
 
 HEADERS += Sources/Public/Configuration/ConfigLoader.h                          \
            Sources/Public/Configuration/ConfigObject.h                          \
-           Sources/Public/Models/ActionsListModel.h
+           Sources/Public/Models/ActionsListModel.h                             \
+           Sources/Public/Components/ActionComponent.h                          \
+           Sources/Public/Models/AnimationSequenceModel.h
 
 SOURCES += Sources/GameConfigurator.cpp                                         \
            Sources/Private/Configuration/ConfigLoad.cpp                         \
            Sources/Private/Configuration/ConfigObject.cpp                       \
-           Sources/Private/Models/ActionsListModel.cpp
+           Sources/Private/Models/ActionsListModel.cpp                          \
+           Sources/Private/Models/AnimationSequenceModel.cpp
 
 RESOURCES += qml.qrc
 

@@ -10,6 +10,7 @@ ScrollView {
 
     ListView {
         spacing: 5
+        id: actionsList
         model: ActionsListModel {
             id: actionsModel
         }
