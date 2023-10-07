@@ -11,18 +11,25 @@ ScrollView {
     ListView {
         spacing: 5
         model: ActionsListModel {
-            id: actions_model
+            id: actionsModel
         }
 
         delegate: ActionListDelegate {
+            actionIndex: index
             width: parent.width
             height: 30
             onRemoveElement: {
-                actions_model.removeElement(index)
+                actionsModel.removeElement(index)
+            }
+            onChangeElement: {
+                actionsModel.changeElement(index, action)
             }
         }
     }
 
-    signal addAction()
+    function addAction(action) {
+        console.log("Add new action: " + action)
+        actionsModel.addNewAction(action)
+    }
 }
 

@@ -33,6 +33,7 @@
         <!-- Dialogs -->
         <file>qml/Dialogs/qmldir</file>
         <file>qml/Dialogs/AddActionDialog.qml</file>
+        <file>qml/Dialogs/ChangeActionDialog.qml</file>
 
         <!-- Images -->
         <file>qml/Images/trash_can.png</file>

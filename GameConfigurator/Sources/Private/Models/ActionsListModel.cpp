@@ -70,3 +70,22 @@ void ActionsListModel::removeElement(int Index)
     ActionsList.removeAt(Index);
     endRemoveRows();
 }
+
+void ActionsListModel::changeElement(int Index, const QString& NewActionName)
+{
+    if (Index > ActionsList.size() && Index <= 0) {
+        return;
+    }
+
+    std::cout << "Index = " << Index << " NewAction = " << NewActionName.toStdString() << std::endl;
+    ActionsList[Index] = NewActionName;
+
+    updateData();
+}
+
+void ActionsListModel::addNewAction(const QString& NewAction)
+{
+    beginInsertRows(QModelIndex(), ActionsList.size(), ActionsList.size());
+    ActionsList.push_back(NewAction);
+    endInsertRows();
+}

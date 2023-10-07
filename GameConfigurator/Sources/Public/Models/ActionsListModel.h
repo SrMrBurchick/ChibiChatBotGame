@@ -26,6 +26,8 @@ public:
     void updateData();
 
     Q_INVOKABLE void removeElement(int Index);
+    Q_INVOKABLE void changeElement(int Index, const QString& NewActionName);
+    Q_INVOKABLE void addNewAction(const QString& NewAction);
 
 protected:
     QVector<QString> ActionsList;

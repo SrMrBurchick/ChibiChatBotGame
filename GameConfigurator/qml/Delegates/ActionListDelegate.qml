@@ -1,9 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
 import Base
+import Dialogs
 
 Rectangle {
     id: root
+    property int actionIndex: 0
 
     border.color: "black"
     border.width: 2
@@ -12,8 +14,28 @@ Rectangle {
         anchors.margins: 4
         anchors.fill: root
 
-        Text {
-            text: name
+        MouseArea {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            Text {
+                anchors.fill: parent
+                id: actionName
+                text: name
+            }
+
+            ChangeActionDialog {
+                id: changeActionDialog
+                actionName: actionName.text
+                onChangeAction: {
+                    changeElement(actionIndex, action);
+                }
+
+            }
+
+            onClicked: {
+                changeActionDialog.open()
+            }
         }
 
         Rectangle {
@@ -31,11 +53,12 @@ Rectangle {
                     source: Style.trashCanImage
                 }
                 onClicked: {
-                    removeElement(index.send);
+                    removeElement(actionIndex);
                 }
             }
         }
     }
 
     signal removeElement(int index);
+    signal changeElement(int index, string action)
 }

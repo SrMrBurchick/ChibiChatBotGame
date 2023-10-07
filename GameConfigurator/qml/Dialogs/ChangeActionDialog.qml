@@ -4,8 +4,7 @@ import QtQuick.Controls
 Dialog {
     id: root
     property string actionName
-
-    title: "Add action"
+    title: "Change action"
     standardButtons: Dialog.Cancel | Dialog.Save
 
     Label {
@@ -26,10 +25,10 @@ Dialog {
     }
 
     onAccepted: {
-        addNewAction(actionName);
-        actionName = ""
+        console.log("Saved: " + actionName);
+        changeAction(actionName);
     }
     onRejected: console.log("Cancel clicked")
 
-    signal addNewAction(string newAction)
+    signal changeAction(string action)
 }

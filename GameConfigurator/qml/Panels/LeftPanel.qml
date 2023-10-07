@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
 import Panels
+import Dialogs
 
 Item {
     id: root
@@ -39,14 +40,24 @@ Item {
                 color: "white"
 
                 ActionsListComponent {
-
+                    id: actionsListComponent
                 }
             }
 
             Button {
                 text: "Add action"
                 font.pointSize: 14
-                onClicked: addAction()
+
+                AddActionDialog {
+                    id: addActionDialog
+                    onAddNewAction: {
+                        actionsListComponent.addAction(newAction)
+                    }
+                }
+
+                onClicked: {
+                    addActionDialog.open()
+                }
                 Layout.fillWidth: true
             }
 
