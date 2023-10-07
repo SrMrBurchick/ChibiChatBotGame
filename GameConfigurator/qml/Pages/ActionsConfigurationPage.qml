@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Dialogs
 import Buttons
 import Panels
+import Dialogs
 
 Item {
     id: root
@@ -13,6 +15,17 @@ Item {
     signal goBack()
     signal save()
     signal loadSpriteSheet()
+
+    FileDialog {
+        id: fileDialog
+        currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
+        nameFilters: ["Image files (*.png *.jpg)"]
+        onAccepted: {
+            // image.source = selectedFile
+            console.log(selectedFile)
+
+        }
+    }
 
     // Main layout
     RowLayout {
@@ -25,9 +38,19 @@ Item {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                AddActionDialog {
+                    id: actionDialog
+                }
+
                 LeftPanel {
                     onGoBack: {
                         rootStack.pop()
+                    }
+                    onLoadSpriteSheet: {
+                        fileDialog.open();
+                    }
+                    onAddAction: {
+                        actionDialog.open();
                     }
                 }
             }

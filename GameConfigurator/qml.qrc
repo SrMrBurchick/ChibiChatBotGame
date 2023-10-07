@@ -30,6 +30,10 @@
         <file>qml/Delegates/SpriteItemDelegate.qml</file>
         <file>qml/Delegates/ActionListDelegate.qml</file>
 
+        <!-- Dialogs -->
+        <file>qml/Dialogs/qmldir</file>
+        <file>qml/Dialogs/AddActionDialog.qml</file>
+
         <!-- Images -->
         <file>qml/Images/trash_can.png</file>
 
