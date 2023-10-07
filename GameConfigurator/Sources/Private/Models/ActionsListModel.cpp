@@ -85,6 +85,10 @@ void ActionsListModel::changeElement(int Index, const QString& NewActionName)
 
 void ActionsListModel::addNewAction(const QString& NewAction)
 {
+    if (NewAction.isEmpty()) {
+        return;
+    }
+
     beginInsertRows(QModelIndex(), ActionsList.size(), ActionsList.size());
     ActionsList.push_back(NewAction);
     endInsertRows();
