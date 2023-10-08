@@ -9,16 +9,15 @@ Item {
     anchors.fill: parent
     anchors.leftMargin: 6
 
-    Text {
-        id: title
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "Animation preview"
-    }
-
     ColumnLayout {
         id: panel
-        anchors.top: title.bottom
-        width: root.width
+        anchors.fill: root
+
+        Text {
+            id: title
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Animation preview"
+        }
 
         // TODO: Replace with AnimationSequance
         Rectangle {
@@ -43,7 +42,10 @@ Item {
 
         }
 
-        // TODO: Fix empty space
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
 
         Button {
             Layout.fillWidth: true
