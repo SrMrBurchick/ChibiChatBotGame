@@ -4,6 +4,8 @@
 
 QT += core quick quickcontrols2
 CONFIG += c++21
+CONFIG += debug
+
 TEMPLATE = app
 TARGET = GameConfigurator
 INCLUDEPATH += ./Sources/Public
@@ -18,7 +20,8 @@ SOURCES += Sources/GameConfigurator.cpp                                         
            Sources/Private/Configuration/ConfigLoad.cpp                         \
            Sources/Private/Configuration/ConfigObject.cpp                       \
            Sources/Private/Models/ActionsListModel.cpp                          \
-           Sources/Private/Models/AnimationSequenceModel.cpp
+           Sources/Private/Models/AnimationSequenceModel.cpp                    \
+           Sources/Private/Components/ActionComponent.cpp
 
 RESOURCES += qml.qrc
 

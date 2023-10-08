@@ -3,7 +3,7 @@
 #include <QAbstractListModel>
 #include "Components/ActionComponent.h"
 
-enum eActionsListRole {
+enum eActionsSequenceListRole {
     Column = Qt::UserRole,
     Row,
     Inverted
@@ -29,6 +29,7 @@ public:
     Q_INVOKABLE void removeElement(int Index);
     Q_INVOKABLE void addNewAction(int Column, int Row);
     Q_INVOKABLE void toggleInverted(int Index);
+    Q_INVOKABLE void placeItemAt(int SourceIndex, int TargetIndex);
 
 protected:
     QList<ActionSequenceSprite> SpriteList;

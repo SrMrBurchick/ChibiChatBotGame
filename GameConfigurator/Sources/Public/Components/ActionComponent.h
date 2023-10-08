@@ -5,6 +5,9 @@ struct ActionSequenceSprite {
     int Column;
     int Row;
     bool bInverted;
+
+    ActionSequenceSprite(int Column, int Row);
+    void toggleInverted();
 };
 
 struct ActionGridSprite {

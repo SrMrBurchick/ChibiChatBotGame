@@ -27,9 +27,12 @@ Rectangle {
 
         onReleased: {
             placeItemAtPosition(ActionsManager.actionSpriteOldIndex, ActionsManager.actionSpriteNewIndex)
+
+            ActionsManager.actionSpriteOldIndex = -1
+            ActionsManager.actionSpriteNewIndex = -1
+
         }
     }
-
 
     DropArea {
         anchors.fill: root

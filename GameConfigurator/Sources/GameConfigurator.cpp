@@ -4,6 +4,7 @@
 #include <QQmlApplicationEngine>
 
 #include "Public/Models/ActionsListModel.h"
+#include "Public/Models/AnimationSequenceModel.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
     engine.addImportPath(":/qml");
 
     ActionsListModel::registerModel("GameActions");
+    AnimationSequenceModel::registerModel("GameActions");
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

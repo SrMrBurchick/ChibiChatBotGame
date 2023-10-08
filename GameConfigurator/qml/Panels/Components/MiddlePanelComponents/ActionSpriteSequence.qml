@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Delegates
+import GameActions
 
 Item {
     id: root
@@ -15,166 +16,21 @@ Item {
             id: title
             anchors.margins: 5
             anchors.horizontalCenter: panel.horizontalCenter
-            text: "Action animation sequance"
+            text: "Action animation sequence"
         }
 
         DelegateModel {
-            id: actionsModel
-            model: ListModel {
-                ListElement{
-                    column: 3
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 4
-                    row: 0
-                }
-
-                ListElement {
-                    column: 2
-                    row: 1
-                }
-
-                ListElement {
-                    column: 3
-                    row: 1
-                }
-
-                ListElement {
-                    column: 3
-                    row: 1
-                }
-
-                ListElement {
-                    column: 3
-                    row: 1
-                }
-
-                ListElement {
-                    column: 3
-                    row: 1
-                }
-
-                ListElement {
-                    column: 3
-                    row: 1
-                }
-
-                ListElement {
-                    column: 3
-                    row: 1
-                }
-
-                ListElement {
-                    column: 3
-                    row: 1
-                }
-
-                ListElement {
-                    column: 3
-                    row: 1
-                }
+            id: actionsDelegateModel
+            model: AnimationSequenceModel {
+                id: actionsModel
             }
 
             delegate: ActionSpriteDelegate {
                 width: scrollView.height
                 height: scrollView.height
+                onPlaceItemAtPosition: (oldIndex, newIndex) => {
+                    actionsModel.placeItemAt(oldIndex, newIndex);
+                }
             }
         }
 
@@ -189,7 +45,7 @@ Item {
                 width: parent.width
                 spacing: 3
                 orientation: ListView.Horizontal
-                model: actionsModel
+                model: actionsDelegateModel
                 cacheBuffer: 50
             }
         }
