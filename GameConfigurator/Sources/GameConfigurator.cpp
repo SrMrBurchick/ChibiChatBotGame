@@ -3,8 +3,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "Public/Models/ActionsListModel.h"
-#include "Public/Models/AnimationSequenceModel.h"
+#include "Models/ActionsListModel.h"
+#include "Models/AnimationSequenceModel.h"
+#include "Models/SpriteSheet.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
 
     ActionsListModel::registerModel("GameActions");
     AnimationSequenceModel::registerModel("GameActions");
+    SpriteSheetModel::registerModel("GameActions");
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

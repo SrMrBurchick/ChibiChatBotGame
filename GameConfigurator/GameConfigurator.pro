@@ -14,14 +14,16 @@ HEADERS += Sources/Public/Configuration/ConfigLoader.h                          
            Sources/Public/Configuration/ConfigObject.h                          \
            Sources/Public/Models/ActionsListModel.h                             \
            Sources/Public/Components/ActionComponent.h                          \
-           Sources/Public/Models/AnimationSequenceModel.h
+           Sources/Public/Models/AnimationSequenceModel.h                       \
+           Sources/Public/Models/SpriteSheet.h
 
 SOURCES += Sources/GameConfigurator.cpp                                         \
            Sources/Private/Configuration/ConfigLoad.cpp                         \
            Sources/Private/Configuration/ConfigObject.cpp                       \
            Sources/Private/Models/ActionsListModel.cpp                          \
            Sources/Private/Models/AnimationSequenceModel.cpp                    \
-           Sources/Private/Components/ActionComponent.cpp
+           Sources/Private/Components/ActionComponent.cpp                       \
+           Sources/Private/Models/SpriteSheet.cpp
 
 RESOURCES += qml.qrc
 
