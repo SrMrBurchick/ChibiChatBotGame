@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Delegates
+import GameActions
+import Panels
 
 Item {
     id: root
@@ -32,79 +34,27 @@ Item {
             ScrollView {
                 clip: true
                 anchors.fill: spritesGrid
-                anchors.margins: 5
 
                 GridView {
+                    id: gridView
                     anchors.fill: parent
-                    // height: panel.height
-                    // cellWidth: 80; cellHeight: 80
-
-                    // TODO: move model to c++
-                    model: ListModel {
-                        ListElement {
-                            column: 0
-                            row: 0
-                        }
-                        ListElement {
-                            column: 1
-                            row: 0
-                        }
-                        ListElement {
-                            column: 2
-                            row: 0
-                        }
-                        ListElement {
-                            column: 3
-                            row: 0
-                        }
-
-                        ListElement {
-                            column: 4
-                            row: 0
-                        }
-
-                        ListElement {
-                            column: 5
-                            row: 0
-                        }
-
-                        ListElement {
-                            column: 0
-                            row: 1
-                        }
-
-                        ListElement {
-                            column: 1
-                            row: 1
-                        }
-
-                        ListElement {
-                            column: 2
-                            row: 1
-                        }
-
-                        ListElement {
-                            column: 3
-                            row: 1
-                        }
-
+                    flow: GridView.LeftToRight
+                    cellWidth: (spritesGrid.width / ActionsManager.tableSettingsColumns)
+                    cellHeight:(spritesGrid.width / ActionsManager.tableSettingsColumns)
+                    model: SpriteSheetModel {
+                        id: spriteSheetModel
                     }
 
                     delegate: SpriteItemDelegate {
-
+                        height: gridView.cellHeight
+                        width: gridView.cellWidth
                     }
                 }
-
             }
-
         }
+    }
 
-            // Text {
-            //     text: root.width + "x" + root.height
-            // }
-
-
-
+    function initModel() {
+        spriteSheetModel.initModel(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
     }
 }
-

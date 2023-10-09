@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
+import Panels
+import GameActions
 
 Item {
     id: configuration_menu

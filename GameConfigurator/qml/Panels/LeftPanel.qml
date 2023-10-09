@@ -4,11 +4,14 @@ import QtQuick.Controls
 import Buttons
 import Panels
 import Dialogs
+import GameActions
 
 Item {
     id: root
     anchors.fill: parent
     anchors.leftMargin: 6
+
+    property Item rootPage: Item
 
     // Text {
     //     text: root.width + "x" + root.height
@@ -83,7 +86,9 @@ Item {
                 color: "white"
 
                 SettingsList {
-
+                    onSplitImageToSprites: {
+                        rootPage.splitImageToSprites()
+                    }
                 }
 
             }
@@ -108,5 +113,5 @@ Item {
     signal addAction()
     signal goBack()
     signal loadSpriteSheet()
+    signal settingsConfigured()
 }
-

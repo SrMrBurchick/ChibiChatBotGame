@@ -22,10 +22,9 @@ Item {
         currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
         nameFilters: ["Image files (*.png *.jpg)"]
         onAccepted: {
-            // image.source = selectedFile
-            spriteSheetPath = selectedFile
-            console.log(spriteSheetPath)
-
+            console.log(selectedFile)
+            ActionsManager.spriteSheetPath = selectedFile
+            loadSpriteSheet()
         }
     }
 
@@ -45,6 +44,7 @@ Item {
                 }
 
                 LeftPanel {
+                    rootPage: root
                     onGoBack: {
                         rootStack.pop()
                     }
@@ -63,12 +63,25 @@ Item {
             id: middle_root
 
             Rectangle {
-                id: sprite_grid
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
                 SpriteSheetGrid {
+                    id: spriteSheetGrid
+                    visible: ActionsManager.spriteSheetConfigured
                     anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                Flickable {
+                    anchors.fill: parent
+                    visible: !ActionsManager.spriteSheetConfigured
+                    clip: true
+                    contentWidth: image.width; contentHeight: image.height
+                    Image {
+                        id: image
+                        visible: true
+                        source: ActionsManager.spriteSheetPath
+                    }
                 }
             }
 
@@ -78,11 +91,6 @@ Item {
                 border.color: "black"
                 border.width: 2
                 color: "white"
-
-                // Text {
-                //     text: middle.height + "x" + middle.width
-                // }
-                // height: parent.height / 3
 
                 ActionSpriteSequence {
 
@@ -103,6 +111,10 @@ Item {
                 }
             }
         }
+    }
+
+    function splitImageToSprites() {
+        spriteSheetGrid.initModel()
     }
 }
 

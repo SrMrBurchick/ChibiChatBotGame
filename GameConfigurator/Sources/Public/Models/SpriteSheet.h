@@ -3,6 +3,12 @@
 #include <QAbstractListModel>
 #include <QObject>
 #include <QVector>
+#include "Components/ActionComponent.h"
+
+enum eSpriteSheetRoles {
+    SpriteColumn = Qt::UserRole,
+    SpriteRow
+};
 
 class SpriteSheetModel : public QAbstractListModel
 {
@@ -21,5 +27,8 @@ public:
 
     void updateData();
 
+    Q_INVOKABLE void initModel(int Columns, int Rows);
+
 protected:
+    QVector<ActionSequenceSprite> SpriteSheet;
 };

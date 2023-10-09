@@ -49,5 +49,4 @@ ApplicationWindow {
             rootStack: stack
         }
     }
-
 }
