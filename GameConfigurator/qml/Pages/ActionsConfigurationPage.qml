@@ -81,6 +81,10 @@ Item {
                         id: image
                         visible: true
                         source: ActionsManager.spriteSheetPath
+
+                        Text {
+                            text: "(" + image.sourceSize.width + "x" + image.sourceSize.height + ")"
+                        }
                     }
                 }
             }

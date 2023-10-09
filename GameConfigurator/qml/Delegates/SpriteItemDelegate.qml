@@ -14,7 +14,8 @@ Rectangle {
     }
 
     Image {
-        anchors.fill:
+        id: image
+        anchors.fill: parent
         source: ActionsManager.spriteSheetPath
         sourceClipRect: Qt.rect(
             parseInt(column) * ActionsManager.spriteSizeWidth,
