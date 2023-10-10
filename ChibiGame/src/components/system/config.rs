@@ -31,6 +31,21 @@ pub struct Config {
     pub system_config: SystemConfigData
 }
 
+pub fn init_chat_bot_settings(obj: &JsonValue) -> Result<SystemConfigData, Box<dyn Error>> {
+    if JsonValue::is_null(obj) {
+        return Err(Box::from("Unknown param"));
+    }
+
+    if false == obj.has_key("url") || false == obj.has_key("port") {
+        return Err(Box::from("Broken sprite size"));
+    }
+
+    Ok(SystemConfigData {
+        chat_bot_url: obj["url"].to_string(),
+        chat_bot_port: obj["port"].as_u32().unwrap()
+    })
+}
+
 pub fn init_sprite_size(obj: &JsonValue) -> Result<SpriteSize, Box<dyn Error>> {
     if JsonValue::is_null(obj) {
         return Err(Box::from("Unknown param"));
@@ -263,5 +278,25 @@ impl Config {
 
     pub fn is_loaded(&self) -> bool {
         self.loaded
+    }
+
+    pub fn init_chat_bot_settings(&mut self) -> Result<(), Box<dyn Error>>{
+        match self.get_value("chat-bot") {
+            Ok(chat_bot_settings) => {
+                match init_chat_bot_settings(&chat_bot_settings) {
+                    Ok(system_config) => {
+                        self.system_config = system_config;
+                    },
+                    Err(e) => {
+                        return Err(Box::from(format!("Failed to parse chat-bot {:?}", e)));
+                    },
+                }
+            }
+            Err(e) => {
+                return Err(Box::from(format!("Failed to get chat-bot {:?}", e)));
+            }
+        }
+
+        return Ok(());
     }
 }

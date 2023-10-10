@@ -71,6 +71,18 @@ pub fn handle_config(
             }
         }
 
+        match config.init_chat_bot_settings() {
+            Err(_) => {
+                event_writer.send(Event {
+                    event_type: Events::SystemEvents(SystemEvents::ConfigLoaded(false)),
+                });
+                continue;
+            },
+            _ => {
+                // Do nothing
+            }
+        }
+
         // If everything ok
         commands.spawn(config);
 

@@ -1,56 +1,18 @@
-
 use bevy::prelude::*;
-use crossbeam_channel::{bounded, Receiver, Sender};
+use crossbeam_channel::{Receiver, Sender};
 use json;
 use wasm_bindgen::prelude::Closure;
 use wasm_bindgen::JsCast;
 use web_sys::{MessageEvent, WebSocket};
 
-use crate::components::{
-    common::events::{
-        Event, Events, SystemEvents
-    },
-    actions::{
-        Actions, string_to_action
-    },
-    system::config::{
-        Config, SystemConfigData
-    }
-};
+use crate::components::actions::{string_to_action, Actions};
 
 #[derive(Resource, Deref)]
-pub struct StreamReceiver(Receiver<Actions>);
+pub struct ChatBotEventsReceiver(pub Receiver<Actions>);
 
-pub fn setup_client(
-    mut commands: Commands,
-    mut event_writer: EventWriter<Event>,
-    config_query: Query<&Config>
-) {
-    let (tx, rx) = bounded::<Actions>(10);
-
-    match config_query.get_single() {
-        Ok(config) => {
-            run_client(tx, config.system_config.clone());
-        },
-        _ => {
-            event_writer.send(Event {
-                event_type: Events::SystemEvents(SystemEvents::ClientLoaded(false)),
-            });
-
-            return;
-        }
-    }
-
-    commands.insert_resource(StreamReceiver(rx));
-
-    event_writer.send(Event {
-        event_type: Events::SystemEvents(SystemEvents::ClientLoaded(true)),
-    });
-}
-
-pub fn run_client(sender: Sender<Actions>, config: SystemConfigData) {
+pub fn run_client(sender: Sender<Actions>, url: String, port: u32) {
     info!("Wait for TCP client");
-    let url = String::from(format!("ws://{}:{}", config.chat_bot_url, config.chat_bot_port));
+    let url = String::from(format!("ws://{}:{}", url, port));
 
     match WebSocket::new(&url) {
         Ok(socket) => {
