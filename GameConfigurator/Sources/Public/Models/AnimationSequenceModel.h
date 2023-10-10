@@ -30,7 +30,10 @@ public:
     Q_INVOKABLE void addNewAction(int Column, int Row);
     Q_INVOKABLE void toggleInverted(int Index);
     Q_INVOKABLE void placeItemAt(int SourceIndex, int TargetIndex);
+    Q_INVOKABLE void setActiveAction(const QString& Action);
 
 protected:
-    QList<ActionSequenceSprite> SpriteList;
+    QList<ActionSequenceSprite>* SpriteList = nullptr;
+    QString CurrentAction = "";
+    QHash<QString, QList<ActionSequenceSprite>> ActionsMap;
 };

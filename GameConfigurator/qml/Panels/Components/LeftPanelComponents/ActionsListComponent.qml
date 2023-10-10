@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import GameActions
 import Delegates
+import Panels
 
 ScrollView {
     anchors.fill: parent
@@ -32,6 +33,10 @@ ScrollView {
             }
             onElementSelected: {
                 delegateManager.currentIndex = index
+
+                if (ActionsManager.sequenceModel != undefined) {
+                    ActionsManager.sequenceModel.setActiveAction(action);
+                }
             }
         }
     }

@@ -25,8 +25,13 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: {
-            console.log(ActionsManager.spriteSheetPath)
+        // onClicked: {
+        //     console.log(ActionsManager.spriteSheetPath)
+        // }
+        onDoubleClicked: {
+            toggleSelected(index, column, row)
         }
     }
+
+    signal toggleSelected(int index, int column, int row)
 }

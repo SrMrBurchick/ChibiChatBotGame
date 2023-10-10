@@ -46,8 +46,14 @@ Item {
                     }
 
                     delegate: SpriteItemDelegate {
+                        id: sprite
                         height: gridView.cellHeight
                         width: gridView.cellWidth
+                        onToggleSelected:(index, column, row) => {
+                            if (ActionsManager.sequenceModel != undefined) {
+                                ActionsManager.sequenceModel.addNewAction(column, row)
+                            }
+                        }
                     }
                 }
             }
@@ -56,5 +62,9 @@ Item {
 
     function initModel() {
         spriteSheetModel.initModel(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
+    }
+
+    Component.onCompleted: {
+        ActionsManager.spriteSheetModel = spriteSheetModel
     }
 }

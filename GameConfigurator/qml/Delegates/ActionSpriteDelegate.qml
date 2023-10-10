@@ -18,6 +18,16 @@ Rectangle {
         text: "(" + column + " : " + row + ")"
     }
 
+    Image {
+        id: image
+        anchors.fill: parent
+        source: ActionsManager.spriteSheetPath
+        sourceClipRect: Qt.rect(
+            parseInt(column) * ActionsManager.spriteSizeWidth,
+            parseInt(row) * ActionsManager.spriteSizeHeight,
+            ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+    }
+
     MouseArea {
         id: dragArea
         anchors.fill: root
@@ -42,5 +52,6 @@ Rectangle {
         }
     }
 
+    signal toggleInverted(int index)
     signal placeItemAtPosition(int oldIndex, int newIndex)
 }

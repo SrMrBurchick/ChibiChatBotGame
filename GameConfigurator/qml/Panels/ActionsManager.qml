@@ -16,4 +16,7 @@ QtObject {
     // Sprite settings
     property int spriteSizeHeight
     property int spriteSizeWidth
+
+    property AnimationSequenceModel sequenceModel: AnimationSequenceModel {}
+    property SpriteSheetModel spriteSheetModel: SpriteSheetModel {}
 }

@@ -44,7 +44,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    elementSelected(actionIndex)
+                    elementSelected(actionIndex, name)
                 }
             }
         }
@@ -68,5 +68,5 @@ Rectangle {
 
     signal removeElement(int index)
     signal changeElement(int index, string action)
-    signal elementSelected(int index)
+    signal elementSelected(int index, string action)
 }

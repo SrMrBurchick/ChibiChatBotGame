@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Delegates
 import GameActions
+import Panels
 
 Item {
     id: root
@@ -49,6 +50,10 @@ Item {
                 cacheBuffer: 50
             }
         }
+    }
+
+    Component.onCompleted: {
+        ActionsManager.sequenceModel = actionsModel
     }
 }
 
