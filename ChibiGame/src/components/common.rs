@@ -36,3 +36,11 @@ pub enum BorderType {
 pub struct Border {
     pub border_type: BorderType
 }
+
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
+pub enum GameStates {
+    #[default]
+    ConfigLoading,
+    ChatBotConnectionSetup,
+    GameRunning
+}

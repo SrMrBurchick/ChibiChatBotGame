@@ -1,7 +1,13 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
 pub mod components;
 pub mod listeners;
+pub mod states;
+
+use crate::components::common::{
+    GameStates
+};
 
 fn main() {
     App::new()
@@ -17,6 +23,12 @@ fn main() {
             }),
             ..default()
         }))
+        .add_plugins((
+            RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0),
+            RapierDebugRenderPlugin::default()
+        ))
+        .add_state::<GameStates>()
+
         // ClearColor must have 0 alpha, otherwise some color will bleed through
         .insert_resource(ClearColor(Color::NONE))
         .add_systems(Startup, setup)
