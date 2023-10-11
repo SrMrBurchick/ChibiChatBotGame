@@ -5,7 +5,7 @@ use crate::components::{
         sprite_index::SpriteIndex,
     },
     actions::{
-        Actions, string_to_action
+        Actions, string_to_action, UserAction
     }
 };
 
@@ -27,6 +27,7 @@ pub struct SystemConfigData {
 pub struct Config {
     content: JsonValue,
     animations_map: AnimationsMap,
+    user_actions: Vec<UserAction>,
     loaded: bool,
     pub system_config: SystemConfigData
 }
@@ -119,7 +120,8 @@ impl Config {
             content: JsonValue::Null,
             animations_map: AnimationsMap::default(),
             loaded: false,
-            system_config: SystemConfigData::default()
+            system_config: SystemConfigData::default(),
+            user_actions: vec![]
         }
     }
 
@@ -204,9 +206,14 @@ impl Config {
         for item in animations_array.members() {
             for entry in item.entries() {
                 let key = string_to_action(entry.0);
+                let mut is_user_action = false;
 
                 if key == Actions::Unknown {
-                    continue;
+                    if false == entry.1.has_key("sprites") {
+                        continue;
+                    } else {
+                        is_user_action = true;
+                    }
                 }
 
                 let mut animations_list: Vec<SpriteIndex> = vec![];
@@ -226,7 +233,16 @@ impl Config {
                     }
                 }
 
-                hash_map.insert(key, animations_list);
+                if is_user_action {
+                    self.user_actions.push(
+                        UserAction {
+                            action: entry.0.to_string(),
+                            animations: animations_list 
+                        }
+                    );
+                } else {
+                    hash_map.insert(key, animations_list);
+                }
             }
         }
 
@@ -298,5 +314,9 @@ impl Config {
         }
 
         return Ok(());
+    }
+
+    pub fn get_user_actions(&self) -> Vec<UserAction> {
+        return self.user_actions.clone();
     }
 }

@@ -1,7 +1,7 @@
 use bevy::{prelude::*, sprite::SpriteSheetBundle};
 
 use crate::components::{
-    actions::{ActionComponent, Actions},
+    actions::ActionComponent,
     animation::AnimationComponent,
     movement::PlayerMovementComponent,
 };
@@ -29,9 +29,7 @@ impl Player {
         Self {
             sprite: SpriteSheetBundle::default(),
             xp: PlayerXp(0),
-            action_component: ActionComponent {
-                current_action: Actions::Unknown
-            },
+            action_component: ActionComponent::default(),
             animation_component: AnimationComponent::new(),
             movement_component: PlayerMovementComponent::new()
         }
@@ -43,5 +41,9 @@ impl Player {
 
     pub fn set_animation_component(&mut self, animation_component: AnimationComponent) {
         self.animation_component = animation_component;
+    }
+
+    pub fn set_action_component(&mut self, action_component: ActionComponent) {
+        self.action_component = action_component;
     }
 }

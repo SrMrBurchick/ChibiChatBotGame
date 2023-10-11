@@ -9,7 +9,7 @@ use crate::components::{
     common::sprite_index::SpriteIndex
 };
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Deref)]
 pub struct AnimationsMap(pub HashMap<Actions, Vec<SpriteIndex>>);
 
 #[derive(Debug, Default, PartialEq, Eq)]

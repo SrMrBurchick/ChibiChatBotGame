@@ -6,6 +6,7 @@ use crate::components::{
         Events, Event, SystemEvents
     },
     animation::AnimationComponent,
+    actions::ActionComponent,
     gameplay::player::*,
     system::config::Config
 };
@@ -35,11 +36,19 @@ pub fn setup_player(
 
         info!("Animation_component {:?}", animation_component);
 
+        let mut action_component = ActionComponent::default();
+
+        action_component.init_animation_map(&config.get_configured_animations_map());
+        action_component.init_user_animations(&config.get_user_actions());
+
+        info!("Action component {:?}", action_component);
+
         let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
         let mut player = Player::new();
         player.set_texture_atlas(texture_atlas_handle);
         player.set_animation_component(animation_component);
+        player.set_action_component(action_component);
 
         commands
             .spawn(player)

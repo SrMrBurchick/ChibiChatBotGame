@@ -3,12 +3,7 @@ use crate::components::{
     actions::{
         ActionComponent, Actions
     },
-    common::{
-        events::{
-            Event, Events, SystemEvents
-        },
-        sprite_index::SpriteIndex
-    }
+    common::sprite_index::SpriteIndex
 };
 
 #[derive(Component, Debug)]
