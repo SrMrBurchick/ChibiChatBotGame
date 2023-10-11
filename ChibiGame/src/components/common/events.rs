@@ -11,8 +11,9 @@ pub enum GameEvents {
 pub enum SystemEvents {
     ConfigLoaded(bool),
     ClientLoaded(bool),
+    GameConfigured(bool),
+    AnimationsConfigured(bool),
     PlayerConfigured(bool),
-    AnimationsConfigured,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]

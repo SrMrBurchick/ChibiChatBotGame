@@ -75,6 +75,6 @@ pub fn setup_animation(mut commands: Commands, mut event_writer: EventWriter<Eve
         timer: Timer::from_seconds(0.1, TimerMode::Repeating),
     });
     event_writer.send(Event {
-        event_type: Events::SystemEvents(SystemEvents::AnimationsConfigured),
+        event_type: Events::SystemEvents(SystemEvents::AnimationsConfigured(true)),
     });
 }

@@ -29,5 +29,7 @@ pub enum GameStates {
     #[default]
     ConfigLoading,
     ChatBotConnectionSetup,
-    GameRunning
+    GameSetup,
+    PlayerSetup,
+    RunGame
 }

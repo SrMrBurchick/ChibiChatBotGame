@@ -23,7 +23,7 @@ pub fn system_event_listener(
                     }
                     SystemEvents::ConfigLoaded(result) => {
                         if result {
-                            next_state.set(GameStates::GameRunning);
+                            next_state.set(GameStates::GameSetup);
                         } else {
                             //TODO: print error
                         }
