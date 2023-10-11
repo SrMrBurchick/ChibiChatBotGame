@@ -24,19 +24,6 @@ pub struct SpriteSize {
     pub width: u32
 }
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-pub enum BorderType {
-    TopBorder,
-    BottomBorder,
-    LeftBorder,
-    RightBorder
-}
-
-#[derive(Component)]
-pub struct Border {
-    pub border_type: BorderType
-}
-
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum GameStates {
     #[default]
