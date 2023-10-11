@@ -30,6 +30,7 @@ pub enum GameStates {
     ConfigLoading,
     ChatBotConnectionSetup,
     GameSetup,
+    AnimationsSetup,
     PlayerSetup,
     RunGame
 }

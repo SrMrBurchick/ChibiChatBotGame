@@ -30,6 +30,10 @@ impl AnimationComponent {
             self.animations[self.current_index].clone()
         }
     }
+
+    pub fn set_new_animation_sequence(&mut self, animations: &Vec<SpriteIndex>) {
+        self.animations = animations.clone();
+    }
 }
 
 #[derive(Resource, Debug)]

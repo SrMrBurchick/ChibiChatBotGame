@@ -1,13 +1,8 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::components::{
-    actions::{
-        Actions, WalkDirection, ClimbDirection, MoveType, ActionComponent
-    },
-    common::events::{
-        Events, GameEvents
-    }
+use crate::components::actions::{
+    Actions, WalkDirection, ClimbDirection, MoveType
 };
 
 #[reflect_trait]
@@ -85,6 +80,48 @@ impl PlayerMovementComponent {
             landed: false,
             can_climb: false,
             speed: 3500.0
+        }
+    }
+
+    pub fn on_action_changed(
+        &mut self,
+        action: Actions,
+        current_move_direction: Vec2
+    ) {
+        match action {
+            Actions::Walk => {
+                self.enabled = true;
+                if current_move_direction.x >= 0.0 {
+                    self.movement = Some(Box::new(WalkComponent {
+                        direction: WalkDirection::Right
+                    }));
+                } else {
+                    self.movement = Some(Box::new(WalkComponent {
+                        direction: WalkDirection::Left
+                    }));
+                }
+
+            }
+            Actions::Climb => {
+                self.enabled = true;
+                if current_move_direction.y >= 0.0 {
+                    self.movement = Some(Box::new(ClimbComponent {
+                        direction: ClimbDirection::Up
+                    }));
+                } else {
+                    self.movement = Some(Box::new(ClimbComponent {
+                        direction: ClimbDirection::Down
+                    }));
+                }
+
+            }
+            Actions::Fall => {
+                self.enabled = true;
+                self.movement = None;
+            }
+            _ => {
+                self.enabled = false;
+            },
         }
     }
 }
