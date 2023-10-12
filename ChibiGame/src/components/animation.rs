@@ -52,6 +52,7 @@ pub fn animation_system(
         &Handle<TextureAtlas>,
     )>,
 ) {
+    info!("Animation component running");
     for (action_component, mut anim_component, mut atlas, handle) in &mut query {
         if action_component.current_action == Actions::Unknown {
             continue;

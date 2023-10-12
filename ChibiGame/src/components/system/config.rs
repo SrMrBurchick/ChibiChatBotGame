@@ -228,10 +228,11 @@ impl Config {
                             animations_list.push(sprite_index);
                         }
                         Err(_) => {
-                            continue;
+                            // continue;
                         }
                     }
                 }
+                info!("Detected animation in {:?}: {:?}", key, animations_list);
 
                 if is_user_action {
                     self.user_actions.push(
@@ -242,6 +243,7 @@ impl Config {
                     );
                 } else {
                     hash_map.insert(key, animations_list);
+                    info!("Animations has been updated: {:?}", hash_map);
                 }
             }
         }
@@ -289,6 +291,7 @@ impl Config {
     }
 
     pub fn get_configured_animations_map(&self) -> AnimationsMap {
+        info!("Configured animations: {:?}", self.animations_map);
         self.animations_map.clone()
     }
 

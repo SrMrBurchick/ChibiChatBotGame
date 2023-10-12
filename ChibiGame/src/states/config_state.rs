@@ -48,7 +48,8 @@ pub fn handle_config(
 
         let mut config = Config::new();
         match config.load(result) {
-            Err(_) => {
+            Err(error) => {
+                error!(error);
                 event_writer.send(Event {
                     event_type: Events::SystemEvents(SystemEvents::ConfigLoaded(false)),
                 });
@@ -60,7 +61,8 @@ pub fn handle_config(
         }
 
         match config.init_animations_map() {
-            Err(_) => {
+            Err(error) => {
+                error!(error);
                 event_writer.send(Event {
                     event_type: Events::SystemEvents(SystemEvents::ConfigLoaded(false)),
                 });
@@ -72,7 +74,8 @@ pub fn handle_config(
         }
 
         match config.init_chat_bot_settings() {
-            Err(_) => {
+            Err(error) => {
+                error!(error);
                 event_writer.send(Event {
                     event_type: Events::SystemEvents(SystemEvents::ConfigLoaded(false)),
                 });

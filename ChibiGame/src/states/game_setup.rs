@@ -1,6 +1,7 @@
 use crate::components::{
     common::events::{Event, Events, SystemEvents},
     gameplay::{Border, BorderType, GameTimer},
+    movement::{WalkComponent, ClimbComponent}
 };
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
@@ -9,11 +10,16 @@ pub fn setup_game(
     mut commands: Commands,
     windows: Query<&Window>,
     mut event_writer: EventWriter<Event>,
+    type_registry: ResMut<AppTypeRegistry>
 ) {
     let window = windows.single();
     let height = window.height();
     let width = window.width();
     let border_size = 10.0;
+
+    // Register movement components traits
+    type_registry.write().register::<WalkComponent>();
+    type_registry.write().register::<ClimbComponent>();
 
     // Setup borders
     // Top border

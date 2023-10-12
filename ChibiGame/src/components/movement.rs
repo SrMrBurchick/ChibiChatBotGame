@@ -131,6 +131,7 @@ pub fn move_player(
     type_registry: Res<AppTypeRegistry>,
     mut query: Query<(&PlayerMovementComponent, &mut Velocity)>,
 ) {
+    info!("Movement component running");
     for (component, mut velocity) in &mut query {
         if component.enabled == false {
             continue;

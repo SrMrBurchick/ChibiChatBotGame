@@ -20,13 +20,15 @@ pub fn system_event_listener(
             Events::SystemEvents(system_event) => {
                 match system_event {
                     SystemEvents::ConfigLoaded(result) => {
+                        info!("ConfigLoaded {:?}", result);
                         if result {
                             next_state.set(GameStates::ChatBotConnectionSetup);
                         } else {
                             //TODO: print error
                         }
                     }
-                    SystemEvents::ConfigLoaded(result) => {
+                    SystemEvents::ClientLoaded(result) => {
+                        info!("ClientLoaded {:?}", result);
                         if result {
                             next_state.set(GameStates::GameSetup);
                         } else {
@@ -34,6 +36,7 @@ pub fn system_event_listener(
                         }
                     },
                     SystemEvents::GameConfigured(result) => {
+                        info!("GameConfigured {:?}", result);
                         if result {
                             next_state.set(GameStates::AnimationsSetup);
                         } else {
@@ -41,6 +44,7 @@ pub fn system_event_listener(
                         }
                     }
                     SystemEvents::AnimationsConfigured(result) => {
+                        info!("AnimationsConfigured {:?}", result);
                         if result {
                             next_state.set(GameStates::PlayerSetup);
                         } else {
@@ -48,6 +52,7 @@ pub fn system_event_listener(
                         }
                     }
                     SystemEvents::PlayerConfigured(result) => {
+                        info!("PlayerConfigured {:?}", result);
                         if result {
                             next_state.set(GameStates::RunGame);
                         } else {
@@ -82,6 +87,7 @@ pub fn handle_game_events(
                 match game_event {
                     GameEvents::ActionChanged(new_action) => {
                         for (mut action_component, mut animation_component, mut movement_component, velocity) in components.iter_mut() {
+                            info!("Action changed to {:?}", new_action);
                             on_action_changed(
                                 new_action,
                                 &mut action_component,
