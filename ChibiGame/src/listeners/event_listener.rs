@@ -6,7 +6,11 @@ use crate::components::{
             Event, Events, GameEvents, SystemEvents
         }
     },
-    gameplay::player::PlayerComponent, actions::{ActionComponent, Actions},
+    gameplay::{
+        player::PlayerComponent,
+        gameplay_logic::GameplayLogicComponent
+    },
+    actions::{ActionComponent, Actions},
     movement::PlayerMovementComponent, animation::AnimationComponent
 };
 
@@ -78,22 +82,37 @@ pub fn handle_game_events(
         &mut ActionComponent,
         &mut AnimationComponent,
         &mut PlayerMovementComponent,
-        &Velocity
+        &mut GameplayLogicComponent,
+        &mut Velocity
     ), With<PlayerComponent>>
 ) {
     for event in events.iter() {
         match event.event_type {
             Events::GameEvents(game_event) => {
                 match game_event {
-                    GameEvents::ActionChanged(new_action) => {
-                        for (mut action_component, mut animation_component, mut movement_component, velocity) in components.iter_mut() {
-                            info!("Action changed to {:?}", new_action);
+                    GameEvents::SetNewAction(new_action) => {
+                        for (_, _, _, mut gameplay_logic_component, _) in components.iter_mut() {
+                            info!("Set new action {:?}", new_action);
+                            if !gameplay_logic_component.try_to_set_action(new_action) {
+                                // TODO: send error message
+                            }
+                        }
+                    }
+                    GameEvents::ActionChanged(action) => {
+                        for (
+                            mut action_component,
+                            mut animation_component,
+                            mut movement_component,
+                            _,
+                            mut velocity
+                        ) in components.iter_mut() {
+                            info!("Action changed to {:?}", action);
                             on_action_changed(
-                                new_action,
+                                action,
                                 &mut action_component,
                                 &mut animation_component,
                                 &mut movement_component,
-                                velocity
+                                &mut velocity
                             );
                         }
                     }
@@ -110,12 +129,12 @@ fn on_action_changed(
     action_component: &mut ActionComponent,
     animation_component : &mut AnimationComponent,
     movement_component: &mut PlayerMovementComponent,
-    velocity: &Velocity
+    velocity: &mut Velocity
 ) {
     let animations = action_component.get_animation_map_by_action(new_action);
     if !animations.is_empty() {
         action_component.current_action = new_action;
         animation_component.set_new_animation_sequence(&animations);
-        movement_component.on_action_changed(new_action, velocity.linvel);
     }
+    movement_component.on_action_changed(new_action, velocity);
 }

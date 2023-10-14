@@ -7,7 +7,10 @@ use crate::components::{
     },
     animation::AnimationComponent,
     actions::ActionComponent,
-    gameplay::player::*,
+    gameplay::{
+        player::*,
+        gameplay_logic::GameplayLogicComponent
+    },
     system::config::Config
 };
 
@@ -66,6 +69,7 @@ pub fn setup_player(
             .insert(TransformBundle::from(Transform::from_scale(Vec3::splat(
                 config.get_sprite_scale(),
             ))))
+            .insert(GameplayLogicComponent::new())
             .insert(PlayerComponent);
     }
 

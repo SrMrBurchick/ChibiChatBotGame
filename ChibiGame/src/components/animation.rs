@@ -1,9 +1,7 @@
 use bevy::prelude::*;
 use crate::components::{
-    actions::{
-        ActionComponent, Actions
-    },
-    common::sprite_index::SpriteIndex
+    common::sprite_index::SpriteIndex,
+    gameplay::gameplay_logic::GameplayLogicComponent
 };
 
 #[derive(Component, Debug)]
@@ -46,15 +44,15 @@ pub fn animation_system(
     texture_atlases: Res<Assets<TextureAtlas>>,
     mut animtimer: ResMut<AnimationTimer>,
     mut query: Query<(
-        &ActionComponent,
+        &GameplayLogicComponent,
         &mut AnimationComponent,
         &mut TextureAtlasSprite,
         &Handle<TextureAtlas>,
     )>,
 ) {
     info!("Animation component running");
-    for (action_component, mut anim_component, mut atlas, handle) in &mut query {
-        if action_component.current_action == Actions::Unknown {
+    for (gameplay_component, mut anim_component, mut atlas, handle) in &mut query {
+        if !gameplay_component.is_current_action_valid() && !gameplay_component.get_action_running_status() {
             continue;
         }
 

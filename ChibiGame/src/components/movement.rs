@@ -86,8 +86,9 @@ impl PlayerMovementComponent {
     pub fn on_action_changed(
         &mut self,
         action: Actions,
-        current_move_direction: Vec2
+        velocity: &mut Velocity
     ) {
+        let current_move_direction = velocity.linvel;
         match action {
             Actions::Walk => {
                 self.enabled = true;
@@ -120,7 +121,10 @@ impl PlayerMovementComponent {
                 self.movement = None;
             }
             _ => {
+                info!("Disable movement");
                 self.enabled = false;
+                self.movement = None;
+                velocity.linvel = Vec2::ZERO;
             },
         }
     }

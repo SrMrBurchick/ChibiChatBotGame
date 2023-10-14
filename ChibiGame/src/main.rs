@@ -11,7 +11,7 @@ use crate::components::common::{
     GameStates, events::Event,
 };
 use crate::components::{
-    animation, movement
+    animation, movement, gameplay::gameplay_logic
 };
 use crate::states::*;
 use crate::listeners::*;
@@ -55,6 +55,7 @@ fn main() {
         .add_systems(OnEnter(GameStates::GameSetup), game_setup::setup_game)
         .add_systems(OnEnter(GameStates::AnimationsSetup), animations_setup::setup_animation)
         .add_systems(OnEnter(GameStates::PlayerSetup), player_setup::setup_player)
+        .add_systems(Update, gameplay_logic::game_logic_system.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, animation::animation_system.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, movement::move_player.run_if(in_state(GameStates::RunGame)))
 
@@ -69,5 +70,5 @@ fn setup(mut commands: Commands) {
 }
 
 fn test_game_setup(mut event_writer: EventWriter<Event>) {
-    event_writer.send(Event { event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::Walk)) });
+    event_writer.send(Event { event_type: Events::GameEvents(GameEvents::SetNewAction(Actions::Walk)) });
 }

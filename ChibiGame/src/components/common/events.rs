@@ -4,6 +4,7 @@ use crate::components::actions::Actions;
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub enum GameEvents {
     ActionChanged(Actions),
+    SetNewAction(Actions),
     PlayerOverlapped(Entity)
 }
 

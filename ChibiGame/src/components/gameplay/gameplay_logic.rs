@@ -40,19 +40,20 @@ impl GameplayLogicComponent {
 
         // If current action cannot be interrupted than any action must be pass
         // to the low_priority actions. Even if the next action cannot be interrupted either
-        if !self.can_be_interrupted {
+        if !self.can_be_interrupted && self.is_current_action_valid() {
             self.pending_actions.push(action);
             return true;
         }
 
         // If current action can be interrupted than any other action must be pass
         // to hight priority, even if the new action can be interrupted
-        if self.can_be_interrupted && self.current_action != Actions::Unknown {
+        if self.can_be_interrupted && self.is_current_action_valid() {
             self.high_priority_actions.push(action);
             return true;
         }
 
         // Set only when current action is unknown
+        info!("Set action {:?}", action);
         self.current_action = action;
         self.can_be_interrupted = !is_action_can_interrupt(action);
 
@@ -140,6 +141,7 @@ pub fn game_logic_system(
         }
     }
 
+    info!("Game logic running {}", is_action_timer_finished);
     // Gameplay logic
     match gameplay_query.get_single_mut() {
         Ok(mut gameplay_component) => {
@@ -147,7 +149,8 @@ pub fn game_logic_system(
             if !gameplay_component.get_action_running_status()
                 && gameplay_component.is_current_action_valid()
             {
-                start_new_action(&gameplay_component, &mut commands);
+                start_new_action(&mut gameplay_component, &mut commands, event_writer);
+
                 return;
             }
 
@@ -176,14 +179,23 @@ pub fn game_logic_system(
 }
 
 fn start_new_action(
-    gameplay_component: &GameplayLogicComponent,
+    gameplay_component: &mut GameplayLogicComponent,
     commands: &mut Commands,
+    mut event_writer: EventWriter<Event>,
 ) {
     commands.spawn(ActionDurationTimer{
         timer: Timer::from_seconds(
             gameplay_component.get_action_duration(), TimerMode::Once
         )
     });
+
+    event_writer.send(Event {
+        event_type: Events::GameEvents(
+            GameEvents::ActionChanged(gameplay_component.get_current_action())
+        ) }
+    );
+
+    gameplay_component.is_action_running = true;
 }
 
 fn on_action_completed(
@@ -195,8 +207,14 @@ fn on_action_completed(
     let next_action = gameplay_component.get_next_action();
     if next_action != Actions::Unknown {
         event_writer.send(Event {
-            event_type: Events::GameEvents(GameEvents::ActionChanged(next_action))
+            event_type: Events::GameEvents(GameEvents::SetNewAction(next_action))
         });
+    } else {
+        event_writer.send(Event {
+            event_type: Events::GameEvents(
+                GameEvents::ActionChanged(next_action)
+            )}
+        );
     }
 }
 
@@ -213,7 +231,7 @@ fn interrupt_current_action(
     gameplay_component.stop_action();
     event_writer.send(Event {
         event_type: Events::GameEvents(
-            GameEvents::ActionChanged(gameplay_component.get_next_action())
+            GameEvents::SetNewAction(gameplay_component.get_next_action())
         ) }
     );
 }
