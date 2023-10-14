@@ -1,4 +1,5 @@
 pub mod player;
+pub mod gameplay_logic;
 
 use bevy::prelude::*;
 

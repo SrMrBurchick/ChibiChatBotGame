@@ -58,9 +58,16 @@ fn main() {
         .add_systems(Update, animation::animation_system.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, movement::move_player.run_if(in_state(GameStates::RunGame)))
 
+        // Test
+        .add_systems(OnEnter(GameStates::RunGame), test_game_setup)
+
         .run();
 }
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
+}
+
+fn test_game_setup(mut event_writer: EventWriter<Event>) {
+    event_writer.send(Event { event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::Walk)) });
 }

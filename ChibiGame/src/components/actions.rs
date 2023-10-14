@@ -136,9 +136,20 @@ impl ActionComponent {
 impl Default for ActionComponent {
     fn default() -> Self {
         Self {
+            // TODO: Remove current action
             current_action: Actions::Unknown,
             user_actions: vec![],
             animation_map: HashMap::default()
         }
+    }
+}
+
+pub fn is_action_can_interrupt(action: Actions) -> bool {
+    match action {
+        Actions::Walk => false,
+        Actions::Climb => false,
+        Actions::StandBy => false,
+        Actions::Unknown => false,
+        _ => true
     }
 }

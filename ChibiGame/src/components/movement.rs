@@ -116,7 +116,7 @@ impl PlayerMovementComponent {
 
             }
             Actions::Fall => {
-                self.enabled = true;
+                self.enabled = false;
                 self.movement = None;
             }
             _ => {
