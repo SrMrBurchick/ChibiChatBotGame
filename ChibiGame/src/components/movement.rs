@@ -158,6 +158,28 @@ impl PlayerMovementComponent {
             },
         }
     }
+
+    pub fn swap_direction(
+        &mut self,
+        type_registry: &AppTypeRegistry,
+    ) {
+        match self.movement.take() {
+            Some(mut movement) => {
+                let type_registry = type_registry.read();
+                let reflect_movement = type_registry
+                    .get_type_data::<ReflectMovementComponent>(movement.type_id())
+                    .unwrap();
+
+                let movement_trait: &mut dyn MovementComponent =
+                    reflect_movement.get_mut(&mut *movement).unwrap();
+
+                movement_trait.swap_direction();
+
+                self.movement = Some(movement);
+            },
+            None => {},
+        }
+    }
 }
 
 pub fn move_player(
