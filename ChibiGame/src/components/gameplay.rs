@@ -1,6 +1,7 @@
 pub mod player;
 pub mod gameplay_logic;
 pub mod actions_strategies;
+pub mod ai;
 
 use bevy::prelude::*;
 

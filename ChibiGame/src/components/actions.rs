@@ -38,6 +38,7 @@ pub enum Actions {
     StandBy,
     Walk,
     UserAction(u32),
+    SwapDirection,
     Unknown
 }
 
