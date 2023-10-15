@@ -1,8 +1,17 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::components::actions::{
-    Actions, WalkDirection, ClimbDirection, MoveType
+use crate::components::{
+    actions::{
+        Actions, WalkDirection, ClimbDirection, MoveType
+    },
+    common::events::{
+        Event, GameEvents, Events, OverlapType
+    },
+    gameplay::{
+        gameplay_logic::GameplayLogicComponent,
+        player::PlayerComponent
+    }
 };
 
 #[reflect_trait]
@@ -88,10 +97,13 @@ impl PlayerMovementComponent {
         action: Actions,
         velocity: &mut Velocity
     ) {
+        if !self.enabled {
+            return;
+        }
+
         let current_move_direction = velocity.linvel;
         match action {
             Actions::Walk => {
-                self.enabled = true;
                 if current_move_direction.x >= 0.0 {
                     self.movement = Some(Box::new(WalkComponent {
                         direction: WalkDirection::Right
@@ -104,7 +116,6 @@ impl PlayerMovementComponent {
 
             }
             Actions::Climb => {
-                self.enabled = true;
                 if current_move_direction.y >= 0.0 {
                     self.movement = Some(Box::new(ClimbComponent {
                         direction: ClimbDirection::Up
@@ -115,10 +126,6 @@ impl PlayerMovementComponent {
                     }));
                 }
 
-            }
-            Actions::Fall => {
-                self.enabled = false;
-                self.movement = None;
             }
             _ => {
                 info!("Disable movement");
@@ -135,7 +142,6 @@ pub fn move_player(
     type_registry: Res<AppTypeRegistry>,
     mut query: Query<(&PlayerMovementComponent, &mut Velocity)>,
 ) {
-    info!("Movement component running");
     for (component, mut velocity) in &mut query {
         if component.enabled == false {
             continue;
@@ -155,6 +161,78 @@ pub fn move_player(
                     movement_trait.get_velocity() * component.speed * time.delta_seconds();
             }
             _ => {}
+        }
+    }
+}
+
+pub fn monitor_collisions(
+    mut collision_events: EventReader<CollisionEvent>,
+    mut event_writer: EventWriter<Event>,
+    colliders: Query<Entity, With<Collider>>,
+    player: Query<Entity, With<PlayerComponent>>
+) {
+    match player.single() {
+        (player_entity) => {
+            for collision in collision_events.iter() {
+                match collision {
+                    CollisionEvent::Stopped(e1, e2, _) => {
+                        for collider_entity in colliders.iter() {
+                            let is_player = player_entity == *e1 || player_entity == *e2;
+                            let is_collider = collider_entity == *e1 || collider_entity == *e2;
+
+                            if is_player && is_collider {
+                                event_writer.send(
+                                    Event {
+                                        event_type: Events::GameEvents(GameEvents::PlayerOverlapped(OverlapType::Ended(collider_entity)))
+                                    }
+                                );
+
+                            }
+                        }
+
+                    },
+                    CollisionEvent::Started(e1, e2, _) => {
+                        for collider_entity in colliders.iter() {
+                            let is_player = player_entity == *e1 || player_entity == *e2;
+                            let is_collider = collider_entity == *e1 || collider_entity == *e2;
+
+                            if is_player && is_collider {
+                                event_writer.send(
+                                    Event {
+                                        event_type: Events::GameEvents(GameEvents::PlayerOverlapped(OverlapType::Started(collider_entity)))
+                                    }
+                                );
+
+                            }
+                        }
+                    },
+                    _ => {},
+                }
+            }
+        }
+        _ => {},
+    }
+}
+
+pub fn monitor_movement(
+    mut event_writer: EventWriter<Event>,
+    components: Query<(&Velocity, &GameplayLogicComponent, &PlayerMovementComponent), With<PlayerComponent>>
+) {
+    for (velocity, gameplay, movement) in components.iter() {
+        if !movement.enabled {
+            continue;
+        }
+
+        // Detect that the player is moving down
+        if velocity.linvel.y < 0.0 {
+            // Check is the current action is not climb
+            if gameplay.get_current_action() != Actions::Climb {
+                event_writer.send(
+                    Event {
+                        event_type: Events::GameEvents(GameEvents::SetNewAction(Actions::Fall))
+                    }
+                );
+            }
         }
     }
 }

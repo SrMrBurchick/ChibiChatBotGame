@@ -50,7 +50,6 @@ pub fn animation_system(
         &Handle<TextureAtlas>,
     )>,
 ) {
-    info!("Animation component running");
     for (gameplay_component, mut anim_component, mut atlas, handle) in &mut query {
         if !gameplay_component.is_current_action_valid() && !gameplay_component.get_action_running_status() {
             continue;

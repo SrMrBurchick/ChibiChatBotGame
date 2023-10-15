@@ -3,10 +3,10 @@ use bevy_rapier2d::prelude::*;
 
 use crate::components::{
     common::events::{
-        Events, Event, SystemEvents
+        Events, Event, SystemEvents, GameEvents
     },
     animation::AnimationComponent,
-    actions::ActionComponent,
+    actions::{ActionComponent, Actions},
     gameplay::{
         player::*,
         gameplay_logic::GameplayLogicComponent
@@ -75,5 +75,9 @@ pub fn setup_player(
 
     event_writer.send(Event {
         event_type: Events::SystemEvents(SystemEvents::PlayerConfigured(true)),
+    });
+
+    event_writer.send(Event {
+        event_type: Events::GameEvents(GameEvents::SetNewAction(Actions::Fall)),
     });
 }

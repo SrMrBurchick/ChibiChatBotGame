@@ -58,6 +58,8 @@ fn main() {
         .add_systems(Update, gameplay_logic::game_logic_system.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, animation::animation_system.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, movement::move_player.run_if(in_state(GameStates::RunGame)))
+        .add_systems(Update, movement::monitor_movement.run_if(in_state(GameStates::RunGame)))
+        .add_systems(Update, movement::monitor_collisions.run_if(in_state(GameStates::RunGame)))
 
         // Test
         .add_systems(OnEnter(GameStates::RunGame), test_game_setup)

@@ -3,12 +3,12 @@ use bevy_rapier2d::prelude::Velocity;
 use crate::components::{
     common::{
         GameStates, events::{
-            Event, Events, GameEvents, SystemEvents
+            Event, Events, GameEvents, SystemEvents, OverlapType
         }
     },
     gameplay::{
         player::PlayerComponent,
-        gameplay_logic::GameplayLogicComponent
+        gameplay_logic::GameplayLogicComponent, Border, BorderType
     },
     actions::{ActionComponent, Actions},
     movement::PlayerMovementComponent, animation::AnimationComponent
@@ -84,14 +84,15 @@ pub fn handle_game_events(
         &mut PlayerMovementComponent,
         &mut GameplayLogicComponent,
         &mut Velocity
-    ), With<PlayerComponent>>
+    ), With<PlayerComponent>>,
+    borders: Query<(Entity, &Border), With<Border>>
 ) {
     for event in events.iter() {
         match event.event_type {
             Events::GameEvents(game_event) => {
                 match game_event {
                     GameEvents::SetNewAction(new_action) => {
-                        for (_, _, _, mut gameplay_logic_component, _) in components.iter_mut() {
+                        for (_, _, movement, mut gameplay_logic_component, _) in components.iter_mut() {
                             info!("Set new action {:?}", new_action);
                             if !gameplay_logic_component.try_to_set_action(new_action) {
                                 // TODO: send error message
@@ -114,6 +115,41 @@ pub fn handle_game_events(
                                 &mut movement_component,
                                 &mut velocity
                             );
+                        }
+                    },
+                    GameEvents::PlayerOverlapped(overlap) => {
+                        info!("Player has overlapped with: {:?}", overlap);
+                        match overlap {
+                            OverlapType::Started(overlap_entity) => {
+                                for border in borders.iter() {
+                                    // Check is overlapped object is border
+                                    if border.0 == overlap_entity {
+                                        for (
+                                            _, _,
+                                            mut movement,
+                                            mut gameplay_logic_component,
+                                            _) in components.iter_mut() {
+                                            gameplay_logic_component.on_player_hit_border(border.1, &mut movement);
+                                        }
+
+                                    }
+                                }
+                            }
+                            OverlapType::Ended(overlap_entity) => {
+                                for border in borders.iter() {
+                                    // Check is overlapped object is border
+                                    if border.0 == overlap_entity {
+                                        for (
+                                            _, _,
+                                            mut movement,
+                                            mut gameplay_logic_component,
+                                            _) in components.iter_mut() {
+                                            gameplay_logic_component.on_player_detach_from_border(border.1, &mut movement);
+                                        }
+                                    }
+                                }
+                            }
+                            _ => {},
                         }
                     }
                     _ => {},

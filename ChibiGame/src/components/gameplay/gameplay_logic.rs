@@ -4,7 +4,7 @@ use crate::components::{
     gameplay::{
         player::PlayerComponent,
         Border, BorderType
-    },
+    }, movement::PlayerMovementComponent,
 };
 use bevy::prelude::*;
 
@@ -83,14 +83,50 @@ impl GameplayLogicComponent {
         return 5.0;
     }
 
-    // TODO: Maybe overhead
-    pub fn on_player_hit_border(&mut self, border: &Border) {
+    pub fn on_player_hit_border(
+        &mut self,
+        border: &Border,
+        movement: &mut PlayerMovementComponent
+    ) {
         match border.border_type {
             BorderType::LeftBorder => {
-
+                movement.can_climb = true;
             },
             BorderType::RightBorder => {
+                movement.can_climb = true;
+            }
+            BorderType::BottomBorder => {
+                movement.landed = true;
+                movement.enabled = true;
+            }
+            BorderType::TopBorder => {
+                movement.landed = false;
+            }
+            _ => {},
+        }
+    }
 
+    pub fn on_player_detach_from_border(
+        &mut self,
+        border: &Border,
+        movement: &mut PlayerMovementComponent
+    ) {
+        match border.border_type {
+            BorderType::LeftBorder => {
+                movement.can_climb = false;
+            },
+            BorderType::RightBorder => {
+                movement.can_climb = false;
+            }
+            BorderType::BottomBorder => {
+                movement.landed = false;
+            }
+            BorderType::TopBorder => {
+                if !movement.can_climb {
+                    movement.enabled = false;
+                }
+
+                movement.landed = false;
             }
             _ => {},
         }
@@ -121,6 +157,7 @@ pub fn game_logic_system(
     time: Res<Time>,
     mut timer_query: Query<(Entity, &mut ActionDurationTimer)>,
     mut gameplay_query: Query<&mut GameplayLogicComponent, With<PlayerComponent>>,
+    movement_query: Query<&PlayerMovementComponent, With<PlayerComponent>>,
 ) {
     let is_action_timer_finished: bool;
     let mut timer_entity: Option<Entity> = None;
@@ -141,7 +178,6 @@ pub fn game_logic_system(
         }
     }
 
-    info!("Game logic running {}", is_action_timer_finished);
     // Gameplay logic
     match gameplay_query.get_single_mut() {
         Ok(mut gameplay_component) => {
@@ -156,7 +192,19 @@ pub fn game_logic_system(
 
             // If action timer completed
             if is_action_timer_finished && gameplay_component.get_action_running_status() {
-                on_action_completed(&mut gameplay_component, event_writer);
+                // Fall action may stopped only when player is landed
+                if gameplay_component.get_current_action() == Actions::Fall {
+                    match movement_query.get_single() {
+                        Ok(movement) => {
+                            if movement.landed {
+                                on_action_completed(&mut gameplay_component, event_writer);
+                            }
+                        }
+                        _ => {},
+                    }
+                } else {
+                    on_action_completed(&mut gameplay_component, event_writer);
+                }
 
                 return;
             }
@@ -183,11 +231,13 @@ fn start_new_action(
     commands: &mut Commands,
     mut event_writer: EventWriter<Event>,
 ) {
-    commands.spawn(ActionDurationTimer{
-        timer: Timer::from_seconds(
-            gameplay_component.get_action_duration(), TimerMode::Once
-        )
-    });
+    if gameplay_component.get_current_action() != Actions::Fall {
+        commands.spawn(ActionDurationTimer{
+            timer: Timer::from_seconds(
+                gameplay_component.get_action_duration(), TimerMode::Once
+            )
+        });
+    }
 
     event_writer.send(Event {
         event_type: Events::GameEvents(
