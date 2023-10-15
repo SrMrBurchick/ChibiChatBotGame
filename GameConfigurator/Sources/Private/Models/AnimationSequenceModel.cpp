@@ -138,3 +138,12 @@ void AnimationSequenceModel::setActiveAction(const QString& Action)
     beginResetModel();
     endResetModel();
 }
+
+void AnimationSequenceModel::clearModel()
+{
+    SpriteList = nullptr;
+    ActionsMap.clear();
+
+    beginResetModel();
+    endResetModel();
+}

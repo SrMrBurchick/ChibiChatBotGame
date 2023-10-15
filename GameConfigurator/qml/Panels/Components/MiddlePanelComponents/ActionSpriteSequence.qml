@@ -55,5 +55,10 @@ Item {
     Component.onCompleted: {
         ActionsManager.sequenceModel = actionsModel
     }
+
+    function clearModel() {
+        console.log("Clear sequence")
+        actionsModel.clearModel();
+    }
 }
 

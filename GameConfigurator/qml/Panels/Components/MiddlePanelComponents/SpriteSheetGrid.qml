@@ -63,6 +63,9 @@ Item {
     function initModel() {
         spriteSheetModel.initModel(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
     }
+    function clearModel() {
+        spriteSheetModel.clearModel()
+    }
 
     Component.onCompleted: {
         ActionsManager.spriteSheetModel = spriteSheetModel

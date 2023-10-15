@@ -23,8 +23,9 @@ Item {
         nameFilters: ["Image files (*.png *.jpg)"]
         onAccepted: {
             console.log(selectedFile)
-            ActionsManager.spriteSheetPath = selectedFile
-            loadSpriteSheet()
+            ActionsManager.spriteSheetPath = selectedFile;
+            ActionsManager.spriteSheetConfigured = false;
+            loadSpriteSheet();
         }
     }
 
@@ -50,6 +51,8 @@ Item {
                     }
                     onLoadSpriteSheet: {
                         fileDialog.open();
+                        spriteSheetGrid.clearModel();
+                        actionsSpriteSequence.clearModel();
                     }
                     onAddAction: {
                         actionDialog.open();
@@ -97,7 +100,7 @@ Item {
                 color: "white"
 
                 ActionSpriteSequence {
-
+                    id: actionsSpriteSequence
                 }
             }
 

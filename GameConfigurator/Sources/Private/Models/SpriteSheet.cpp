@@ -69,3 +69,11 @@ void SpriteSheetModel::initModel(int Columns, int Rows)
     beginResetModel();
     endResetModel();
 }
+
+void SpriteSheetModel::clearModel()
+{
+    SpriteSheet.clear();
+
+    beginResetModel();
+    endResetModel();
+}

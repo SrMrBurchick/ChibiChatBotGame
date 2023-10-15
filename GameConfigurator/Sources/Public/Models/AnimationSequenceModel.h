@@ -31,6 +31,7 @@ public:
     Q_INVOKABLE void toggleInverted(int Index);
     Q_INVOKABLE void placeItemAt(int SourceIndex, int TargetIndex);
     Q_INVOKABLE void setActiveAction(const QString& Action);
+    Q_INVOKABLE void clearModel();
 
 protected:
     QList<ActionSequenceSprite>* SpriteList = nullptr;

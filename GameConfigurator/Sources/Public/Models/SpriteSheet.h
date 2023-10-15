@@ -28,6 +28,7 @@ public:
     void updateData();
 
     Q_INVOKABLE void initModel(int Columns, int Rows);
+    Q_INVOKABLE void clearModel();
 
 protected:
     QVector<ActionSequenceSprite> SpriteSheet;
