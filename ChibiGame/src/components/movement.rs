@@ -18,6 +18,7 @@ use crate::components::{
 pub trait MovementComponent {
     fn get_velocity(&self) -> Vec2;
     fn get_movement_type(&self) -> MoveType;
+    fn swap_direction(&mut self);
 }
 
 #[derive(Component, Debug, Reflect)]
@@ -44,6 +45,17 @@ impl MovementComponent for WalkComponent {
     fn get_movement_type(&self) -> MoveType {
         MoveType::Walk(self.direction)
     }
+
+    fn swap_direction(&mut self) {
+        match self.direction {
+            WalkDirection::Left => {
+                self.direction = WalkDirection::Right;
+            }
+            WalkDirection::Right => {
+                self.direction = WalkDirection::Left;
+            },
+        }
+    }
 }
 
 #[derive(Component, Debug, Reflect)]
@@ -69,6 +81,17 @@ impl MovementComponent for ClimbComponent {
 
     fn get_movement_type(&self) -> MoveType {
         MoveType::Climb(self.direction)
+    }
+
+    fn swap_direction(&mut self) {
+        match self.direction {
+            ClimbDirection::Up => {
+                self.direction = ClimbDirection::Down;
+            },
+            ClimbDirection::Down => {
+                self.direction = ClimbDirection::Up;
+            }
+        }
     }
 }
 
