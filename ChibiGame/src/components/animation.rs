@@ -69,28 +69,28 @@ pub fn animation_system(
             let next_sprite_index = sprite_start_index + next_sprite.column;
             atlas.index = next_sprite_index as usize % texture_atlas.textures.len();
 
+            let mut inverted: bool = next_sprite.inverted;
             match movement_component.get_move_type(&type_registry) {
                 Some(move_type) => {
                     match move_type {
                         MoveType::Walk(direction) => {
                             match direction {
                                 WalkDirection::Left => {
-                                    atlas.flip_x = !next_sprite.inverted;
+                                    inverted = !next_sprite.inverted;
                                 }
                                 _ => {
-                                    atlas.flip_x = next_sprite.inverted;
                                 },
                             }
                         }
                         _ => {
-                            atlas.flip_x = next_sprite.inverted;
                         },
                     }
                 }
                 _ => {
-                    atlas.flip_x = next_sprite.inverted;
                 },
             }
+
+            atlas.flip_x = inverted;
         }
     }
 }
