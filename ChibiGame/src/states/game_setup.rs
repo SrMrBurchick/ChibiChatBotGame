@@ -1,6 +1,9 @@
 use crate::components::{
     common::events::{Event, Events, SystemEvents},
-    gameplay::{Border, BorderType, GameTimer},
+    gameplay::{
+        Border, BorderType, GameTimer,
+        actions_strategies::climb_strategy::ClimbStrategy
+    },
     movement::{WalkComponent, ClimbComponent}
 };
 use bevy::prelude::*;
@@ -20,6 +23,9 @@ pub fn setup_game(
     // Register movement components traits
     type_registry.write().register::<WalkComponent>();
     type_registry.write().register::<ClimbComponent>();
+
+    // Register actions strategies
+    type_registry.write().register::<ClimbStrategy>();
 
     // Setup borders
     // Top border

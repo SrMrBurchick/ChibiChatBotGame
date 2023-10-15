@@ -72,5 +72,5 @@ fn setup(mut commands: Commands) {
 }
 
 fn test_game_setup(mut event_writer: EventWriter<Event>) {
-    event_writer.send(Event { event_type: Events::GameEvents(GameEvents::SetNewAction(Actions::Walk)) });
+    event_writer.send(Event { event_type: Events::GameEvents(GameEvents::SetNewAction(Actions::Climb)) });
 }

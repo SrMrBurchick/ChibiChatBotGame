@@ -3,10 +3,15 @@ use crate::components::{
     common::events::{Event, Events, GameEvents},
     gameplay::{
         player::PlayerComponent,
-        Border, BorderType
+        Border, BorderType,
+        actions_strategies::{
+            ActionLogicStrategy, climb_strategy::ClimbStrategy
+        }
     }, movement::PlayerMovementComponent,
 };
 use bevy::prelude::*;
+
+use super::actions_strategies::ReflectActionLogicStrategy;
 
 #[derive(Component, Debug)]
 pub struct ActionDurationTimer {
@@ -20,6 +25,7 @@ pub struct GameplayLogicComponent {
     is_action_running: bool,
     current_action: Actions,
     can_be_interrupted: bool,
+    current_strategy: Option<Box<dyn Reflect>>,
 }
 
 impl GameplayLogicComponent {
@@ -29,7 +35,8 @@ impl GameplayLogicComponent {
             high_priority_actions: vec![],
             is_action_running: false,
             current_action: Actions::Unknown,
-            can_be_interrupted: false
+            can_be_interrupted: false,
+            current_strategy: None
         }
     }
 
@@ -56,6 +63,16 @@ impl GameplayLogicComponent {
         info!("Set action {:?}", action);
         self.current_action = action;
         self.can_be_interrupted = !is_action_can_interrupt(action);
+
+        // Assign action strategy if exists
+        match action {
+            Actions::Climb => {
+                self.current_strategy = Some(Box::new(
+                    ClimbStrategy::new()
+                ));
+            }
+            _ => {},
+        }
 
         return true;
     }
@@ -140,6 +157,7 @@ impl GameplayLogicComponent {
         self.current_action = Actions::Unknown;
         self.is_action_running = false;
         self.can_be_interrupted = true;
+        self.current_strategy = None;
     }
 
     pub fn is_interruption_available(&self) -> bool {
@@ -148,6 +166,77 @@ impl GameplayLogicComponent {
 
     pub fn is_current_action_valid(&self) -> bool {
         return self.current_action != Actions::Unknown;
+    }
+
+    pub fn execute_strategy(
+        &mut self,
+        movement: &PlayerMovementComponent,
+        mut event_writer: EventWriter<Event>,
+        type_registry: &AppTypeRegistry,
+    ) {
+        match self.current_strategy.take() {
+            Some(mut strategy) => {
+                let type_registry = type_registry.read();
+
+                let reflect_strategy = type_registry
+                    .get_type_data::<ReflectActionLogicStrategy>(strategy.type_id())
+                    .unwrap();
+
+                let strategy_trait: &mut dyn ActionLogicStrategy =
+                    reflect_strategy.get_mut(&mut *strategy).unwrap();
+
+                strategy_trait.do_action(movement, self, &mut event_writer);
+
+                //Put strategy back
+                self.current_strategy = Some(strategy);
+
+            }
+            _ => {}
+        }
+    }
+
+    pub fn is_valid_strategy(
+        &self,
+        type_registry: &AppTypeRegistry,
+    ) -> bool {
+        match self.current_strategy.as_deref() {
+            Some(strategy) => {
+                let type_registry = type_registry.read();
+                let reflect_strategy = type_registry
+                    .get_type_data::<ReflectActionLogicStrategy>(strategy.type_id())
+                    .unwrap();
+
+                let strategy_trait: &dyn ActionLogicStrategy =
+                    reflect_strategy.get(&*strategy).unwrap();
+
+                return strategy_trait.is_valid_strategy(self);
+            }
+            _ => {
+                return false;
+            }
+        }
+    }
+
+    pub fn is_strategy_preparing(
+        &self,
+        type_registry: &AppTypeRegistry,
+    ) -> bool {
+        match self.current_strategy.as_deref() {
+            Some(strategy) => {
+                let type_registry = type_registry.read();
+                let reflect_strategy = type_registry
+                    .get_type_data::<ReflectActionLogicStrategy>(strategy.type_id())
+                    .unwrap();
+
+                let strategy_trait: &dyn ActionLogicStrategy =
+                    reflect_strategy.get(&*strategy).unwrap();
+
+                return strategy_trait.is_in_preparing_phase();
+            }
+            _ => {
+                return false;
+            }
+        }
     }
 }
 
@@ -158,6 +247,7 @@ pub fn game_logic_system(
     mut timer_query: Query<(Entity, &mut ActionDurationTimer)>,
     mut gameplay_query: Query<&mut GameplayLogicComponent, With<PlayerComponent>>,
     movement_query: Query<&PlayerMovementComponent, With<PlayerComponent>>,
+    type_registry: Res<AppTypeRegistry>,
 ) {
     let is_action_timer_finished: bool;
     let mut timer_entity: Option<Entity> = None;
@@ -166,7 +256,17 @@ pub fn game_logic_system(
     match timer_query.get_single_mut() {
         Ok((entity, mut action_timer)) => {
             timer_entity = Some(entity);
-            action_timer.timer.tick(time.delta());
+            match gameplay_query.get_single_mut() {
+                Ok(gameplay_component) => {
+                    if !gameplay_component.is_strategy_preparing(&type_registry) {
+                        action_timer.timer.tick(time.delta());
+                    }
+                }
+                _ => {
+                    action_timer.timer.tick(time.delta());
+                }
+            }
+
             is_action_timer_finished = action_timer.timer.finished();
 
             if is_action_timer_finished {
@@ -221,6 +321,17 @@ pub fn game_logic_system(
                 return;
             }
 
+            // If action strategy running
+            if gameplay_component.is_valid_strategy(&type_registry) {
+                match movement_query.get_single() {
+                    Ok(movement) => {
+                        gameplay_component.execute_strategy(&movement, event_writer, &type_registry);
+                    }
+                    _ => {},
+                }
+
+                return;
+            }
         }
         Err(_) => {}
     }

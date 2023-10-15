@@ -92,7 +92,7 @@ pub fn handle_game_events(
             Events::GameEvents(game_event) => {
                 match game_event {
                     GameEvents::SetNewAction(new_action) => {
-                        for (_, _, movement, mut gameplay_logic_component, _) in components.iter_mut() {
+                        for (_, _, _, mut gameplay_logic_component, _) in components.iter_mut() {
                             info!("Set new action {:?}", new_action);
                             if !gameplay_logic_component.try_to_set_action(new_action) {
                                 // TODO: send error message
@@ -167,6 +167,10 @@ fn on_action_changed(
     movement_component: &mut PlayerMovementComponent,
     velocity: &mut Velocity
 ) {
+    if new_action == action_component.current_action {
+        return;
+    }
+
     let animations = action_component.get_animation_map_by_action(new_action);
     if !animations.is_empty() {
         action_component.current_action = new_action;

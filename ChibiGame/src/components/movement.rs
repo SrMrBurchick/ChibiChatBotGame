@@ -226,7 +226,9 @@ pub fn monitor_movement(
         // Detect that the player is moving down
         if velocity.linvel.y < 0.0 {
             // Check is the current action is not climb
-            if gameplay.get_current_action() != Actions::Climb {
+            if gameplay.get_current_action() != Actions::Climb &&
+               gameplay.get_current_action() != Actions::Fall
+            {
                 event_writer.send(
                     Event {
                         event_type: Events::GameEvents(GameEvents::SetNewAction(Actions::Fall))
