@@ -98,7 +98,7 @@ impl MovementComponent for ClimbComponent {
 #[derive(Component)]
 pub struct PlayerMovementComponent {
     pub movement: Option<Box<dyn Reflect>>,
-    pub enabled: bool,
+    pub active: bool,
     pub landed: bool,
     pub can_climb: bool,
     pub speed: f32,
@@ -108,7 +108,7 @@ impl PlayerMovementComponent {
     pub fn new() -> Self {
         PlayerMovementComponent {
             movement: None,
-            enabled: false,
+            active: false,
             landed: false,
             can_climb: false,
             speed: 3500.0
@@ -120,11 +120,8 @@ impl PlayerMovementComponent {
         action: Actions,
         velocity: &mut Velocity
     ) {
-        if !self.enabled {
-            return;
-        }
-
         let current_move_direction = velocity.linvel;
+        self.active = true;
         match action {
             Actions::Walk => {
                 if current_move_direction.x >= 0.0 {
@@ -152,7 +149,7 @@ impl PlayerMovementComponent {
             }
             _ => {
                 info!("Disable movement");
-                self.enabled = false;
+                self.active = false;
                 self.movement = None;
                 velocity.linvel = Vec2::ZERO;
             },
@@ -185,10 +182,10 @@ impl PlayerMovementComponent {
 pub fn move_player(
     time: Res<Time>,
     type_registry: Res<AppTypeRegistry>,
-    mut query: Query<(&PlayerMovementComponent, &mut Velocity)>,
+    mut query: Query<(&PlayerMovementComponent, &GameplayLogicComponent, &mut Velocity)>,
 ) {
-    for (component, mut velocity) in &mut query {
-        if component.enabled == false {
+    for (component, gameplay, mut velocity) in &mut query {
+        if component.active == false || gameplay.is_movement_enabled() == false {
             continue;
         }
 
@@ -202,8 +199,23 @@ pub fn move_player(
                 let movement_trait: &dyn MovementComponent =
                     reflect_movement.get(&*movement).unwrap();
 
-                velocity.linvel =
-                    movement_trait.get_velocity() * component.speed * time.delta_seconds();
+                let can_move: bool;
+                match gameplay.get_current_action() {
+                    Actions::Walk => {
+                        can_move = component.landed;
+                    }
+                    Actions::Climb => {
+                        can_move = component.can_climb;
+                    }
+                    _ => {
+                        can_move = false;
+                    },
+                }
+
+                if can_move {
+                    velocity.linvel =
+                        movement_trait.get_velocity() * component.speed * time.delta_seconds();
+                }
             }
             _ => {}
         }
@@ -264,7 +276,7 @@ pub fn monitor_movement(
     components: Query<(&Velocity, &GameplayLogicComponent, &PlayerMovementComponent), With<PlayerComponent>>
 ) {
     for (velocity, gameplay, movement) in components.iter() {
-        if !movement.enabled {
+        if movement.landed {
             continue;
         }
 

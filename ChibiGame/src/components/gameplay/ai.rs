@@ -79,6 +79,9 @@ pub fn ai_system(
                 Actions::SwapDirection => {
                     movement.swap_direction(&type_registry);
                 }
+                Actions::Unknown => {
+                    // Do nothing
+                }
                 _ => {
                     event_writer.send(
                         Event {

@@ -25,6 +25,7 @@ pub struct GameplayLogicComponent {
     is_action_running: bool,
     current_action: Actions,
     can_be_interrupted: bool,
+    movement_enabled: bool,
     current_strategy: Option<Box<dyn Reflect>>,
 }
 
@@ -36,7 +37,8 @@ impl GameplayLogicComponent {
             is_action_running: false,
             current_action: Actions::Unknown,
             can_be_interrupted: false,
-            current_strategy: None
+            current_strategy: None,
+            movement_enabled: false
         }
     }
 
@@ -71,7 +73,9 @@ impl GameplayLogicComponent {
                     ClimbStrategy::new()
                 ));
             }
-            _ => {},
+            _ => {
+                self.current_strategy = None;
+            },
         }
 
         return true;
@@ -89,7 +93,7 @@ impl GameplayLogicComponent {
         if self.pending_actions.is_empty() {
             self.is_action_running = false;
             self.can_be_interrupted = true;
-            return Actions::Unknown;
+            return Actions::StandBy;
         }
 
         return self.pending_actions.pop().unwrap();
@@ -108,13 +112,22 @@ impl GameplayLogicComponent {
         match border.border_type {
             BorderType::LeftBorder => {
                 movement.can_climb = true;
+
+                if self.current_action != Actions::Climb {
+                    self.try_to_set_action(Actions::StandBy);
+                }
             },
             BorderType::RightBorder => {
                 movement.can_climb = true;
+
+                if self.current_action != Actions::Climb {
+                    self.try_to_set_action(Actions::StandBy);
+                }
             }
             BorderType::BottomBorder => {
                 movement.landed = true;
-                movement.enabled = true;
+                self.movement_enabled = true;
+                self.try_to_set_action(Actions::StandBy);
             }
             BorderType::TopBorder => {
                 movement.landed = false;
@@ -140,7 +153,7 @@ impl GameplayLogicComponent {
             }
             BorderType::TopBorder => {
                 if !movement.can_climb {
-                    movement.enabled = false;
+                    self.movement_enabled = false;
                 }
 
                 movement.landed = false;
@@ -237,6 +250,10 @@ impl GameplayLogicComponent {
                 return false;
             }
         }
+    }
+
+    pub fn is_movement_enabled(&self) -> bool {
+        self.movement_enabled
     }
 }
 

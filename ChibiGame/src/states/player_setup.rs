@@ -9,7 +9,10 @@ use crate::components::{
     actions::{ActionComponent, Actions},
     gameplay::{
         player::*,
-        gameplay_logic::GameplayLogicComponent
+        gameplay_logic::GameplayLogicComponent,
+        ai::{
+            AIComponent, AITimer
+        }
     },
     system::config::Config
 };
@@ -53,6 +56,15 @@ pub fn setup_player(
         player.set_animation_component(animation_component);
         player.set_action_component(action_component);
 
+        // Setup AI component
+        let mut ai_component = AIComponent::new();
+        ai_component.add_new_action(Actions::Walk, 9);
+        ai_component.add_new_action(Actions::Climb, 4);
+        ai_component.add_new_action(Actions::SwapDirection, 5);
+        commands.insert_resource(AITimer {
+            timer: Timer::from_seconds(5.0, TimerMode::Repeating),
+        });
+
         commands
             .spawn(player)
             .insert(RigidBody::Dynamic)
@@ -70,6 +82,7 @@ pub fn setup_player(
                 config.get_sprite_scale(),
             ))))
             .insert(GameplayLogicComponent::new())
+            .insert(ai_component)
             .insert(PlayerComponent);
     }
 

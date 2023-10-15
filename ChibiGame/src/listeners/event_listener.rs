@@ -172,9 +172,7 @@ fn on_action_changed(
     }
 
     let animations = action_component.get_animation_map_by_action(new_action);
-    if !animations.is_empty() {
-        action_component.current_action = new_action;
-        animation_component.set_new_animation_sequence(&animations);
-    }
+    action_component.current_action = new_action;
+    animation_component.set_new_animation_sequence(&animations);
     movement_component.on_action_changed(new_action, velocity);
 }
