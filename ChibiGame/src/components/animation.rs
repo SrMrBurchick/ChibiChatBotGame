@@ -1,7 +1,11 @@
 use bevy::prelude::*;
 use crate::components::{
     common::sprite_index::SpriteIndex,
-    gameplay::gameplay_logic::GameplayLogicComponent
+    gameplay::gameplay_logic::GameplayLogicComponent,
+    movement::PlayerMovementComponent,
+    actions::{
+        MoveType, WalkDirection
+    }
 };
 
 #[derive(Component, Debug)]
@@ -43,14 +47,16 @@ pub fn animation_system(
     time: Res<Time>,
     texture_atlases: Res<Assets<TextureAtlas>>,
     mut animtimer: ResMut<AnimationTimer>,
+    type_registry: Res<AppTypeRegistry>,
     mut query: Query<(
         &GameplayLogicComponent,
+        &PlayerMovementComponent,
         &mut AnimationComponent,
         &mut TextureAtlasSprite,
         &Handle<TextureAtlas>,
     )>,
 ) {
-    for (gameplay_component, mut anim_component, mut atlas, handle) in &mut query {
+    for (gameplay_component, movement_component, mut anim_component, mut atlas, handle) in &mut query {
         if !gameplay_component.is_current_action_valid() && !gameplay_component.get_action_running_status() {
             continue;
         }
@@ -62,7 +68,29 @@ pub fn animation_system(
             let sprite_start_index = next_sprite.row * anim_component.map_columns;
             let next_sprite_index = sprite_start_index + next_sprite.column;
             atlas.index = next_sprite_index as usize % texture_atlas.textures.len();
-            atlas.flip_x = next_sprite.inverted;
+
+            match movement_component.get_move_type(&type_registry) {
+                Some(move_type) => {
+                    match move_type {
+                        MoveType::Walk(direction) => {
+                            match direction {
+                                WalkDirection::Left => {
+                                    atlas.flip_x = !next_sprite.inverted;
+                                }
+                                _ => {
+                                    atlas.flip_x = next_sprite.inverted;
+                                },
+                            }
+                        }
+                        _ => {
+                            atlas.flip_x = next_sprite.inverted;
+                        },
+                    }
+                }
+                _ => {
+                    atlas.flip_x = next_sprite.inverted;
+                },
+            }
         }
     }
 }

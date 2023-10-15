@@ -2,7 +2,10 @@ use crate::components::{
     common::events::{Event, Events, SystemEvents},
     gameplay::{
         Border, BorderType, GameTimer,
-        actions_strategies::climb_strategy::ClimbStrategy
+        actions_strategies::{
+            climb_strategy::ClimbStrategy,
+            walk_strategy::WalkStrategy
+        }
     },
     movement::{WalkComponent, ClimbComponent}
 };
@@ -26,6 +29,7 @@ pub fn setup_game(
 
     // Register actions strategies
     type_registry.write().register::<ClimbStrategy>();
+    type_registry.write().register::<WalkStrategy>();
 
     // Setup borders
     // Top border

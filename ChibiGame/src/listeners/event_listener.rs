@@ -85,6 +85,7 @@ pub fn handle_game_events(
         &mut GameplayLogicComponent,
         &mut Velocity
     ), With<PlayerComponent>>,
+    type_registry: Res<AppTypeRegistry>,
     borders: Query<(Entity, &Border), With<Border>>
 ) {
     for event in events.iter() {
@@ -108,13 +109,22 @@ pub fn handle_game_events(
                             mut velocity
                         ) in components.iter_mut() {
                             info!("Action changed to {:?}", action);
-                            on_action_changed(
-                                action,
-                                &mut action_component,
-                                &mut animation_component,
-                                &mut movement_component,
-                                &mut velocity
-                            );
+                            match action {
+                                Actions::SwapDirection => {
+                                    if action_component.current_action == Actions::Walk {
+                                        movement_component.swap_direction(&type_registry);
+                                    }
+                                }
+                                _ => {
+                                    on_action_changed(
+                                        action,
+                                        &mut action_component,
+                                        &mut animation_component,
+                                        &mut movement_component,
+                                        &mut velocity
+                                    );
+                                }
+                            }
                         }
                     },
                     GameEvents::PlayerOverlapped(overlap) => {

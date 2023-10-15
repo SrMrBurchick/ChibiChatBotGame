@@ -6,6 +6,7 @@ use crate::components::{
 };
 
 pub mod climb_strategy;
+pub mod walk_strategy;
 
 #[reflect_trait]
 pub trait ActionLogicStrategy {

@@ -5,7 +5,8 @@ use crate::components::{
         player::PlayerComponent,
         Border, BorderType,
         actions_strategies::{
-            ActionLogicStrategy, climb_strategy::ClimbStrategy
+            ActionLogicStrategy, climb_strategy::ClimbStrategy,
+            walk_strategy::WalkStrategy
         }
     }, movement::PlayerMovementComponent,
 };
@@ -71,6 +72,11 @@ impl GameplayLogicComponent {
             Actions::Climb => {
                 self.current_strategy = Some(Box::new(
                     ClimbStrategy::new()
+                ));
+            }
+            Actions::Walk => {
+                self.current_strategy = Some(Box::new(
+                    WalkStrategy::new()
                 ));
             }
             _ => {

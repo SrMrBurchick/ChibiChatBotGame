@@ -2,7 +2,6 @@ use bevy::prelude::*;
 use rand::prelude::*;
 use crate::components::{
     actions::Actions,
-    movement::PlayerMovementComponent,
     gameplay::player::PlayerComponent,
     common::events::{
         Event, Events, GameEvents
@@ -66,19 +65,15 @@ impl AIComponent {
 
 pub fn ai_system(
     mut event_writer: EventWriter<Event>,
-    mut components: Query<(&AIComponent, &mut PlayerMovementComponent), With<PlayerComponent>>,
+    mut components: Query<&AIComponent, With<PlayerComponent>>,
     time: Res<Time>,
     mut ai_timer: ResMut<AITimer>,
-    type_registry: Res<AppTypeRegistry>,
 ) {
     ai_timer.timer.tick(time.delta());
     if ai_timer.timer.finished() {
-        for (ai, mut movement) in components.iter_mut() {
+        for ai in components.iter_mut() {
             let new_action = ai.generate_action();
             match new_action {
-                Actions::SwapDirection => {
-                    movement.swap_direction(&type_registry);
-                }
                 Actions::Unknown => {
                     // Do nothing
                 }

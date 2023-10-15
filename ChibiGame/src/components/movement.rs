@@ -177,6 +177,25 @@ impl PlayerMovementComponent {
             None => {},
         }
     }
+
+    pub fn get_move_type(&self, type_registry: &AppTypeRegistry) -> Option<MoveType> {
+        match self.movement.as_deref() {
+            Some(movement) => {
+                let type_registry = type_registry.read();
+                let reflect_movement = type_registry
+                    .get_type_data::<ReflectMovementComponent>(movement.type_id())
+                    .unwrap();
+
+                let movement_trait: &dyn MovementComponent =
+                    reflect_movement.get(&*movement).unwrap();
+
+                return Some(movement_trait.get_movement_type());
+            },
+            None => {
+                None
+            }
+        }
+    }
 }
 
 pub fn move_player(
