@@ -38,14 +38,18 @@ impl ActionLogicStrategy for WalkStrategy {
         }
 
         if movement.landed {
-            self.preparing = true;
+            self.preparing = false;
             if movement.can_climb {
-                event_writer.send(
-                    Event {
-                        event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::SwapDirection))
-                    }
-                );
+                if gameplay.get_current_action() == Actions::Walk {
+                    event_writer.send(
+                        Event {
+                            event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::SwapDirection))
+                        }
+                    );
+                }
             }
+        } else {
+            self.preparing = true;
         }
     }
     fn is_valid_strategy(

@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::components::{
     actions::{
-        Actions, WalkDirection, ClimbDirection, MoveType
+        Actions, WalkDirection, ClimbDirection, MoveType, ActionComponent
     },
     common::events::{
         Event, GameEvents, Events, OverlapType
@@ -201,9 +201,9 @@ impl PlayerMovementComponent {
 pub fn move_player(
     time: Res<Time>,
     type_registry: Res<AppTypeRegistry>,
-    mut query: Query<(&PlayerMovementComponent, &GameplayLogicComponent, &mut Velocity)>,
+    mut query: Query<(&PlayerMovementComponent, &GameplayLogicComponent, &ActionComponent, &mut Velocity)>,
 ) {
-    for (component, gameplay, mut velocity) in &mut query {
+    for (component, gameplay, action, mut velocity) in &mut query {
         if component.active == false || gameplay.is_movement_enabled() == false {
             continue;
         }
@@ -219,7 +219,7 @@ pub fn move_player(
                     reflect_movement.get(&*movement).unwrap();
 
                 let can_move: bool;
-                match gameplay.get_current_action() {
+                match action.current_action {
                     Actions::Walk => {
                         can_move = component.landed;
                     }
@@ -231,6 +231,7 @@ pub fn move_player(
                     },
                 }
 
+                info!("Can move {:?}", can_move);
                 if can_move {
                     velocity.linvel =
                         movement_trait.get_velocity() * component.speed * time.delta_seconds();

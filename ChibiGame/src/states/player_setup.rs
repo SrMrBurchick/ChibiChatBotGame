@@ -58,11 +58,11 @@ pub fn setup_player(
 
         // Setup AI component
         let mut ai_component = AIComponent::new();
-        ai_component.add_new_action(Actions::Walk, 9);
-        ai_component.add_new_action(Actions::Climb, 4);
-        ai_component.add_new_action(Actions::SwapDirection, 5);
+        ai_component.add_new_action(Actions::Walk, 90);
+        ai_component.add_new_action(Actions::Climb, 50);
+        ai_component.add_new_action(Actions::SwapDirection, 1);
         commands.insert_resource(AITimer {
-            timer: Timer::from_seconds(5.0, TimerMode::Repeating),
+            timer: Timer::from_seconds(15.0, TimerMode::Repeating),
         });
 
         commands

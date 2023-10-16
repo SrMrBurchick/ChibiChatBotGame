@@ -118,17 +118,9 @@ impl GameplayLogicComponent {
         match border.border_type {
             BorderType::LeftBorder => {
                 movement.can_climb = true;
-
-                if self.current_action != Actions::Climb {
-                    self.try_to_set_action(Actions::StandBy);
-                }
             },
             BorderType::RightBorder => {
                 movement.can_climb = true;
-
-                if self.current_action != Actions::Climb {
-                    self.try_to_set_action(Actions::StandBy);
-                }
             }
             BorderType::BottomBorder => {
                 movement.landed = true;

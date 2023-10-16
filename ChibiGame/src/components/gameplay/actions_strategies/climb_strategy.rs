@@ -48,11 +48,13 @@ impl ActionLogicStrategy for ClimbStrategy {
             }
         } else if !self.preparing {
             self.preparing = true;
-            event_writer.send(
-                Event {
-                    event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::Walk))
-                }
-            );
+            if movement.landed {
+                event_writer.send(
+                    Event {
+                        event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::Walk))
+                    }
+                );
+            }
         }
     }
     fn is_valid_strategy(
