@@ -25,6 +25,9 @@ Item {
             console.log(selectedFile)
             ActionsManager.spriteSheetPath = selectedFile;
             ActionsManager.spriteSheetConfigured = false;
+            spriteSheetGrid.clearModel();
+            actionsSpriteSequence.clearModel();
+
             loadSpriteSheet();
         }
     }
@@ -51,8 +54,6 @@ Item {
                     }
                     onLoadSpriteSheet: {
                         fileDialog.open();
-                        spriteSheetGrid.clearModel();
-                        actionsSpriteSequence.clearModel();
                     }
                     onAddAction: {
                         actionDialog.open();
