@@ -16,12 +16,16 @@ use crate::components::{
 #[derive(Component, Debug, Reflect)]
 #[reflect(ActionLogicStrategy)]
 pub struct WalkStrategy{
-    preparing: bool
+    preparing: bool,
+    swap_direction_delay: u8
 }
 
 impl WalkStrategy {
     pub fn new() -> Self {
-        WalkStrategy { preparing: false }
+        WalkStrategy {
+            preparing: false,
+            swap_direction_delay: 0
+        }
     }
 }
 
@@ -40,12 +44,17 @@ impl ActionLogicStrategy for WalkStrategy {
         if movement.landed {
             self.preparing = false;
             if movement.can_climb {
-                if gameplay.get_current_action() == Actions::Walk {
+                if gameplay.get_current_action() == Actions::Walk && self.swap_direction_delay == 0 {
                     event_writer.send(
                         Event {
                             event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::SwapDirection))
                         }
                     );
+                    self.swap_direction_delay = 3;
+                }
+            } else {
+                if self.swap_direction_delay != 0 {
+                    self.swap_direction_delay -= 1;
                 }
             }
         } else {

@@ -58,9 +58,9 @@ pub fn setup_player(
 
         // Setup AI component
         let mut ai_component = AIComponent::new();
-        ai_component.add_new_action(Actions::Walk, 90);
-        ai_component.add_new_action(Actions::Climb, 50);
-        ai_component.add_new_action(Actions::SwapDirection, 1);
+        ai_component.add_new_action(Actions::Walk, 0.2); // 20% chance to pick walk action
+        ai_component.add_new_action(Actions::Climb, 0.4); // 40% chance to active a climb action
+        ai_component.add_new_action(Actions::SwapDirection, 0.01); // 1% chance to swap current direction
         commands.insert_resource(AITimer {
             timer: Timer::from_seconds(15.0, TimerMode::Repeating),
         });

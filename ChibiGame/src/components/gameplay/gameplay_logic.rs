@@ -51,15 +51,21 @@ impl GameplayLogicComponent {
         // If current action cannot be interrupted than any action must be pass
         // to the low_priority actions. Even if the next action cannot be interrupted either
         if !self.can_be_interrupted && self.is_current_action_valid() {
-            self.pending_actions.push(action);
-            return true;
+            if !self.pending_actions.contains(&action) {
+                self.pending_actions.push(action);
+                return true;
+            }
+            return false;
         }
 
         // If current action can be interrupted than any other action must be pass
         // to hight priority, even if the new action can be interrupted
         if self.can_be_interrupted && self.is_current_action_valid() {
-            self.high_priority_actions.push(action);
-            return true;
+            if !self.high_priority_actions.contains(&action) {
+                self.high_priority_actions.push(action);
+                return true;
+            }
+            return false;
         }
 
         // Set only when current action is unknown

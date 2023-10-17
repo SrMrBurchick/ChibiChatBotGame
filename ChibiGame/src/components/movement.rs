@@ -84,14 +84,15 @@ impl MovementComponent for ClimbComponent {
     }
 
     fn swap_direction(&mut self) {
-        match self.direction {
-            ClimbDirection::Up => {
-                self.direction = ClimbDirection::Down;
-            },
-            ClimbDirection::Down => {
-                self.direction = ClimbDirection::Up;
-            }
-        }
+        // TODO: Fix if player already landed and direction is down than swap directions or change action
+        // match self.direction {
+        //     ClimbDirection::Up => {
+        //         self.direction = ClimbDirection::Down;
+        //     },
+        //     ClimbDirection::Down => {
+        //         self.direction = ClimbDirection::Up;
+        //     }
+        // }
     }
 }
 

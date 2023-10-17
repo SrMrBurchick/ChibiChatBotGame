@@ -14,27 +14,27 @@ pub struct AITimer {
     pub timer: Timer,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq)]
 struct AIActionComponent {
     pub action: Actions,
-    pub weight: u32
+    pub weight: f32
 }
 
 #[derive(Component)]
 pub struct AIComponent {
     actions: Vec<AIActionComponent>,
-    total_weight: u32
+    total_weight: f32
 }
 
 impl AIComponent {
     pub fn new() -> Self {
         AIComponent {
             actions: vec![],
-            total_weight: 0
+            total_weight: 0.0
         }
     }
 
-    pub fn add_new_action(&mut self, action: Actions, weight: u32) {
+    pub fn add_new_action(&mut self, action: Actions, weight: f32) {
         let action_comp = AIActionComponent{
             action,
             weight
@@ -43,20 +43,18 @@ impl AIComponent {
         if !self.actions.contains(&action_comp) {
             self.total_weight += action_comp.weight;
             self.actions.push(action_comp);
-
-            self.actions.sort_by_key(|item| item.weight);
         }
     }
 
     pub fn generate_action(&self) -> Actions {
         let mut rand = rand::thread_rng();
-        let mut new_action_weight = rand.gen_range(0..self.total_weight);
+        let new_action_weight = rand.gen_range(0.0..self.total_weight);
+        let mut cumulative_weight = 0.0;
         for action in self.actions.iter() {
-            if new_action_weight < action.weight {
+            cumulative_weight += action.weight;
+            if new_action_weight < cumulative_weight {
                 return action.action;
             }
-
-            new_action_weight -= action.weight;
         }
 
         return Actions::Unknown;
