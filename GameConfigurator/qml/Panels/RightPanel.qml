@@ -13,38 +13,41 @@ Item {
         id: panel
         anchors.fill: root
 
-        Text {
-            id: title
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Animation preview"
-        }
-
-        // TODO: Replace with AnimationSequance
-        Rectangle {
-            anchors.horizontalCenter: panel.horizontalCenter
-            color: "green"
-            width: 100
-            height: 100
-        }
-
-        RowLayout {
-            anchors.horizontalCenter: panel.horizontalCenter
-
-            spacing: 4
-
-            Button {
-                text: "Play"
-            }
-
-            Button {
-                text: "Pause"
-            }
-
-        }
-
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            ColumnLayout {
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                Text {
+                    id: title
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Animation preview"
+                }
+
+                // TODO: Replace with AnimationSequance
+                Rectangle {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: "green"
+                    width: 200
+                    height: 200
+                }
+
+                RowLayout {
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    spacing: 4
+
+                    Button {
+                        text: "Play"
+                    }
+
+                    Button {
+                        text: "Pause"
+                    }
+
+                }
+            }
         }
 
         Button {
