@@ -51,8 +51,8 @@ QHash<int, QByteArray> AnimationSequenceModel::roleNames() const
 {
     QHash<int, QByteArray> RoleNames;
 
-    RoleNames[eActionsSequenceListRole::Column] = "column";
-    RoleNames[eActionsSequenceListRole::Row] = "row";
+    RoleNames[eActionsSequenceListRole::Column] = "sprite_column";
+    RoleNames[eActionsSequenceListRole::Row] = "sprite_row";
     RoleNames[eActionsSequenceListRole::Inverted] = "inverted";
 
     return RoleNames;
@@ -121,6 +121,7 @@ void AnimationSequenceModel::placeItemAt(int SourceIndex, int TargetIndex)
     }
 
     SpriteList->move(SourceIndex, TargetIndex);
+    currentSpriteIndex = 0;
 
     beginResetModel();
     endResetModel();
@@ -134,6 +135,7 @@ void AnimationSequenceModel::setActiveAction(const QString& Action)
     }
 
     SpriteList = &ActionsMap[CurrentAction];
+    currentSpriteIndex = 0;
 
     beginResetModel();
     endResetModel();
@@ -142,8 +144,26 @@ void AnimationSequenceModel::setActiveAction(const QString& Action)
 void AnimationSequenceModel::clearModel()
 {
     SpriteList = nullptr;
+    currentSpriteIndex = 0;
     ActionsMap.clear();
 
     beginResetModel();
     endResetModel();
+}
+
+QVariantMap AnimationSequenceModel::getNextSprite()
+{
+    QVariantMap NextSprite;
+
+    if (SpriteList != nullptr) {
+        if (currentSpriteIndex >= SpriteList->size()) {
+            currentSpriteIndex = 0;
+        }
+
+        NextSprite["sprite_column"] = SpriteList->at(currentSpriteIndex).Column;
+        NextSprite["sprite_row"] = SpriteList->at(currentSpriteIndex).Row;
+        ++currentSpriteIndex;
+    }
+
+    return NextSprite;
 }

@@ -15,7 +15,7 @@ Rectangle {
     Drag.active: dragArea.drag.active
 
     Text {
-        text: "(" + column + " : " + row + ")"
+        text: "(" + sprite_column + " : " + sprite_row + ")"
     }
 
     Image {
@@ -23,8 +23,8 @@ Rectangle {
         anchors.fill: parent
         source: ActionsManager.spriteSheetPath
         sourceClipRect: Qt.rect(
-            parseInt(column) * ActionsManager.spriteSizeWidth,
-            parseInt(row) * ActionsManager.spriteSizeHeight,
+            parseInt(sprite_column) * ActionsManager.spriteSizeWidth,
+            parseInt(sprite_row) * ActionsManager.spriteSizeHeight,
             ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
     }
 

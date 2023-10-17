@@ -39,8 +39,8 @@ QHash<int, QByteArray> SpriteSheetModel::roleNames() const
 {
     QHash<int, QByteArray> RoleNames;
 
-    RoleNames[eSpriteSheetRoles::SpriteColumn] = "column";
-    RoleNames[eSpriteSheetRoles::SpriteRow] = "row";
+    RoleNames[eSpriteSheetRoles::SpriteColumn] = "sprite_column";
+    RoleNames[eSpriteSheetRoles::SpriteRow] = "sprite_row";
 
     return RoleNames;
 }

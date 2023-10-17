@@ -33,8 +33,11 @@ public:
     Q_INVOKABLE void setActiveAction(const QString& Action);
     Q_INVOKABLE void clearModel();
 
+    Q_INVOKABLE QVariantMap getNextSprite();
+
 protected:
     QList<ActionSequenceSprite>* SpriteList = nullptr;
     QString CurrentAction = "";
+    int currentSpriteIndex = 0;
     QHash<QString, QList<ActionSequenceSprite>> ActionsMap;
 };

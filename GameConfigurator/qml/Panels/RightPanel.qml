@@ -9,6 +9,17 @@ Item {
     anchors.fill: parent
     anchors.leftMargin: 6
 
+    Timer {
+        id: timer
+        interval: 100
+        running: false
+        repeat: true
+
+        onTriggered: {
+            root.playAnimationPreview()
+        }
+    }
+
     ColumnLayout {
         id: panel
         anchors.fill: root
@@ -28,9 +39,18 @@ Item {
                 // TODO: Replace with AnimationSequance
                 Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    color: "green"
                     width: 200
                     height: 200
+                    Image {
+                        id: actionPreview
+                        anchors.fill: parent
+                        source: ActionsManager.spriteSheetPath
+                        // sourceClipRect: Qt.rect(
+                        //     parseInt(column) * ActionsManager.spriteSizeWidth,
+                        //     parseInt(row) * ActionsManager.spriteSizeHeight,
+                        //     ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+                    }
+
                 }
 
                 RowLayout {
@@ -40,10 +60,16 @@ Item {
 
                     Button {
                         text: "Play"
+                        onClicked: {
+                            timer.running = true
+                        }
                     }
 
                     Button {
                         text: "Pause"
+                        onClicked: {
+                            timer.running = false
+                        }
                     }
 
                 }
@@ -58,7 +84,15 @@ Item {
 
     }
 
-
     signal saveActionsConfig()
+
+    function playAnimationPreview() {
+        var nextSpriteData = ActionsManager.sequenceModel.getNextSprite()
+        actionPreview.sourceClipRect = Qt.rect(
+            parseInt(nextSpriteData.sprite_column) * ActionsManager.spriteSizeWidth,
+            parseInt(nextSpriteData.sprite_row) * ActionsManager.spriteSizeHeight,
+            ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight
+        )
+    }
 }
 

@@ -10,7 +10,7 @@ Rectangle {
     color: "yellow"
 
     Text {
-        text: "(" + row + " : " + column + ")"
+        text: "(" + sprite_column + " : " + sprite_row + ")"
     }
 
     Image {
@@ -18,8 +18,8 @@ Rectangle {
         anchors.fill: parent
         source: ActionsManager.spriteSheetPath
         sourceClipRect: Qt.rect(
-            parseInt(column) * ActionsManager.spriteSizeWidth,
-            parseInt(row) * ActionsManager.spriteSizeHeight,
+            parseInt(sprite_column) * ActionsManager.spriteSizeWidth,
+            parseInt(sprite_row) * ActionsManager.spriteSizeHeight,
             ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
     }
 
@@ -29,9 +29,9 @@ Rectangle {
         //     console.log(ActionsManager.spriteSheetPath)
         // }
         onDoubleClicked: {
-            toggleSelected(index, column, row)
+            toggleSelected(index, sprite_column, sprite_row)
         }
     }
 
-    signal toggleSelected(int index, int column, int row)
+    signal toggleSelected(int index, int sprite_column, int sprite_row)
 }
