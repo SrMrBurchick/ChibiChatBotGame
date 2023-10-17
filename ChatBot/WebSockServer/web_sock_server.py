@@ -14,6 +14,7 @@ class WebSockServer:
             print("WSS: Client connected")
             async for message in self.__websocket:
                 print(f'WSS: Get new message: {message}')
+                await self.send_command(message, None)
 
         finally:
             print("WSS: Client disconnected")
@@ -22,7 +23,7 @@ class WebSockServer:
     def is_client_connected(self) -> bool:
         return self.__websocket is not None
 
-    def send_command(self, command: str, author: str):
+    async def send_command(self, command: str, author: str):
         if self.is_client_connected():
             event = {
                 "action": command
@@ -31,12 +32,11 @@ class WebSockServer:
             if author is not None:
                 event["author"] = author
 
-            self.__websocket.send(json.dumps(event))
+            await self.__websocket.send(json.dumps(event))
 
     async def run_server(self):
         print("Start Web Socket Server")
-        async with websockets.serve(self.__handle_server__, self.__url, self.__port):
-            await asyncio.Future()  # run forever
+        await websockets.serve(self.__handle_server__, self.__url, self.__port)
 
 async def main():
     wss = WebSockServer()
