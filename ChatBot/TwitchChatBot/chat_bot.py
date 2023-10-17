@@ -12,6 +12,7 @@ import irc.bot
 import requests
 import asyncio
 import json
+from WebSockServer.web_sock_server import WebSockServer
 
 import os
 import sys
@@ -22,10 +23,11 @@ CREDENTIALS_FILE = "../credentials.json"
 
 
 class TwitchBot(irc.bot.SingleServerIRCBot):
-    def __init__(self, username, client_id, token, channel):
+    def __init__(self, username, client_id, token, channel, wss: WebSockServer):
         self.client_id = client_id
         self.token = token
         self.channel = '#' + channel
+        self.wss = wss
 
         # Create IRC bot connection
         server = 'irc.chat.twitch.tv'
@@ -51,46 +53,20 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         if e.arguments[0][:1] == '!':
             cmd = e.arguments[0].split(' ')[0][1:]
             print('Received command: ' + cmd)
+            self.do_command(e, cmd)
         return
 
     def do_command(self, e, cmd):
         c = self.connection
 
-        # Poll the API to get current game.
-        if cmd == "game":
-            url = 'https://api.twitch.tv/kraken/channels/' + self.channel_id
-            headers = {'Client-ID': self.client_id,
-                       'Accept': 'application/vnd.twitchtv.v5+json'}
-            r = requests.get(url, headers=headers).json()
-            c.privmsg(self.channel, r['display_name'] +
-                      ' is currently playing ' + r['game'])
-
-        # Poll the API the get the current status of the stream
-        elif cmd == "title":
-            url = 'https://api.twitch.tv/kraken/channels/' + self.channel_id
-            headers = {'Client-ID': self.client_id,
-                       'Accept': 'application/vnd.twitchtv.v5+json'}
-            r = requests.get(url, headers=headers).json()
-            c.privmsg(self.channel, r['display_name'] +
-                      ' channel title is currently ' + r['status'])
-
-        # Provide basic information to viewers for specific commands
-        elif cmd == "raffle":
-            message = "This is an example bot, replace this text with your raffle text."
-            c.privmsg(self.channel, message)
-        elif cmd == "schedule":
-            message = "This is an example bot, replace this text with your schedule text."
-            c.privmsg(self.channel, message)
-
-        # The command was not recognized
-        else:
-            c.privmsg(self.channel, "Did not understand command: " + cmd)
+        # TODO: Add configured commands list
+        c.privmsg(self.channel, "Did not understand command: " + cmd)
 
     async def run_bot(self):
         await self.start()
 
 
-def create_bot() -> TwitchBot:
+def create_bot(wss: WebSockServer) -> TwitchBot:
     with open(CREDENTIALS_FILE) as creds_file:
         creds_data = creds_file.read()
 
@@ -100,7 +76,7 @@ def create_bot() -> TwitchBot:
     token = creds["token"]
     channel = "SrMrBurchick"
 
-    return TwitchBot(username, client_id, token, channel)
+    return TwitchBot(username, client_id, token, channel, wss)
 
 
 if __name__ == "__main__":
