@@ -23,11 +23,12 @@ CREDENTIALS_FILE = "../credentials.json"
 
 
 class TwitchBot(irc.bot.SingleServerIRCBot):
-    def __init__(self, username, client_id, token, channel, wss: WebSockServer):
+    def __init__(self, username, client_id, token, channel, wss: WebSockServer, commands: list):
         self.client_id = client_id
         self.token = token
         self.channel = '#' + channel
         self.wss = wss
+        self.commands = []
 
         # Create IRC bot connection
         server = 'irc.chat.twitch.tv'
@@ -59,14 +60,23 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def do_command(self, e, cmd):
         c = self.connection
 
-        # TODO: Add configured commands list
-        c.privmsg(self.channel, "Did not understand command: " + cmd)
+        if cmd in self.commands:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(self.wss.send_command(cmd, None))
+        elif cmd == "commands":
+            commands = ""
+            for command in self.commands:
+                commands += "{command}\n"
+            c.privmsg(self.channel, "Available commands: " + commands)
+        else:
+            c.privmsg(self.channel, "Did not understand command: " + cmd)
 
     async def run_bot(self):
         await self.start()
 
 
-def create_bot(wss: WebSockServer) -> TwitchBot:
+def create_bot(wss: WebSockServer, commands: list) -> TwitchBot:
     with open(CREDENTIALS_FILE) as creds_file:
         creds_data = creds_file.read()
 
@@ -76,7 +86,7 @@ def create_bot(wss: WebSockServer) -> TwitchBot:
     token = creds["token"]
     channel = "SrMrBurchick"
 
-    return TwitchBot(username, client_id, token, channel, wss)
+    return TwitchBot(username, client_id, token, channel, wss, commands)
 
 
 if __name__ == "__main__":

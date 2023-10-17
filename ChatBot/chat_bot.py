@@ -6,7 +6,7 @@ from TwitchChatBot.chat_bot import create_bot
 async def main():
     # TODO add config and credentials reading
     wss = WebSockServer()
-    bot = create_bot(wss)
+    bot = create_bot(wss, [])
 
     wss_task = wss.run_server()
     loop = asyncio.get_running_loop()
