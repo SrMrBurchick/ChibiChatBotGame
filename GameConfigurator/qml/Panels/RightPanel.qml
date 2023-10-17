@@ -36,7 +36,6 @@ Item {
                     text: "Animation preview"
                 }
 
-                // TODO: Replace with AnimationSequance
                 Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: 200
@@ -45,10 +44,6 @@ Item {
                         id: actionPreview
                         anchors.fill: parent
                         source: ActionsManager.spriteSheetPath
-                        // sourceClipRect: Qt.rect(
-                        //     parseInt(column) * ActionsManager.spriteSizeWidth,
-                        //     parseInt(row) * ActionsManager.spriteSizeHeight,
-                        //     ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
                     }
 
                 }
