@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
+import Delegates
+import Panels
 
 // TODO: Refactor style
 Item {
@@ -25,54 +27,35 @@ Item {
         width: root.width
         anchors.top: title.bottom
         anchors.bottom: root.bottom
+        SettingsItemDelegate {
+            fieldName: "Chanel name:"
+            fieldDescription: "Twitch chanel target"
+            onValueChanged:(text) => {
+                ActionsManager.twitchChannel = text
+            }
+        }
+
+        SettingsItemDelegate {
+            fieldName: "Chat bot URL:"
+            defaultText: ActionsManager.chatBotURL
+            onValueChanged:(text) => {
+                ActionsManager.chatBotURL = text
+            }
+        }
+
+        SettingsItemDelegate {
+            fieldName: "Chat bot port:"
+            defaultText: ActionsManager.chatBotPort
+            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+            onValueChanged:(text) => {
+                ActionsManager.chatBotPort = parseInt(text)
+            }
+        }
 
         // Settings
-        ListView {
+        Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
-
-            spacing: 10
-
-            // TODO: Move model to c++
-            model: ListModel {
-                ListElement {
-                    name: "Twitch channel name"
-                    value: "IcePepePopusk"
-                }
-
-                ListElement {
-                    name: "GameClient port"
-                    value: "12345"
-                }
-            }
-
-            delegate: Rectangle {
-                width: panel.width
-                height: delegateContent.height
-
-                RowLayout {
-                    id: delegateContent
-                    Text {
-                        text: name + ": "
-                        font.pointSize: 16
-                    }
-                    Rectangle {
-                        clip: true
-                        border.color: "black"
-                        border.width: 2
-                        color: "gray"
-                        Layout.minimumHeight: 20
-                        Layout.minimumWidth: 40
-
-                        TextEdit {
-
-                            anchors.verticalCenter: parent.verticalCenter
-                            id: edittibleValue
-                            text: value
-                        }
-                    }
-                }
-            }
         }
 
         // Controls

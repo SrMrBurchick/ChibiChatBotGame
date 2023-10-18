@@ -1,5 +1,6 @@
 pragma Singleton
 import QtQuick
+import QtQuick.Controls
 import GameActions
 
 QtObject {
@@ -16,6 +17,11 @@ QtObject {
     // Sprite settings
     property int spriteSizeHeight
     property int spriteSizeWidth
+
+    // System settings
+    property string twitchChannel
+    property string chatBotURL: "localhost"
+    property int chatBotPort: 6565
 
     property AnimationSequenceModel sequenceModel: AnimationSequenceModel {}
     property SpriteSheetModel spriteSheetModel: SpriteSheetModel {}

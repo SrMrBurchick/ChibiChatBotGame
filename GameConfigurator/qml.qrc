@@ -30,6 +30,7 @@
         <file>qml/Delegates/ActionSpriteDelegate.qml</file>
         <file>qml/Delegates/SpriteItemDelegate.qml</file>
         <file>qml/Delegates/ActionListDelegate.qml</file>
+        <file>qml/Delegates/SettingsItemDelegate.qml</file>
 
         <!-- Dialogs -->
         <file>qml/Dialogs/qmldir</file>

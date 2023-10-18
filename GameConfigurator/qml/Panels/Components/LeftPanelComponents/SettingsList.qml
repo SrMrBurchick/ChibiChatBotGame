@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Panels
 import GameActions
+import Delegates
 
 ColumnLayout {
     anchors.fill: parent
@@ -18,34 +19,25 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        RowLayout {
-            Text {
-                text: "columns"
-            }
-            Rectangle {
-                Layout.fillWidth: true
-            }
-            TextEdit {
-                text: "0"
-                onEditingFinished: {
-                    ActionsManager.tableSettingsColumns = parseInt(text)
-                }
+        SettingsItemDelegate {
+            fieldName: "Columns:"
+            fieldDescription: "Columns count"
+            defaultText: ActionsManager.tableSettingsColumns
+            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+            onValueChanged:(text) => {
+                ActionsManager.tableSettingsColumns = parseInt(text)
+                console.log(ActionsManager.tableSettingsColumns)
             }
         }
 
-        RowLayout {
-            Text {
-                text: "rows"
-            }
-            Rectangle {
-                Layout.fillWidth: true
-            }
-            TextEdit {
-                text: "0"
-                onEditingFinished: {
-                    ActionsManager.tableSettingsRows = parseInt(text)
-                }
-
+        SettingsItemDelegate {
+            fieldName: "Rows:"
+            fieldDescription: "Row count"
+            defaultText: ActionsManager.tableSettingsRows
+            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+            onValueChanged:(text) => {
+                ActionsManager.tableSettingsRows = parseInt(text)
+                console.log(ActionsManager.tableSettingsRows)
             }
         }
     }
@@ -57,35 +49,27 @@ ColumnLayout {
     }
 
     ColumnLayout {
+        spacing: 5
+        Layout.fillWidth: true
+        Layout.fillHeight: true
 
-        RowLayout {
-            Text {
-                text: "width"
-            }
-            Rectangle {
-                Layout.fillWidth: true
-            }
-            TextEdit {
-                text: "0"
-                onEditingFinished: {
-                    ActionsManager.spriteSizeWidth = parseInt(text)
-                }
+        SettingsItemDelegate {
+            fieldName: "Width:"
+            fieldDescription: "Sprite width"
+            defaultText: ActionsManager.spriteSizeWidth
+            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+            onValueChanged:(text) => {
+                ActionsManager.spriteSizeWidth = parseInt(text)
             }
         }
 
-        RowLayout {
-            Text {
-                text: "height"
-            }
-            Rectangle {
-                Layout.fillWidth: true
-            }
-            TextEdit {
-                text: "0"
-
-                onEditingFinished: {
-                    ActionsManager.spriteSizeHeight = parseInt(text)
-                }
+        SettingsItemDelegate {
+            fieldName: "Height:"
+            fieldDescription: "Sprite height"
+            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+            defaultText: ActionsManager.spriteSizeHeight
+            onValueChanged:(text) => {
+                ActionsManager.spriteSizeHeight = parseInt(text)
             }
         }
     }
