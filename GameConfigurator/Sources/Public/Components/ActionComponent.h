@@ -15,3 +15,5 @@ struct ActionGridSprite {
     int Row;
     QString Action;
 };
+
+using ActionsMap = QHash<QString, QList<ActionSequenceSprite>>;

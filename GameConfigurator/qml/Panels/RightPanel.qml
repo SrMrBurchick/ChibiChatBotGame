@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
 import Panels
+import ConfigComponent
 
 Item {
     id: root
@@ -79,7 +80,13 @@ Item {
 
     }
 
-    signal saveActionsConfig()
+    function saveActionsConfig() {
+        Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
+        Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+        Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
+        Config.saveActions(ActionsManager.sequenceModel)
+        Config.saveConfig()
+    }
 
     function playAnimationPreview() {
         var nextSpriteData = ActionsManager.sequenceModel.getNextSprite()

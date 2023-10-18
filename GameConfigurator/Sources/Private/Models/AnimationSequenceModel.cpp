@@ -130,11 +130,11 @@ void AnimationSequenceModel::placeItemAt(int SourceIndex, int TargetIndex)
 void AnimationSequenceModel::setActiveAction(const QString& Action)
 {
     CurrentAction = Action;
-    if (!ActionsMap.contains(CurrentAction)) {
-        ActionsMap[Action] = QList<ActionSequenceSprite>();
+    if (!Map.contains(CurrentAction)) {
+        Map[Action] = QList<ActionSequenceSprite>();
     }
 
-    SpriteList = &ActionsMap[CurrentAction];
+    SpriteList = &Map[CurrentAction];
     currentSpriteIndex = 0;
 
     beginResetModel();
@@ -145,7 +145,7 @@ void AnimationSequenceModel::clearModel()
 {
     SpriteList = nullptr;
     currentSpriteIndex = 0;
-    ActionsMap.clear();
+    Map.clear();
 
     beginResetModel();
     endResetModel();
@@ -166,4 +166,9 @@ QVariantMap AnimationSequenceModel::getNextSprite()
     }
 
     return NextSprite;
+}
+
+const ActionsMap& AnimationSequenceModel::getMap() const
+{
+    return Map;
 }
