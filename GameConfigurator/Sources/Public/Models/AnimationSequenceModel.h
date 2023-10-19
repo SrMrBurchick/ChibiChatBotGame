@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <QMutex>
+
 #include "Components/ActionComponent.h"
 
 enum eActionsSequenceListRole {
@@ -41,4 +43,5 @@ protected:
     QString CurrentAction = "";
     int currentSpriteIndex = 0;
     ActionsMap Map;
+    QMutex SpriteListMutex;
 };

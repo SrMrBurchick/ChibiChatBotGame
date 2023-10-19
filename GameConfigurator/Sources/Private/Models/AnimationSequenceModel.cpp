@@ -88,9 +88,12 @@ void AnimationSequenceModel::addNewAction(int Column, int Row)
         return;
     }
 
-    beginResetModel();
-    SpriteList->push_back(ActionSequenceSprite(Column, Row));
-    endResetModel();
+    QMutexLocker MutexLocker(&SpriteListMutex);
+    if (MutexLocker.isLocked()) {
+        beginResetModel();
+        SpriteList->push_back(ActionSequenceSprite(Column, Row));
+        endResetModel();
+    }
 }
 
 void AnimationSequenceModel::toggleInverted(int Index)
@@ -120,11 +123,15 @@ void AnimationSequenceModel::placeItemAt(int SourceIndex, int TargetIndex)
         return;
     }
 
-    SpriteList->move(SourceIndex, TargetIndex);
-    currentSpriteIndex = 0;
+    QMutexLocker MutexLocker(&SpriteListMutex);
+    if (MutexLocker.isLocked()) {
+        SpriteList->move(SourceIndex, TargetIndex);
+        currentSpriteIndex = 0;
+    }
 
     beginResetModel();
     endResetModel();
+
 }
 
 void AnimationSequenceModel::setActiveAction(const QString& Action)
@@ -134,8 +141,11 @@ void AnimationSequenceModel::setActiveAction(const QString& Action)
         Map[Action] = QList<ActionSequenceSprite>();
     }
 
-    SpriteList = &Map[CurrentAction];
-    currentSpriteIndex = 0;
+    QMutexLocker MutexLocker(&SpriteListMutex);
+    if (MutexLocker.isLocked()) {
+        SpriteList = &Map[CurrentAction];
+        currentSpriteIndex = 0;
+    }
 
     beginResetModel();
     endResetModel();
@@ -143,9 +153,12 @@ void AnimationSequenceModel::setActiveAction(const QString& Action)
 
 void AnimationSequenceModel::clearModel()
 {
-    SpriteList = nullptr;
-    currentSpriteIndex = 0;
-    Map.clear();
+    QMutexLocker MutexLocker(&SpriteListMutex);
+    if (MutexLocker.isLocked()) {
+        SpriteList = nullptr;
+        currentSpriteIndex = 0;
+        Map.clear();
+    }
 
     beginResetModel();
     endResetModel();
@@ -154,9 +167,10 @@ void AnimationSequenceModel::clearModel()
 QVariantMap AnimationSequenceModel::getNextSprite()
 {
     QVariantMap NextSprite;
+    QMutexLocker MutexLocker(&SpriteListMutex);
 
-    if (SpriteList != nullptr) {
-        if (currentSpriteIndex >= SpriteList->size()) {
+    if (SpriteList != nullptr && !SpriteList->isEmpty() && MutexLocker.isLocked()) {
+        if (currentSpriteIndex >= SpriteList->length()) {
             currentSpriteIndex = 0;
         }
 
