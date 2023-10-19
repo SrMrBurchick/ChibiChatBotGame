@@ -22,6 +22,8 @@ QtObject {
     property string twitchChannel
     property string chatBotURL: "localhost"
     property int chatBotPort: 6565
+    property int screenWidth: 1920
+    property int screenHeight: 1200
 
     property AnimationSequenceModel sequenceModel: AnimationSequenceModel {}
     property SpriteSheetModel spriteSheetModel: SpriteSheetModel {}

@@ -7,6 +7,8 @@ Rectangle {
     width: parent.width
     height: 40
 
+    anchors.margins: 10
+
     property string defaultText
     property string fieldName: ""
     property string fieldDescription: ""

@@ -9,6 +9,7 @@ import Panels
 Item {
     id: root
     anchors.fill: parent
+    anchors.margins: 10
 
     property StackView rootStack: StackView.view
 
@@ -16,7 +17,7 @@ Item {
     Text {
         id: title
         anchors.horizontalCenter: parent.horizontalCenter
-        text: "ChatBot configuration"
+        text: "Configuration"
         font.pointSize: 24
     }
 
@@ -27,6 +28,12 @@ Item {
         width: root.width
         anchors.top: title.bottom
         anchors.bottom: root.bottom
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "ChatBot"
+            font.pointSize: 14
+        }
+
         SettingsItemDelegate {
             fieldName: "Chanel name:"
             fieldDescription: "Twitch chanel target"
@@ -49,6 +56,30 @@ Item {
             typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
             onValueChanged:(text) => {
                 ActionsManager.chatBotPort = parseInt(text)
+            }
+        }
+
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Game"
+            font.pointSize: 14
+        }
+
+        SettingsItemDelegate {
+            fieldName: "Game screen width:"
+            defaultText: ActionsManager.screenWidth
+            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+            onValueChanged:(text) => {
+                ActionsManager.screenWidth = parseInt(text)
+            }
+        }
+
+        SettingsItemDelegate {
+            fieldName: "Game screen height:"
+            defaultText: ActionsManager.screenHeight
+            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+            onValueChanged:(text) => {
+                ActionsManager.screenHeight = parseInt(text)
             }
         }
 
