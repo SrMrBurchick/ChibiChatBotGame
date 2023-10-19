@@ -6,12 +6,6 @@
 ActionsListModel::ActionsListModel(QObject* Parent)
     :QAbstractListModel(Parent)
 {
-    // Standard actions
-    ActionsList.push_back("Walk");
-    ActionsList.push_back("Climb");
-    ActionsList.push_back("StandBy");
-    ActionsList.push_back("PickUp");
-    ActionsList.push_back("Dance");
 }
 
 int ActionsListModel::rowCount(const QModelIndex& Parent) const

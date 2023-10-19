@@ -186,3 +186,13 @@ const ActionsMap& AnimationSequenceModel::getMap() const
 {
     return Map;
 }
+
+void AnimationSequenceModel::initModel(const ActionsMap& InitMap)
+{
+    if (InitMap.isEmpty()) {
+        return;
+    }
+
+    Map = InitMap;
+    setActiveAction(Map.begin().key());
+}

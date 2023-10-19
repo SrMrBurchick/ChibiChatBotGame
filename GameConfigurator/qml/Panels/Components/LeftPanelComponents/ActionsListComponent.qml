@@ -4,6 +4,7 @@ import QtQuick.Controls
 import GameActions
 import Delegates
 import Panels
+import ConfigComponent
 
 ScrollView {
     anchors.fill: parent
@@ -39,6 +40,14 @@ ScrollView {
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+        if (Config.isConfigLoaded()) {
+            Config.initActionsListModel(actionsModel)
+        }
+
+        ActionsManager.sequenceModel = actionsModel
     }
 
     function addAction(action) {

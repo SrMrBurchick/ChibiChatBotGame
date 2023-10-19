@@ -7,6 +7,7 @@
 
 #include "Components/ActionComponent.h"
 #include "Models/AnimationSequenceModel.h"
+#include "Models/ActionsListModel.h"
 
 struct SpriteSize {
     int Height;
@@ -33,13 +34,23 @@ struct SystemConfig {
 class ConfigObject : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(bool configLoaded READ isConfigLoaded)
 public:
     explicit ConfigObject(QObject* Parent = nullptr);
     virtual ~ConfigObject();
 
     void ParseJsonDocument(const QJsonDocument& JsonDocument);
     void SaveConfigToFile(const QString& ConfigFile);
+
+    Q_INVOKABLE void initActionsListModel(ActionsListModel* Model);
+    Q_INVOKABLE void initAnimationsSequenceModel(AnimationSequenceModel* Model);
+
+    Q_INVOKABLE QString getSpriteSheetPath() const;
+    Q_INVOKABLE QString getChatBotURL() const;
+    Q_INVOKABLE int getChatBotPort() const;
+    Q_INVOKABLE int getSpriteHeight() const;
+    Q_INVOKABLE int getSpriteWidth() const;
+    Q_INVOKABLE int getTableColumns() const;
+    Q_INVOKABLE int getTableRows() const;
 
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
@@ -50,8 +61,7 @@ public:
     Q_INVOKABLE void saveTableSettings(const int Columns, const int Rows);
     Q_INVOKABLE void saveActions(const AnimationSequenceModel* Model);
 
-public slots:
-    bool isConfigLoaded() const { return bConfigLoaded; }
+    Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
 protected:
     bool bConfigLoaded = false;

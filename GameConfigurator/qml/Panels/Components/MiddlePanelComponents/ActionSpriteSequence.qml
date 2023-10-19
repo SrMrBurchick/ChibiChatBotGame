@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Delegates
 import GameActions
 import Panels
+import ConfigComponent
 
 Item {
     id: root
@@ -53,6 +54,10 @@ Item {
     }
 
     Component.onCompleted: {
+        if (Config.isConfigLoaded()) {
+            Config.initAnimationsSequenceModel(actionsModel)
+        }
+
         ActionsManager.sequenceModel = actionsModel
     }
 

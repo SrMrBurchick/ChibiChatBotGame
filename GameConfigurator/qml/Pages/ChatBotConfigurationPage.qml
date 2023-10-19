@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Buttons
 import Delegates
 import Panels
+import ConfigComponent
 
 // TODO: Refactor style
 Item {
@@ -111,6 +112,13 @@ Item {
 
         }
 
+    }
+
+    Component.onCompleted: {
+        if (Config.isConfigLoaded()) {
+            ActionsManager.chatBotURL = Config.getChatBotURL()
+            ActionsManager.chatBotPort = Config.getChatBotPort()
+        }
     }
 
     signal saveChatBotConfig()

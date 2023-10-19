@@ -5,6 +5,7 @@ import QtQuick.Dialogs
 import Buttons
 import Panels
 import Dialogs
+import ConfigComponent
 
 Item {
     id: root
@@ -118,6 +119,18 @@ Item {
 
                 }
             }
+        }
+    }
+
+    Component.onCompleted: {
+        if (Config.isConfigLoaded()) {
+            ActionsManager.spriteSheetPath = Config.getSpriteSheetPath();
+            ActionsManager.spriteSizeWidth = Config.getSpriteWidth()
+            ActionsManager.spriteSizeHeight = Config.getSpriteHeight()
+            ActionsManager.tableSettingsColumns = Config.getTableColumns()
+            ActionsManager.tableSettingsRows = Config.getTableRows()
+            ActionsManager.spriteSheetConfigured = true
+            splitImageToSprites()
         }
     }
 

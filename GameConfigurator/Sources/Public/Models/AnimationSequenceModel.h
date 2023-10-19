@@ -28,6 +28,8 @@ public:
 
     void updateData();
 
+    void initModel(const ActionsMap& InitMap);
+
     Q_INVOKABLE void removeElement(int Index);
     Q_INVOKABLE void addNewAction(int Column, int Row);
     Q_INVOKABLE void toggleInverted(int Index);

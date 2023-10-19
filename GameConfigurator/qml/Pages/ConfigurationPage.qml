@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Buttons
 import Panels
 import GameActions
+import ConfigComponent
 
 Item {
     id: configuration_menu
@@ -31,8 +32,13 @@ Item {
         }
     }
 
+    Component.onCompleted: {
+        if (Config.isConfigLoaded() == false) {
+            Config.loadConfig()
+        }
+    }
+
     signal goBack()
     signal goActionsConfiguration()
     signal goChatBotConfiguration()
 }
-
