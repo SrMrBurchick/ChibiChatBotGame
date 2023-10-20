@@ -4,7 +4,7 @@
 
 QT += core quick quickcontrols2
 CONFIG += c++21
-CONFIG += debug
+CONFIG += debug_and_release
 
 TEMPLATE = app
 TARGET = GameConfigurator
