@@ -15,7 +15,11 @@ HEADERS += Sources/Public/Configuration/ConfigLoader.h                          
            Sources/Public/Models/ActionsListModel.h                             \
            Sources/Public/Components/ActionComponent.h                          \
            Sources/Public/Models/AnimationSequenceModel.h                       \
-           Sources/Public/Models/SpriteSheet.h
+           Sources/Public/Models/SpriteSheet.h                                  \
+           Sources/Public/Managers/ProcessManager.h                             \
+           Sources/Public/Managers/ProcessInterface.h                           \
+           Sources/Public/Managers/Processes/ChatBotProcess.h                   \
+           Sources/Public/Managers/Processes/GameProcess.h
 
 SOURCES += Sources/GameConfigurator.cpp                                         \
            Sources/Private/Configuration/ConfigLoad.cpp                         \
@@ -23,7 +27,11 @@ SOURCES += Sources/GameConfigurator.cpp                                         
            Sources/Private/Models/ActionsListModel.cpp                          \
            Sources/Private/Models/AnimationSequenceModel.cpp                    \
            Sources/Private/Components/ActionComponent.cpp                       \
-           Sources/Private/Models/SpriteSheet.cpp
+           Sources/Private/Models/SpriteSheet.cpp                               \
+           Sources/Private/Managers/ProcessManager.cpp                          \
+           Sources/Private/Managers/ProcessInterface.cpp                        \
+           Sources/Private/Managers/Processes/ChatBotProcess.cpp                \
+           Sources/Private/Managers/Processes/GameProcess.cpp
 
 RESOURCES += qml.qrc
 
