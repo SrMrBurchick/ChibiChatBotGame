@@ -42,6 +42,17 @@ QML2_IMPORT_PATH = qml
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
 
+# Executables path
+DEFINES += "CHAT_BOT_PATH=\"chat_bot\""
+DEFINES += "GAME_PATH=\"ChibiGame.wasm\""
+DEFINES += "WASM_RUNNER_PATH=\"Tools/wasm-server-runner\""
+
+# Check if the target OS is Windows
+contains(QMAKE_TARGET.os, Windows) {
+    DEFINES += "CHAT_BOT_PATH=\"chat_bot.exe\""
+    DEFINES += "WASM_RUNNER_PATH=\"Tools/wasm-server-runner.exe\""
+}
+
 # Directories
 release: DESTDIR = build/release
 debug:   DESTDIR = build/debug

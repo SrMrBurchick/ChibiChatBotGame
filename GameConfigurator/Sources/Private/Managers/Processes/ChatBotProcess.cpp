@@ -1,7 +1,7 @@
 #include "Managers/Processes/ChatBotProcess.h"
 
 ChatBotProcess::ChatBotProcess()
-    :IProcess("", eProcessType::ChatBot)
+    :IProcess(QT_STRINGIFY(CHAT_BOT_PATH), eProcessType::ChatBot)
 {
 }
 
