@@ -12,11 +12,11 @@ CHAT_BOT="$PWD/ChatBot"
 
 ## Create ChibiChatBotGame directory
 PACKAGE_DIRECTORY="$PWD/ChibiChatBotGame"
-PACKAGE_TOOLS_DIRECTORY="$PWD/ChibiChatBotGame/Tools"
-if [ -d ${PACKAGE_DIRECTORY} ]; then
+PACKAGE_TOOLS_DIRECTORY="$PACKAGE_DIRECTORY/Tools"
+if [ ! -d ${PACKAGE_DIRECTORY} ]; then
     echo "Create ChibiChatBotGame package directory"
     mkdir ${PACKAGE_DIRECTORY}
-    if [ -d ${PACKAGE_TOOLS_DIRECTORY} ]; then
+    if [ ! -d ${PACKAGE_TOOLS_DIRECTORY} ]; then
         mkdir ${PACKAGE_TOOLS_DIRECTORY}
     fi
 fi
@@ -37,7 +37,7 @@ cd ${GAME_CONFIGURATOR}
 qmake6 -makefile
 
 ### Build
-make
+make release
 
 ### Copy GameConfigurator to package
 cp ${GAME_CONFIGURATOR}/build/release/GameConfigurator ${PACKAGE_DIRECTORY}
