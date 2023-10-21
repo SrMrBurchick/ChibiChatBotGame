@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
+import ProcessesComponent
 
 Item {
     id: menu
@@ -16,6 +17,9 @@ Item {
 
         BaseButton {
             text: "Start game"
+            onClicked: {
+                ProcessManager.runGame()
+            }
         }
 
         BaseButton {

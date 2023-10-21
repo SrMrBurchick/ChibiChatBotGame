@@ -95,7 +95,7 @@ pub fn init_sprite_index(obj: &JsonValue) -> Result<SpriteIndex, Box<dyn Error>>
 
 pub async fn wasm_load_config(sender: async_std::channel::Sender<String>) -> Result<(), JsValue> {
     info!("Load config");
-    let url = "config/animation_map.json";
+    let url = "config/ChibiChatBotGameConfig.json";
 
     // let (mut tx, rx) = wasm_bindgen_futures::channel::unbounded();
     let mut opts = RequestInit::new();
@@ -209,7 +209,7 @@ impl Config {
                 let mut is_user_action = false;
 
                 if key == Actions::Unknown {
-                    if false == entry.1.has_key("sprites") {
+                    if false == entry.1.is_array() {
                         continue;
                     } else {
                         is_user_action = true;
@@ -218,11 +218,11 @@ impl Config {
 
                 let mut animations_list: Vec<SpriteIndex> = vec![];
 
-                if false == entry.1.has_key("sprites") {
+                if false == entry.1.is_array() {
                     return Err(Box::from("Broken animation item"));
                 }
 
-                for animation in entry.1["sprites"].members() {
+                for animation in entry.1.members() {
                     match init_sprite_index(animation) {
                         Ok(sprite_index) => {
                             animations_list.push(sprite_index);

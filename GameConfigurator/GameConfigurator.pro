@@ -44,13 +44,14 @@ QML_DESIGNER_IMPORT_PATH =
 
 # Executables path
 DEFINES += "CHAT_BOT_PATH=\"chat_bot\""
-DEFINES += "GAME_PATH=\"ChibiGame.wasm\""
-DEFINES += "WASM_RUNNER_PATH=\"Tools/wasm-server-runner\""
+DEFINES += "GAME_RUNNER_PATH=\"RunGame.sh\""
+DEFINES += "GAME_ASSETS_PATH=\"Game/assets\""
+DEFINES += "CONFIG_FILE=\"Game/config/ChibiChatBotConfig.json\""
 
 # Check if the target OS is Windows
 contains(QMAKE_TARGET.os, Windows) {
     DEFINES += "CHAT_BOT_PATH=\"chat_bot.exe\""
-    DEFINES += "WASM_RUNNER_PATH=\"Tools/wasm-server-runner.exe\""
+    DEFINES += "GAME_RUNNER_PATH=\"RunGame.bat\""
 }
 
 # Directories

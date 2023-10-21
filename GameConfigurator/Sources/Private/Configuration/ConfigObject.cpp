@@ -158,12 +158,12 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 
 void ConfigObject::saveConfig()
 {
-    SaveConfigToFile("ChibiChatBotGameConfig.json");
+    SaveConfigToFile(QT_STRINGIFY(CONFIG_FILE));
 }
 
 void ConfigObject::loadConfig()
 {
-    QFile ConfigFile("ChibiChatBotGameConfig.json");
+    QFile ConfigFile(QT_STRINGIFY(CONFIG_FILE));
     if (ConfigFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QJsonDocument JsonConfig = QJsonDocument::fromJson(ConfigFile.readAll());
         ParseJsonDocument(JsonConfig);
