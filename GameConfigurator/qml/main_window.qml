@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Pages
+import SystemTools
+import Base
 
 ApplicationWindow {
     visible: true
@@ -10,6 +12,24 @@ ApplicationWindow {
         id: stack
         anchors.fill: parent
         initialItem: main_menu
+    }
+
+    NotificationListModel {
+        id: notificationModel
+    }
+
+    ListView {
+        height: parent.height
+        width: 200
+        x: parent.width - width
+        anchors.margins: 5
+        spacing: 5
+        model: notificationModel
+        delegate: Notification {
+            description: title
+            message: body
+            rootModel: notificationModel
+        }
     }
 
     Component {

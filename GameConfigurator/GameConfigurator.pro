@@ -19,7 +19,8 @@ HEADERS += Sources/Public/Configuration/ConfigLoader.h                          
            Sources/Public/Managers/ProcessManager.h                             \
            Sources/Public/Managers/ProcessInterface.h                           \
            Sources/Public/Managers/Processes/ChatBotProcess.h                   \
-           Sources/Public/Managers/Processes/GameProcess.h
+           Sources/Public/Managers/Processes/GameProcess.h                      \
+           Sources/Public/Models/NotificationModel.h
 
 SOURCES += Sources/GameConfigurator.cpp                                         \
            Sources/Private/Configuration/ConfigLoad.cpp                         \
@@ -31,7 +32,8 @@ SOURCES += Sources/GameConfigurator.cpp                                         
            Sources/Private/Managers/ProcessManager.cpp                          \
            Sources/Private/Managers/ProcessInterface.cpp                        \
            Sources/Private/Managers/Processes/ChatBotProcess.cpp                \
-           Sources/Private/Managers/Processes/GameProcess.cpp
+           Sources/Private/Managers/Processes/GameProcess.cpp                   \
+           Sources/Private/Models/NotificationModel.cpp
 
 RESOURCES += qml.qrc
 

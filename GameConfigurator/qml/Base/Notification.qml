@@ -11,12 +11,11 @@ Rectangle {
     border.color: "black"
     border.width: 1
 
-    property string title: ""
+    property string description: ""
     property string message: ""
+    property ListModel rootModel: ListModel{}
 
     // Position the notification in the top right corner
-    anchors.top: parent.top
-    anchors.right: parent.right
     anchors.margins: 10
 
     // Opacity property for the fade-in and fade-out effect
@@ -26,6 +25,11 @@ Rectangle {
     Behavior on opacityValue {
         NumberAnimation {
             duration: 500 // Adjust the duration as needed
+            onRunningChanged: {
+                if (!running && opacityValue == 0) {
+                    rootModel.remove(index, 1)
+                }
+            }
         }
     }
 
@@ -39,7 +43,7 @@ Rectangle {
         anchors.margins: 10
         font.pixelSize: 18 // Set the font size
         font.bold: true
-        text: root.title
+        text: description
     }
     Text {
         id: body
@@ -64,6 +68,7 @@ Rectangle {
     // Trigger the fade-out animation after a delay
     Timer {
         id: hideTimer
+        running: opacityValue == 1
         interval: 3000 // Adjust the delay as needed (milliseconds)
         onTriggered: hide()
     }
@@ -78,5 +83,9 @@ Rectangle {
         onEntered: {
             hideTimer.restart()
         }
+    }
+
+    Component.onCompleted: {
+        show()
     }
 }

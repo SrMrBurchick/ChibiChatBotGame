@@ -7,6 +7,7 @@
 #include "Models/ActionsListModel.h"
 #include "Models/AnimationSequenceModel.h"
 #include "Models/SpriteSheet.h"
+#include "Models/NotificationModel.h"
 #include "Managers/ProcessManager.h"
 #include "Managers/Processes/GameProcess.h"
 #include "Managers/Processes/ChatBotProcess.h"
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
     ActionsListModel::registerModel("GameActions");
     AnimationSequenceModel::registerModel("GameActions");
     SpriteSheetModel::registerModel("GameActions");
+    NotificationListModel::registerModel("SystemTools");
 
     qmlRegisterSingletonInstance("ConfigComponent", 1, 0, "Config", Config.get());
     qmlRegisterSingletonInstance("ProcessesComponent", 1, 0, "ProcessManager", Manager.get());
