@@ -35,6 +35,7 @@ ${PROJECT_LOCATION}/tools/Scripts/Build/Linux/BuildGame.sh ${GAME} ${PACKAGE_GAM
 
 ## Copy game runner script to package directory
 cp ${PROJECT_LOCATION}/tools/Scripts/Runners/Linux/RunGame.sh ${PACKAGE_DIRECTORY}
+cp ${PROJECT_LOCATION}/tools/Scripts/Runners/Linux/RunChatBot.sh ${PACKAGE_DIRECTORY}
 
 ######################### Build Chat bot #######################################
 ${PROJECT_LOCATION}/tools/Scripts/Build/Linux/BuildChatBot.sh ${CHAT_BOT} ${PACKAGE_DIRECTORY}

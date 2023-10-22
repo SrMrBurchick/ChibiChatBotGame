@@ -24,6 +24,7 @@ public:
     void Kill();
 
     eProcessType GetType() const {return Type;}
+    QString GetLastError();
 
 private:
     QProcess Process;

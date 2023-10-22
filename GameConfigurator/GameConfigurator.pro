@@ -47,10 +47,10 @@ QML2_IMPORT_PATH = qml
 QML_DESIGNER_IMPORT_PATH =
 
 # Executables path
-DEFINES += "CHAT_BOT_PATH=\"chat_bot\""
-DEFINES += "GAME_RUNNER_PATH=\"RunGame.sh\""
-DEFINES += "GAME_ASSETS_PATH=\"Game/assets\""
-DEFINES += "CONFIG_FILE=\"Game/config/ChibiChatBotConfig.json\""
+DEFINES += CHAT_BOT_PATH="./RunChatBot.sh"
+DEFINES += GAME_RUNNER_PATH="./RunGame.sh"
+DEFINES += GAME_ASSETS_PATH="Game/assets"
+DEFINES += CONFIG_FILE="Game/config/ChibiChatBotConfig.json"
 
 # Check if the target OS is Windows
 contains(QMAKE_TARGET.os, Windows) {
@@ -59,8 +59,11 @@ contains(QMAKE_TARGET.os, Windows) {
 }
 
 # Directories
-debug:   DESTDIR = build/debug
-release: DESTDIR = build/release
+DESTDIR = build/release
+
+CONFIG(debug, debug|release) {
+    DESTDIR = build/debug
+}
 
 OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc

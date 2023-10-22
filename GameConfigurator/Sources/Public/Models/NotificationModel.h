@@ -29,6 +29,7 @@ public:
     void updateData();
 
     Q_INVOKABLE void addNotification(const QString& Title, const QString& Body);
+    Q_INVOKABLE void removeNotification(int Index);
 
 protected:
     QVector<Notification> NotificationList;

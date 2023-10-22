@@ -74,3 +74,14 @@ void NotificationListModel::addNotification(const QString& Title, const QString&
 
     updateData();
 }
+
+void NotificationListModel::removeNotification(int Index)
+{
+    if (Index > NotificationList.size() && Index <= 0) {
+        return;
+    }
+
+    beginRemoveRows(QModelIndex(), Index, Index);
+    NotificationList.removeAt(Index);
+    endRemoveRows();
+}

@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import SystemTools
 
 Rectangle {
     id: root
@@ -13,7 +14,7 @@ Rectangle {
 
     property string description: ""
     property string message: ""
-    property ListModel rootModel: ListModel{}
+    property NotificationListModel rootModel: NotificationListModel{}
 
     // Position the notification in the top right corner
     anchors.margins: 10
@@ -27,7 +28,7 @@ Rectangle {
             duration: 500 // Adjust the duration as needed
             onRunningChanged: {
                 if (!running && opacityValue == 0) {
-                    rootModel.remove(index, 1)
+                    rootModel.removeNotification(index)
                 }
             }
         }

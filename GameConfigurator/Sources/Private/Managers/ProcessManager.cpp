@@ -8,6 +8,7 @@ ProcessManager::ProcessManager(QObject* Parent)
 
 ProcessManager::~ProcessManager()
 {
+    StopAll();
     ProcessesList.clear();
 }
 
@@ -61,9 +62,15 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
 void ProcessManager::runChatBot()
 {
     if (TryToRunProcess(eProcessType::ChatBot)) {
-        // TODO: notify success
+        NotificationsManager::SendNotification("Chat bot process", "Chat bot is running");
     } else {
-        // TODO notify fault
+        QString Error;
+        QPointer<IProcess> Process = ProcessesList[eProcessType::ChatBot];
+        if (!Process.isNull()) {
+            Error = Process->GetLastError();
+        }
+
+        NotificationsManager::SendNotification("Chat bot process", QString::asprintf("Failed to run chat bot\n %s", Error.toStdString().c_str()));
     }
 }
 
@@ -72,6 +79,12 @@ void ProcessManager::runGame()
     if (TryToRunProcess(eProcessType::Game)) {
         NotificationsManager::SendNotification("Game process", "Game running");
     } else {
-        NotificationsManager::SendNotification("Game process", "Failed to run game");
+        QString Error;
+        QPointer<IProcess> Process = ProcessesList[eProcessType::Game];
+        if (!Process.isNull()) {
+            Error = Process->GetLastError();
+        }
+
+        NotificationsManager::SendNotification("Game process", QString::asprintf("Failed to run game\n %s", Error.toStdString().c_str()));
     }
 }

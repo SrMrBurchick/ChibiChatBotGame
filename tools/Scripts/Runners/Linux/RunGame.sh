@@ -14,4 +14,5 @@ fi
 cd ${GAME_LOCATION}
 
 # Run game
+chromium "http://127.0.0.1:1334" &
 $WASM_SERVER_RUNNER_LOCATION ${GAME}

@@ -11,7 +11,7 @@ cd ${GAME_CONFIGURATOR_LOCATION}
 qmake6 -makefile
 
 ### Build
-make release
+make
 
 ### Copy GameConfigurator to package
 cp ${GAME_CONFIGURATOR_LOCATION}/build/release/GameConfigurator ${PACKAGE_LOCATION}

@@ -1,4 +1,8 @@
 #include "Managers/ProcessInterface.h"
+#include "Managers/NotificationsManager.h"
+
+#include <QString>
+#include <iostream>
 
 IProcess::IProcess(const QString& _Program, const eProcessType _Type)
     :QObject(), Program(_Program), Type(_Type)
@@ -35,9 +39,10 @@ bool IProcess::RunProcess()
         return false;
     }
 
+    NotificationsManager::SendNotification("Process manager", QString::asprintf("Running a\n %s", Program.toStdString().c_str()));
     Process.start(Program);
 
-    return IsProcessRunning();
+    return Process.isOpen();
 }
 
 bool IProcess::StopProcess()
@@ -58,7 +63,10 @@ bool IProcess::IsProcessRunning()
 
 void IProcess::Kill()
 {
-    if (IsProcessRunning()) {
-        Process.kill();
-    }
+    Process.kill();
+}
+
+QString IProcess::GetLastError()
+{
+    return Process.readAllStandardError();
 }

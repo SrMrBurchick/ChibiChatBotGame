@@ -24,6 +24,9 @@ Item {
 
         BaseButton {
             text: "Start chat bot"
+            onClicked: {
+                ProcessManager.runChatBot()
+            }
         }
 
         BaseButton {
