@@ -1,4 +1,5 @@
 #include "Configuration/ConfigObject.h"
+#include "Managers/NotificationsManager.h"
 
 #include <iostream>
 
@@ -109,7 +110,6 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
 
 void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 {
-
     QJsonObject JsonTableSettings;
     QJsonObject JsonSpriteSettings;
     QJsonObject JsonChatBotSettings;
@@ -153,6 +153,9 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     if (ConfigFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         ConfigFile.write(QJsonDocument(Config).toJson());
         ConfigFile.close();
+        NotificationsManager::SendNotification("Config", "Saved successfully!");
+    } else {
+        NotificationsManager::SendNotification("Config", "Failed to save config!");
     }
 }
 
@@ -169,7 +172,6 @@ void ConfigObject::loadConfig()
         ParseJsonDocument(JsonConfig);
         ConfigFile.close();
     }
-
 }
 
 void ConfigObject::saveChatBotConfig(const QString& URL, const int Port)

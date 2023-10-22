@@ -19,7 +19,7 @@ ApplicationWindow {
     }
 
     ListView {
-        height: parent.height
+        height: 200
         width: 200
         x: parent.width - width
         anchors.margins: 5

@@ -28,7 +28,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         self.token = token
         self.channel = '#' + channel
         self.wss = wss
-        self.commands = []
+        self.commands = commands
 
         # Create IRC bot connection
         server = 'irc.chat.twitch.tv'
@@ -66,8 +66,9 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             loop.run_until_complete(self.wss.send_command(cmd, None))
         elif cmd == "commands":
             commands = ""
+            print(self.commands)
             for command in self.commands:
-                commands += "{command}\n"
+                commands = "{} {}".format(commands, command)
             c.privmsg(self.channel, "Available commands: " + commands)
         else:
             c.privmsg(self.channel, "Did not understand command: " + cmd)

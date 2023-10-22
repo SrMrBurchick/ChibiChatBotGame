@@ -95,7 +95,7 @@ pub fn init_sprite_index(obj: &JsonValue) -> Result<SpriteIndex, Box<dyn Error>>
 
 pub async fn wasm_load_config(sender: async_std::channel::Sender<String>) -> Result<(), JsValue> {
     info!("Load config");
-    let url = "config/ChibiChatBotGameConfig.json";
+    let url = "config/ChibiChatBotConfig.json";
 
     // let (mut tx, rx) = wasm_bindgen_futures::channel::unbounded();
     let mut opts = RequestInit::new();
