@@ -11,6 +11,7 @@
 #include "Managers/ProcessManager.h"
 #include "Managers/Processes/GameProcess.h"
 #include "Managers/Processes/ChatBotProcess.h"
+#include "Managers/NotificationsManager.h"
 
 int main(int argc, char *argv[])
 {
@@ -38,6 +39,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonInstance("ConfigComponent", 1, 0, "Config", Config.get());
     qmlRegisterSingletonInstance("ProcessesComponent", 1, 0, "ProcessManager", Manager.get());
+    qmlRegisterSingletonInstance("SystemTools", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

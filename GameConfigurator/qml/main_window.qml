@@ -69,4 +69,8 @@ ApplicationWindow {
             rootStack: stack
         }
     }
+
+    Component.onCompleted: {
+        NotificationsManager.addModel(notificationModel);
+    }
 }

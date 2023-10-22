@@ -4,7 +4,7 @@
 
 QT += core quick quickcontrols2
 CONFIG += c++21
-CONFIG += debug_and_release
+# CONFIG += debug_and_release
 
 TEMPLATE = app
 TARGET = GameConfigurator
@@ -20,7 +20,8 @@ HEADERS += Sources/Public/Configuration/ConfigLoader.h                          
            Sources/Public/Managers/ProcessInterface.h                           \
            Sources/Public/Managers/Processes/ChatBotProcess.h                   \
            Sources/Public/Managers/Processes/GameProcess.h                      \
-           Sources/Public/Models/NotificationModel.h
+           Sources/Public/Models/NotificationModel.h                            \
+           Sources/Public/Managers/NotificationsManager.h
 
 SOURCES += Sources/GameConfigurator.cpp                                         \
            Sources/Private/Configuration/ConfigLoad.cpp                         \
@@ -33,7 +34,8 @@ SOURCES += Sources/GameConfigurator.cpp                                         
            Sources/Private/Managers/ProcessInterface.cpp                        \
            Sources/Private/Managers/Processes/ChatBotProcess.cpp                \
            Sources/Private/Managers/Processes/GameProcess.cpp                   \
-           Sources/Private/Models/NotificationModel.cpp
+           Sources/Private/Models/NotificationModel.cpp                         \
+           Sources/Private/Managers/NotificationsManager.cpp
 
 RESOURCES += qml.qrc
 
@@ -57,8 +59,8 @@ contains(QMAKE_TARGET.os, Windows) {
 }
 
 # Directories
-release: DESTDIR = build/release
 debug:   DESTDIR = build/debug
+release: DESTDIR = build/release
 
 OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc

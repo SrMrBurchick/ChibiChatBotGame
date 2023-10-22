@@ -1,4 +1,5 @@
 #include "Managers/ProcessManager.h"
+#include "Managers/NotificationsManager.h"
 
 ProcessManager::ProcessManager(QObject* Parent)
     :QObject(Parent)
@@ -69,8 +70,8 @@ void ProcessManager::runChatBot()
 void ProcessManager::runGame()
 {
     if (TryToRunProcess(eProcessType::Game)) {
-        // TODO: notify success
+        NotificationsManager::SendNotification("Game process", "Game running");
     } else {
-        // TODO notify fault
+        NotificationsManager::SendNotification("Game process", "Failed to run game");
     }
 }
