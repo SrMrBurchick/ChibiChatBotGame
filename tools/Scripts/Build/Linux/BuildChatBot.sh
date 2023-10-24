@@ -11,4 +11,4 @@ cd ${CHAT_BOT_LOCATION}
 pyinstaller chat_bot.py
 
 ## Copy chat bot to package
-cp ${CHAT_BOT_LOCATION}/build/chat_bot/chat_bot ${PACKAGE_LOCATION}
+cp -r ${CHAT_BOT_LOCATION}/build/chat_bot/dist/chat_bot ${PACKAGE_LOCATION}
