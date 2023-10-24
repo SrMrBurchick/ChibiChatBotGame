@@ -51,7 +51,21 @@ Rectangle {
             ActionsManager.actionSpriteNewIndex = dragArea.DelegateModel.itemsIndex
         }
     }
+    Rectangle {
+        color: "green"
+        anchors.top: image.top
+        anchors.left: image.right - width
+        height: root.height / 5
+        width: height
+        MouseArea {
+            anchors.fill: parent
+            onDoubleClicked: {
+                removeItem(index)
+            }
+        }
+    }
 
     signal toggleInverted(int index)
     signal placeItemAtPosition(int oldIndex, int newIndex)
+    signal removeItem(int index)
 }

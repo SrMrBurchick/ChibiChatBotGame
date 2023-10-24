@@ -33,6 +33,9 @@ Item {
                 onPlaceItemAtPosition: (oldIndex, newIndex) => {
                     actionsModel.placeItemAt(oldIndex, newIndex);
                 }
+                onRemoveItem: (index) => {
+                    actionsModel.removeElement(index)
+                }
             }
         }
 
