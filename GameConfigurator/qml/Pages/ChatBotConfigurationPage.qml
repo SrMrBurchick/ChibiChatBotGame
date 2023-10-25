@@ -5,8 +5,8 @@ import Buttons
 import Delegates
 import Panels
 import ConfigComponent
+import Base
 
-// TODO: Refactor style
 Item {
     id: root
     anchors.fill: parent
@@ -15,11 +15,12 @@ Item {
     property StackView rootStack: StackView.view
 
     // Title
-    Text {
+    BaseText {
         id: title
         anchors.horizontalCenter: parent.horizontalCenter
         text: "Configuration"
-        font.pointSize: 24
+        font.pointSize: 32
+        font.bold: true
     }
 
 
@@ -29,63 +30,89 @@ Item {
         width: root.width
         anchors.top: title.bottom
         anchors.bottom: root.bottom
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "ChatBot"
-            font.pointSize: 14
-        }
+        BasePanel {
+            Layout.fillWidth: true
+            height: chat_bot_settings.height
 
-        SettingsItemDelegate {
-            fieldName: "Chanel name:"
-            fieldDescription: "Twitch chanel target"
-            onValueChanged:(text) => {
-                ActionsManager.twitchChannel = text
+            ColumnLayout {
+                id: chat_bot_settings
+                width: parent.width
+
+                BaseText {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "ChatBot"
+                    font.pointSize: 14
+                    font.bold: true
+                }
+
+                SettingsItemDelegate {
+                    fieldName: "Chanel name:"
+                    fieldDescription: "Twitch chanel target"
+                    onValueChanged:(text) => {
+                        ActionsManager.twitchChannel = text
+                    }
+                }
+
+                SettingsItemDelegate {
+                    fieldName: "Chat bot URL:"
+                    defaultText: ActionsManager.chatBotURL
+                    onValueChanged:(text) => {
+                        ActionsManager.chatBotURL = text
+                    }
+                }
+
+                SettingsItemDelegate {
+                    fieldName: "Chat bot port:"
+                    defaultText: ActionsManager.chatBotPort
+                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                    onValueChanged:(text) => {
+                        ActionsManager.chatBotPort = parseInt(text)
+                    }
+                }
+
             }
         }
 
-        SettingsItemDelegate {
-            fieldName: "Chat bot URL:"
-            defaultText: ActionsManager.chatBotURL
-            onValueChanged:(text) => {
-                ActionsManager.chatBotURL = text
-            }
-        }
 
-        SettingsItemDelegate {
-            fieldName: "Chat bot port:"
-            defaultText: ActionsManager.chatBotPort
-            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-            onValueChanged:(text) => {
-                ActionsManager.chatBotPort = parseInt(text)
-            }
-        }
+        BasePanel {
+            Layout.fillWidth: true
+            height: game_settings.height
 
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Game"
-            font.pointSize: 14
-        }
+            ColumnLayout {
+                id: game_settings
+                width: parent.width
 
-        SettingsItemDelegate {
-            fieldName: "Game screen width:"
-            defaultText: ActionsManager.screenWidth
-            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-            onValueChanged:(text) => {
-                ActionsManager.screenWidth = parseInt(text)
-            }
-        }
+                BaseText {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Game"
+                    font.pointSize: 14
+                    font.bold: true
+                }
 
-        SettingsItemDelegate {
-            fieldName: "Game screen height:"
-            defaultText: ActionsManager.screenHeight
-            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-            onValueChanged:(text) => {
-                ActionsManager.screenHeight = parseInt(text)
+                SettingsItemDelegate {
+                    fieldName: "Game screen width:"
+                    defaultText: ActionsManager.screenWidth
+                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                    onValueChanged:(text) => {
+                        ActionsManager.screenWidth = parseInt(text)
+                    }
+                }
+
+                SettingsItemDelegate {
+                    fieldName: "Game screen height:"
+                    defaultText: ActionsManager.screenHeight
+                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                    onValueChanged:(text) => {
+                        ActionsManager.screenHeight = parseInt(text)
+                    }
+                }
+
             }
         }
 
         // Settings
         Rectangle {
+            opacity: 0
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
@@ -102,6 +129,7 @@ Item {
             }
 
             Rectangle {
+                opacity: 0
                 Layout.fillWidth: true
             }
 

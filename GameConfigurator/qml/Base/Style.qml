@@ -17,6 +17,8 @@ QtObject {
     readonly property color darkPanelBorderColor: "#1f1d21"
     readonly property color darkNotificationBGColor: "#2c2731"
     readonly property color darkNotificationBorderColor: "#1f1d21"
+    readonly property color darkSettingsItemBGColor: "#534b60"
+    readonly property color darkSettingsItemBorderColor: "#1f1d21"
 
     // Light colors
     readonly property color lightTextColor: "black"
@@ -28,6 +30,8 @@ QtObject {
     readonly property color lightPanelBorderColor: "#7a7a7a"
     readonly property color lightNotificationBGColor: "#cfcfcf"
     readonly property color lightNotificationBorderColor: "#7a7a7a"
+    readonly property color lightSettingsItemBGColor: "#8b8b8b"
+    readonly property color lightSettingsItemBorderColor: "#474747"
 
     // Style
     // Colors
@@ -41,6 +45,8 @@ QtObject {
     readonly property color panelBorderColor: bIsDarkTheme ? darkPanelBGColor : lightPanelBorderColor
     readonly property color notificationBGColor: bIsDarkTheme ? darkNotificationBGColor : lightNotificationBGColor
     readonly property color notificationBorderColor: bIsDarkTheme ? darkNotificationBorderColor : lightNotificationBorderColor
+    readonly property color settingsItemBGColor: bIsDarkTheme ? darkSettingsItemBGColor : lightSettingsItemBGColor
+    readonly property color settingsItemBorderColor: bIsDarkTheme ? darkSettingsItemBorderColor : lightSettingsItemBorderColor
 
     // Sizes
     readonly property int buttonBorderSize: 2
