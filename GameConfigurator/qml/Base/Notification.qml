@@ -2,14 +2,15 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import SystemTools
+import Base
 
 Rectangle {
     id: root
     width: title.width + body.width + 50
     height: title.height + body.height + 50
-    color: "lightblue"
+    color: Style.notificationBGColor
     radius: 10
-    border.color: "black"
+    border.color: Style.notificationBorderColor
     border.width: 1
 
     property string description: ""
@@ -37,7 +38,7 @@ Rectangle {
     // Use the opacity property for the fade-in and fade-out effect
     opacity: opacityValue
 
-    Text {
+    BaseText {
         id: title
         anchors.top: root.top
         anchors.left: root.left
@@ -46,7 +47,7 @@ Rectangle {
         font.bold: true
         text: description
     }
-    Text {
+    BaseText {
         id: body
         anchors.top: title.bottom
         anchors.left: root.left
@@ -58,7 +59,7 @@ Rectangle {
 
     // Add a function to trigger the animation
     function show() {
-        opacityValue = 1;
+        opacityValue = Style.notificationOpacity;
     }
 
     // Add a function to trigger the fade-out animation
@@ -69,14 +70,14 @@ Rectangle {
     // Trigger the fade-out animation after a delay
     Timer {
         id: hideTimer
-        running: opacityValue == 1
+        running: opacityValue == Style.notificationOpacity
         interval: 3000 // Adjust the delay as needed (milliseconds)
         onTriggered: hide()
     }
 
     // Trigger the fade-out animation when the notification is clicked
     MouseArea {
-        enabled: opacityValue == 1
+        enabled: opacityValue == Style.notificationOpacity
         anchors.fill: parent
         onClicked: {
             hide()

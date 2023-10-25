@@ -19,20 +19,29 @@ ApplicationWindow {
 
     NotificationListModel {
         id: notificationModel
+        onNotificationsCountChanged: (count) => {
+            notificationsList.height = count * 200
+        }
     }
 
-    ListView {
-        height: 200
-        width: 200
-        x: parent.width - width
-        anchors.margins: 5
-        spacing: 5
-        model: notificationModel
-        delegate: Notification {
+    Component {
+        id: notification
+        Notification {
             description: title
             message: body
             rootModel: notificationModel
         }
+    }
+
+    ListView {
+        id: notificationsList
+        anchors.right: parent.right
+        anchors.margins: 5
+        width: 200
+        spacing: 5
+        model: notificationModel
+        delegate: notification
+        clip: true
     }
 
     Component {

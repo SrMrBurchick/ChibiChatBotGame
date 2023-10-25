@@ -15,6 +15,8 @@ QtObject {
     readonly property color darkButtonBorderColor: "#2d2a31"
     readonly property color darkPanelBGColor: "#4d4852"
     readonly property color darkPanelBorderColor: "#1f1d21"
+    readonly property color darkNotificationBGColor: "#2c2731"
+    readonly property color darkNotificationBorderColor: "#1f1d21"
 
     // Light colors
     readonly property color lightTextColor: "black"
@@ -24,6 +26,8 @@ QtObject {
     readonly property color lightButtonBorderColor: "#474747"
     readonly property color lightPanelBGColor: "#cfcfcf"
     readonly property color lightPanelBorderColor: "#7a7a7a"
+    readonly property color lightNotificationBGColor: "#cfcfcf"
+    readonly property color lightNotificationBorderColor: "#7a7a7a"
 
     // Style
     // Colors
@@ -35,6 +39,8 @@ QtObject {
     readonly property color buttonBorderColor: bIsDarkTheme ? darkButtonBorderColor : lightButtonBorderColor
     readonly property color panelBGColor: bIsDarkTheme ? darkPageBGColor : lightPanelBGColor
     readonly property color panelBorderColor: bIsDarkTheme ? darkPanelBGColor : lightPanelBorderColor
+    readonly property color notificationBGColor: bIsDarkTheme ? darkNotificationBGColor : lightNotificationBGColor
+    readonly property color notificationBorderColor: bIsDarkTheme ? darkNotificationBorderColor : lightNotificationBorderColor
 
     // Sizes
     readonly property int buttonBorderSize: 2
@@ -45,4 +51,7 @@ QtObject {
 
     // Margins
     readonly property int defaultMargin: 5
+
+    // Settings
+    readonly property real notificationOpacity: 0.75
 }

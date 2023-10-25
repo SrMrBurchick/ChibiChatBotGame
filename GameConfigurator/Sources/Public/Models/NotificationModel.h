@@ -30,6 +30,11 @@ public:
 
     Q_INVOKABLE void addNotification(const QString& Title, const QString& Body);
     Q_INVOKABLE void removeNotification(int Index);
+    Q_INVOKABLE int getNotificationsCount();
+
+signals:
+    void notificationsCountChanged(int Count);
+
 
 protected:
     QVector<Notification> NotificationList;
