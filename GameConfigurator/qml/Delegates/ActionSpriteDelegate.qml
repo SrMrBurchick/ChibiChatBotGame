@@ -53,10 +53,12 @@ Rectangle {
         }
     }
     Rectangle {
-        anchors.top: image.top
-        anchors.left: image.right - width
+        id: removeButton
         height: root.height / 5
         width: height
+        anchors.top: image.top
+        anchors.right: image.right
+
         MouseArea {
             anchors.fill: parent
             onDoubleClicked: {
