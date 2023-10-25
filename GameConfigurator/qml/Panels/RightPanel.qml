@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Buttons
 import Panels
 import ConfigComponent
+import Base
 
 Item {
     id: root
@@ -25,13 +26,13 @@ Item {
         id: panel
         anchors.fill: root
 
-        Rectangle {
+        BasePanel {
             Layout.fillWidth: true
             Layout.fillHeight: true
             ColumnLayout {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
-                Text {
+                BaseText {
                     id: title
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Animation preview"
@@ -54,14 +55,14 @@ Item {
 
                     spacing: 4
 
-                    Button {
+                    BaseButton {
                         text: "Play"
                         onClicked: {
                             timer.running = true
                         }
                     }
 
-                    Button {
+                    BaseButton {
                         text: "Pause"
                         onClicked: {
                             timer.running = false
@@ -72,7 +73,7 @@ Item {
             }
         }
 
-        Button {
+        BaseButton {
             Layout.fillWidth: true
             text: "Save"
             onClicked: saveActionsConfig()

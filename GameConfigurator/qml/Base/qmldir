@@ -1,3 +1,5 @@
 module Base
 singleton Style 1.0 Style.qml
 Notification 1.0 Notification.qml
+BaseText 1.0 BaseText.qml
+BasePanel 1.0 BasePanel.qml

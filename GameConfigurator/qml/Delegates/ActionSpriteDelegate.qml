@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Panels
+import Base
 
 Rectangle {
     id: root
@@ -14,7 +15,7 @@ Rectangle {
 
     Drag.active: dragArea.drag.active
 
-    Text {
+    BaseText {
         text: "(" + sprite_column + " : " + sprite_row + ")"
     }
 
@@ -52,7 +53,6 @@ Rectangle {
         }
     }
     Rectangle {
-        color: "green"
         anchors.top: image.top
         anchors.left: image.right - width
         height: root.height / 5

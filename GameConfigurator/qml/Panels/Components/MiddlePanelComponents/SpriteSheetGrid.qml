@@ -4,32 +4,29 @@ import QtQuick.Controls
 import Delegates
 import GameActions
 import Panels
+import Base
 
 Item {
     id: root
     anchors.fill: parent
 
-    Rectangle {
+    BasePanel {
         id: panel
         anchors.fill: root
 
-        Text {
+        BaseText {
             id: title
             anchors.margins: 5
             anchors.horizontalCenter: panel.horizontalCenter
             text: "Sprite sheet"
         }
 
-        Rectangle {
+        BasePanel {
             id: spritesGrid
             anchors.top: title.bottom
             anchors.bottom: panel.bottom
 
             width: panel.width
-
-            border.color: "black"
-            border.width: 2
-            color: "white"
 
             ScrollView {
                 clip: true

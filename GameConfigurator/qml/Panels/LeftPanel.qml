@@ -5,6 +5,7 @@ import Buttons
 import Panels
 import Dialogs
 import GameActions
+import Base
 
 Item {
     id: root
@@ -12,11 +13,6 @@ Item {
     anchors.leftMargin: 6
 
     property Item rootPage: Item
-
-    // Text {
-    //     text: root.width + "x" + root.height
-    // }
-    // anchors.horizontalCenter: parent.horizontalCenter
 
     ColumnLayout {
         anchors.fill: parent
@@ -28,26 +24,22 @@ Item {
 
             spacing: 5
 
-            Text {
+            BaseText {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Actions List"
-                font.pointSize: 16
+                // font.pointSize: 16
             }
 
-            Rectangle {
+            BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
-                border.color: "black"
-                border.width: 2
-                color: "white"
 
                 ActionsListComponent {
                     id: actionsListComponent
                 }
             }
 
-            Button {
+            BaseButton {
                 text: "Add action"
                 font.pointSize: 14
 
@@ -71,19 +63,15 @@ Item {
             Layout.maximumHeight: 400
             Layout.fillWidth: true
 
-            Text {
+            BaseText {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Settings"
                 font.pointSize: 16
             }
 
-            Rectangle {
+            BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
-                border.color: "black"
-                border.width: 2
-                color: "white"
 
                 SettingsList {
                     onSplitImageToSprites: {
@@ -95,16 +83,14 @@ Item {
         }
 
         // Navigation
-        Button {
+        BaseButton {
             text: "Load sprite sheet"
-            font.pointSize: 14
             onClicked: loadSpriteSheet()
             Layout.fillWidth: true
         }
 
-        Button {
+        BaseButton {
             text: "Back"
-            font.pointSize: 14
             onClicked: goBack()
             Layout.fillWidth: true
         }

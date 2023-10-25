@@ -7,6 +7,9 @@ import Base
 
 ApplicationWindow {
     visible: true
+    background: Rectangle {
+        color: Style.pageBGColor
+    }
 
     StackView {
         id: stack

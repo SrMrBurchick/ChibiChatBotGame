@@ -1,5 +1,6 @@
 import QtQuick
 import Panels
+import Base
 
 Rectangle {
     id: root
@@ -7,9 +8,7 @@ Rectangle {
     border.color: "black"
     border.width: 2
 
-    color: "yellow"
-
-    Text {
+    BaseText {
         text: "(" + sprite_column + " : " + sprite_row + ")"
     }
 
@@ -25,9 +24,6 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        // onClicked: {
-        //     console.log(ActionsManager.spriteSheetPath)
-        // }
         onDoubleClicked: {
             toggleSelected(index, sprite_column, sprite_row)
         }

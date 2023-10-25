@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Base
 
 Rectangle {
     id: root
@@ -17,7 +18,7 @@ Rectangle {
     RowLayout {
         anchors.fill: root
 
-        Text {
+        BaseText {
             text: fieldName
         }
         Rectangle {

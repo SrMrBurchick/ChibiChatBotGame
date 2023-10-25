@@ -5,16 +5,17 @@ import Delegates
 import GameActions
 import Panels
 import ConfigComponent
+import Base
 
 Item {
     id: root
     anchors.fill: parent
 
-    Rectangle {
+    BasePanel {
         id: panel
         anchors.fill: root
 
-        Text {
+        BaseText {
             id: title
             anchors.margins: 5
             anchors.horizontalCenter: panel.horizontalCenter

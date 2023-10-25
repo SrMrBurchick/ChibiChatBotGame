@@ -18,7 +18,7 @@ Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            Text {
+            BaseText {
                 anchors.fill: parent
                 id: actionName
                 text: name

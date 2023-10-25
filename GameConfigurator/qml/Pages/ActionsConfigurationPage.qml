@@ -6,6 +6,7 @@ import Buttons
 import Panels
 import Dialogs
 import ConfigComponent
+import Base
 
 Item {
     id: root
@@ -41,7 +42,7 @@ Item {
         // Left panel
         ColumnLayout {
             Layout.maximumWidth: 300
-            Rectangle {
+            BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 AddActionDialog {
@@ -67,7 +68,7 @@ Item {
         ColumnLayout {
             id: middle_root
 
-            Rectangle {
+            BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -87,19 +88,16 @@ Item {
                         visible: true
                         source: ActionsManager.spriteSheetPath
 
-                        Text {
+                        BaseText {
                             text: "(" + image.sourceSize.width + "x" + image.sourceSize.height + ")"
                         }
                     }
                 }
             }
 
-            Rectangle {
+            BasePanel {
                 Layout.fillWidth: true
                 Layout.minimumHeight: 200
-                border.color: "black"
-                border.width: 2
-                color: "white"
 
                 ActionSpriteSequence {
                     id: actionsSpriteSequence
@@ -111,7 +109,7 @@ Item {
         // Right panel
         ColumnLayout {
             Layout.maximumWidth: 300
-            Rectangle {
+            BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 

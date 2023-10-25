@@ -4,12 +4,14 @@ import QtQuick.Controls
 import Panels
 import GameActions
 import Delegates
+import Base
+import Buttons
 
 ColumnLayout {
     anchors.fill: parent
     anchors.margins: 10
 
-    Text {
+    BaseText {
         anchors.horizontalCenter: parent.horizontalCenter
         text: "Table settings"
         font.pixelSize: 24 // Set the font size
@@ -42,7 +44,7 @@ ColumnLayout {
         }
     }
 
-    Text {
+    BaseText {
         text: "Sprite settings"
         anchors.horizontalCenter: parent.horizontalCenter
         font.pixelSize: 24 // Set the font size
@@ -74,7 +76,7 @@ ColumnLayout {
         }
     }
 
-    Button {
+    BaseButton {
         Layout.fillWidth: true
         text: "Split to sprites"
         onClicked: {
