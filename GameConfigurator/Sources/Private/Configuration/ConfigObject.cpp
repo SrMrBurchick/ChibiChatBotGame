@@ -4,8 +4,9 @@
 #include <iostream>
 
 #include <QFile>
-#include <QJsonObject>
+#include <QImage>
 #include <QJsonArray>
+#include <QJsonObject>
 
 // Global settings fields
 constexpr char SOURCE_FILE[] = "source-file";
@@ -202,6 +203,7 @@ void ConfigObject::saveActions(const AnimationSequenceModel* Model)
 void ConfigObject::saveSpriteSheetPath(const QString& ImagePath)
 {
     SystemSettings.ImagePath = ImagePath;
+    CopyImageToAssets();
 }
 
 void ConfigObject::initActionsListModel(ActionsListModel* Model)
@@ -259,4 +261,18 @@ int ConfigObject::getTableColumns() const
 int ConfigObject::getTableRows() const
 {
     return TableSettings.Rows;
+}
+
+void ConfigObject::CopyImageToAssets()
+{
+    QImage image;
+    if (SystemSettings.ImagePath.isEmpty()) {
+        return;
+    }
+
+    QString SystemPath = SystemSettings.ImagePath;
+    SystemPath.remove("file://");
+    if (image.load(SystemPath)) {
+        image.save(QT_STRINGIFY(GAME_ASSET_IMAGE_PATH));
+    }
 }

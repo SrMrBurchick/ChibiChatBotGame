@@ -28,7 +28,7 @@ pub fn setup_player(
         let mut animation_component: AnimationComponent = AnimationComponent::new();
         animation_component.map_columns = config.get_table_size().unwrap().columns;
 
-        let texture_handle = asset_server.load(config.get_img());
+        let texture_handle = asset_server.load("sprite-sheet.png");
         let sprite_size = config.get_sprite_size().unwrap();
         let table_size = config.get_table_size().unwrap();
         let texture_atlas = TextureAtlas::from_grid(

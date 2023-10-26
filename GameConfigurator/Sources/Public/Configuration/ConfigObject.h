@@ -64,6 +64,8 @@ public:
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
 protected:
+    void CopyImageToAssets();
+
     bool bConfigLoaded = false;
     QString SpriteSheetPath;
     SpriteSize SpriteSettings;
