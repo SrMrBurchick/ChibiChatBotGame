@@ -7,7 +7,7 @@ import Delegates
 import Base
 import Buttons
 
-Column {
+ColumnLayout {
     id: root
 
     BaseText {
@@ -18,9 +18,11 @@ Column {
 
     ColumnLayout {
         Layout.fillWidth: true
-        Layout.fillHeight: true
 
         SettingsItemDelegate {
+            Layout.fillWidth: true
+            Layout.margins: 10
+
             fieldName: "Columns:"
             fieldDescription: "Columns count"
             defaultText: ActionsManager.tableSettingsColumns
@@ -32,6 +34,9 @@ Column {
         }
 
         SettingsItemDelegate {
+            Layout.fillWidth: true
+            Layout.margins: 10
+
             fieldName: "Rows:"
             fieldDescription: "Row count"
             defaultText: ActionsManager.tableSettingsRows
@@ -52,9 +57,11 @@ Column {
     ColumnLayout {
         spacing: 5
         Layout.fillWidth: true
-        Layout.fillHeight: true
 
         SettingsItemDelegate {
+            Layout.fillWidth: true
+            Layout.margins: 10
+
             fieldName: "Width:"
             fieldDescription: "Sprite width"
             defaultText: ActionsManager.spriteSizeWidth
@@ -65,6 +72,9 @@ Column {
         }
 
         SettingsItemDelegate {
+            Layout.fillWidth: true
+            Layout.margins: 10
+
             fieldName: "Height:"
             fieldDescription: "Sprite height"
             typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
@@ -75,6 +85,9 @@ Column {
         }
 
         SettingsItemDelegate {
+            Layout.fillWidth: true
+            Layout.margins: 10
+
             fieldName: "Scale:"
             fieldDescription: "Sprite scale"
             typeValidator: RegularExpressionValidator{regularExpression: /^[0-9\./]+$/}

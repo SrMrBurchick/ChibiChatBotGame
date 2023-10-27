@@ -14,107 +14,124 @@ Item {
 
     property StackView rootStack: StackView.view
 
-    // Title
-    BaseText {
-        id: title
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "Configuration"
-        font.pointSize: 32
-        font.bold: true
-    }
 
-
-    // Panel
     ColumnLayout {
-        id: panel
-        width: root.width
-        anchors.top: title.bottom
-        anchors.bottom: root.bottom
-        BasePanel {
-            Layout.fillWidth: true
-            height: chat_bot_settings.height
+        anchors.fill: root
 
-            ColumnLayout {
-                id: chat_bot_settings
-                width: parent.width
-
-                BaseText {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: "ChatBot"
-                    font.pointSize: 14
-                    font.bold: true
-                }
-
-                SettingsItemDelegate {
-                    fieldName: "Chanel name:"
-                    fieldDescription: "Twitch chanel target"
-                    onValueChanged:(text) => {
-                        ActionsManager.twitchChannel = text
-                    }
-                }
-
-                SettingsItemDelegate {
-                    fieldName: "Chat bot URL:"
-                    defaultText: ActionsManager.chatBotURL
-                    onValueChanged:(text) => {
-                        ActionsManager.chatBotURL = text
-                    }
-                }
-
-                SettingsItemDelegate {
-                    fieldName: "Chat bot port:"
-                    defaultText: ActionsManager.chatBotPort
-                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                    onValueChanged:(text) => {
-                        ActionsManager.chatBotPort = parseInt(text)
-                    }
-                }
-
-            }
+        // Title
+        BaseText {
+            id: title
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Configuration"
+            font.pointSize: 32
+            font.bold: true
         }
 
-
-        BasePanel {
-            Layout.fillWidth: true
-            height: game_settings.height
-
-            ColumnLayout {
-                id: game_settings
-                width: parent.width
-
-                BaseText {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Game"
-                    font.pointSize: 14
-                    font.bold: true
-                }
-
-                SettingsItemDelegate {
-                    fieldName: "Game screen width:"
-                    defaultText: ActionsManager.screenWidth
-                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                    onValueChanged:(text) => {
-                        ActionsManager.screenWidth = parseInt(text)
-                    }
-                }
-
-                SettingsItemDelegate {
-                    fieldName: "Game screen height:"
-                    defaultText: ActionsManager.screenHeight
-                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                    onValueChanged:(text) => {
-                        ActionsManager.screenHeight = parseInt(text)
-                    }
-                }
-
-            }
-        }
-
-        // Settings
-        Rectangle {
-            opacity: 0
+        ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            // Chat bot settings
+            BasePanel {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                ColumnLayout {
+                    id: chat_bot_settings
+                    width: parent.width
+
+                    BaseText {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "ChatBot"
+                        font.pointSize: 14
+                        font.bold: true
+                    }
+
+                    SettingsItemDelegate {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 10
+
+                        fieldName: "Chanel name:"
+                        fieldDescription: "Twitch chanel target"
+                        onValueChanged:(text) => {
+                            ActionsManager.twitchChannel = text
+                        }
+                    }
+
+                    SettingsItemDelegate {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 10
+
+                        fieldName: "Chat bot URL:"
+                        defaultText: ActionsManager.chatBotURL
+                        onValueChanged:(text) => {
+                            ActionsManager.chatBotURL = text
+                        }
+                    }
+
+                    SettingsItemDelegate {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 10
+
+                        fieldName: "Chat bot port:"
+                        defaultText: ActionsManager.chatBotPort
+                        typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                        onValueChanged:(text) => {
+                            ActionsManager.chatBotPort = parseInt(text)
+                        }
+                    }
+
+                }
+            }
+
+            // Game settings
+            BasePanel {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                // height: game_settings.height
+
+                ColumnLayout {
+                    id: game_settings
+                    width: parent.width
+
+                    BaseText {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Game"
+                        font.pointSize: 14
+                        font.bold: true
+                    }
+
+                    SettingsItemDelegate {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 10
+
+                        fieldName: "Game screen width:"
+                        defaultText: ActionsManager.screenWidth
+                        typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                        onValueChanged:(text) => {
+                            ActionsManager.screenWidth = parseInt(text)
+                        }
+                    }
+
+                    SettingsItemDelegate {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 10
+
+                        fieldName: "Game screen height:"
+                        defaultText: ActionsManager.screenHeight
+                        typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                        onValueChanged:(text) => {
+                            ActionsManager.screenHeight = parseInt(text)
+                        }
+                    }
+
+                }
+            }
         }
 
         // Controls

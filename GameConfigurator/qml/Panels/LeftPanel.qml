@@ -68,25 +68,8 @@ Item {
                 id: settings_column
                 width: parent.width
 
-                BaseText {
-                    Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-                    text: "Settings"
-                    font.pixelSize: 32 // Set the font size
-                }
-
                 SettingsList {
                     Layout.fillWidth: true
-                    // Layout.fillHeight: true
-                }
-
-                BaseButton {
-                    Layout.fillWidth: true
-                    Layout.margins: 10
-                    text: "Split to sprites"
-                    onClicked: {
-                        ActionsManager.spriteSheetConfigured = true
-                        rootPage.splitImageToSprites()
-                    }
                 }
             }
         }
@@ -94,8 +77,21 @@ Item {
         // Navigation
         ColumnLayout {
             Layout.fillWidth: true
+
             BaseButton {
+                Layout.fillWidth: true
                 Layout.margins: 10
+                text: "Split to sprites"
+                onClicked: {
+                    ActionsManager.spriteSheetConfigured = true
+                    rootPage.splitImageToSprites()
+                }
+            }
+
+            BaseButton {
+                Layout.bottomMargin: 10
+                Layout.leftMargin: 10
+                Layout.rightMargin: 10
                 text: "Load sprite sheet"
                 onClicked: loadSpriteSheet()
                 Layout.fillWidth: true

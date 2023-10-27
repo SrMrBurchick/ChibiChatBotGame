@@ -17,7 +17,7 @@ QtObject {
     readonly property color darkPanelBorderColor: "#1f1d21"
     readonly property color darkNotificationBGColor: "#2c2731"
     readonly property color darkNotificationBorderColor: "#1f1d21"
-    readonly property color darkSettingsItemBGColor: "#534b60"
+    readonly property color darkSettingsItemBGColor: "#342f3b"
     readonly property color darkSettingsItemBorderColor: "#1f1d21"
 
     // Light colors

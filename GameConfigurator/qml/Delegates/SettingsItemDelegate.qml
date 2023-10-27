@@ -5,10 +5,8 @@ import Base
 
 Rectangle {
     id: root
-    height: 40
-
-    Layout.margins: 10
-    width: parent.width - 20
+    height: settings_item.height
+    width: parent.width
 
     property string defaultText
     property string fieldName: ""
@@ -20,17 +18,20 @@ Rectangle {
     border.width: 2
 
     RowLayout {
-        anchors.fill: root
-        anchors.margins: 10
+        id: settings_item
+        width: root.width
+        anchors.centerIn: root
 
         BaseText {
             text: fieldName
+            Layout.margins: 10
         }
         Rectangle {
             opacity: 0
             Layout.fillWidth: true
         }
         TextField {
+            Layout.margins: 10
             placeholderText: fieldDescription
             horizontalAlignment: TextInput.AlignHCenter
             validator: typeValidator
