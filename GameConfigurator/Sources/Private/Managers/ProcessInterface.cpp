@@ -63,7 +63,7 @@ bool IProcess::IsProcessRunning()
 
 void IProcess::Kill()
 {
-    Process.kill();
+    Process.terminate();
 }
 
 QString IProcess::GetLastError()

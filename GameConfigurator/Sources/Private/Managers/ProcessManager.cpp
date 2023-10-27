@@ -88,3 +88,8 @@ void ProcessManager::runGame()
         NotificationsManager::SendNotification("Game process", QString::asprintf("Failed to run game\n %s", Error.toStdString().c_str()));
     }
 }
+
+void ProcessManager::killAll()
+{
+    StopAll();
+}

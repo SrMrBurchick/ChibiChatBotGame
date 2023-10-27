@@ -21,6 +21,7 @@ public:
 
     Q_INVOKABLE void runGame();
     Q_INVOKABLE void runChatBot();
+    Q_INVOKABLE void killAll();
 
 private:
     QMap<eProcessType, QPointer<IProcess>> ProcessesList;

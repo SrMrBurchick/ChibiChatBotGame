@@ -38,6 +38,7 @@ Item {
         BaseButton {
             text: "Exit"
             onClicked: {
+                ProcessManager.killAll()
                 Qt.quit()
             }
 
