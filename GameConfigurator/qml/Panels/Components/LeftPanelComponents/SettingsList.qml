@@ -7,9 +7,8 @@ import Delegates
 import Base
 import Buttons
 
-ColumnLayout {
-    anchors.fill: parent
-    anchors.margins: 10
+Column {
+    id: root
 
     BaseText {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -75,15 +74,4 @@ ColumnLayout {
             }
         }
     }
-
-    BaseButton {
-        Layout.fillWidth: true
-        text: "Split to sprites"
-        onClicked: {
-            ActionsManager.spriteSheetConfigured = true
-            splitImageToSprites()
-        }
-    }
-
-    signal splitImageToSprites()
 }

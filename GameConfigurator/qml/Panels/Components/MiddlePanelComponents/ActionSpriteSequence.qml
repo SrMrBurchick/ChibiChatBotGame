@@ -14,6 +14,7 @@ Item {
     BasePanel {
         id: panel
         anchors.fill: root
+        anchors.margins: 0
 
         BaseText {
             id: title

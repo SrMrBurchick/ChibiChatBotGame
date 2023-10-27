@@ -75,6 +75,7 @@ Item {
 
         BaseButton {
             Layout.fillWidth: true
+            Layout.margins: 10
             text: "Save"
             onClicked: saveActionsConfig()
         }

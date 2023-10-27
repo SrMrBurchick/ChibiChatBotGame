@@ -7,7 +7,6 @@ import Panels
 import ConfigComponent
 
 ScrollView {
-    anchors.fill: parent
     anchors.margins: 4
 
     ListView {

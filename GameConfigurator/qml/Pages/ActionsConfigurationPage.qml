@@ -43,6 +43,7 @@ Item {
         ColumnLayout {
             Layout.maximumWidth: 300
             BasePanel {
+                border.width: 0
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 AddActionDialog {
@@ -71,6 +72,7 @@ Item {
             BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                border.width: !ActionsManager.spriteSheetConfigured ? Style.buttonBorderSize : 0
 
                 SpriteSheetGrid {
                     id: spriteSheetGrid
@@ -98,6 +100,8 @@ Item {
             BasePanel {
                 Layout.fillWidth: true
                 Layout.minimumHeight: 200
+                border.width: 0
+                anchors.margins: 0
 
                 ActionSpriteSequence {
                     id: actionsSpriteSequence
@@ -112,6 +116,7 @@ Item {
             BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                border.width: 0
 
                 RightPanel {
 
