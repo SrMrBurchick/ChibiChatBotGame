@@ -25,6 +25,7 @@ constexpr char TABLE_SETTINGS_ROWS[] = "rows";
 constexpr char SPRITE_SETTINGS[] = "sprite-size";
 constexpr char SPRITE_SETTINGS_HEIGHT[] = "height";
 constexpr char SPRITE_SETTINGS_WIDTH[] = "width";
+constexpr char SPRITE_SCALE[] = "sprite-scale";
 
 // Animations settings fields
 constexpr char ANIMATIONS_SETTINGS[] = "animations";
@@ -54,6 +55,11 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     // Init source file
     if (ConfigMap.contains(SOURCE_FILE)) {
         SystemSettings.ImagePath = ConfigMap[SOURCE_FILE].toString();
+    }
+
+    // Init sprite scale
+    if (ConfigMap.contains(SPRITE_SCALE)) {
+        SystemSettings.SpriteScale = ConfigMap[SPRITE_SCALE].toFloat();
     }
 
     // Init chat bot settings
@@ -145,6 +151,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 
     QJsonObject Config;
     Config[SOURCE_FILE] = SystemSettings.ImagePath;
+    Config[SPRITE_SCALE] = SystemSettings.SpriteScale;
     Config[CHAT_BOT_SETTINGS] = JsonChatBotSettings;
     Config[TABLE_SETTINGS] = JsonTableSettings;
     Config[SPRITE_SETTINGS] = JsonSpriteSettings;
@@ -275,4 +282,14 @@ void ConfigObject::CopyImageToAssets()
     if (image.load(SystemPath)) {
         image.save(QT_STRINGIFY(GAME_ASSET_IMAGE_PATH));
     }
+}
+
+void ConfigObject::saveSpriteScale(const float SpriteScale)
+{
+    SystemSettings.SpriteScale = SpriteScale;
+}
+
+float ConfigObject::getSpriteScale() const
+{
+    return SystemSettings.SpriteScale;
 }

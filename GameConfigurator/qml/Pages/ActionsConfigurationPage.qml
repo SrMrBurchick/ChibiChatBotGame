@@ -132,6 +132,7 @@ Item {
             ActionsManager.spriteSizeHeight = Config.getSpriteHeight()
             ActionsManager.tableSettingsColumns = Config.getTableColumns()
             ActionsManager.tableSettingsRows = Config.getTableRows()
+            ActionsManager.spriteScale = Config.getSpriteScale()
             ActionsManager.spriteSheetConfigured = true
             splitImageToSprites()
         }

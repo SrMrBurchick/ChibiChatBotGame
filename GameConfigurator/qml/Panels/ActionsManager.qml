@@ -17,6 +17,7 @@ QtObject {
     // Sprite settings
     property int spriteSizeHeight
     property int spriteSizeWidth
+    property real spriteScale: 1.0
 
     // System settings
     property string twitchChannel

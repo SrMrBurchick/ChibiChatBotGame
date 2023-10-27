@@ -73,5 +73,16 @@ Column {
                 ActionsManager.spriteSizeHeight = parseInt(text)
             }
         }
+
+        SettingsItemDelegate {
+            fieldName: "Scale:"
+            fieldDescription: "Sprite scale"
+            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9\./]+$/}
+            defaultText: ActionsManager.spriteScale
+            onValueChanged:(text) => {
+                ActionsManager.spriteScale = parseFloat(text)
+                console.log(ActionsManager.spriteScale)
+            }
+        }
     }
 }
