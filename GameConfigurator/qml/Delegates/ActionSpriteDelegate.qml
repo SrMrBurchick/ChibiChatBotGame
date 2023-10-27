@@ -52,15 +52,18 @@ Rectangle {
             ActionsManager.actionSpriteNewIndex = dragArea.DelegateModel.itemsIndex
         }
     }
-    Rectangle {
+    Image {
         id: removeButton
         height: root.height / 5
         width: height
         anchors.top: image.top
         anchors.right: image.right
+        source: Style.trashCanImage
+
 
         MouseArea {
             anchors.fill: parent
+
             onDoubleClicked: {
                 removeItem(index)
             }
