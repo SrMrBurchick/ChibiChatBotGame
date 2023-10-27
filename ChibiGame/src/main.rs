@@ -35,7 +35,10 @@ fn main() {
         }))
         .add_plugins((
             RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0),
-            RapierDebugRenderPlugin::default()
+            #[cfg(debug_assertions)]
+            {
+                RapierDebugRenderPlugin::default()
+            }
         ))
         .add_state::<GameStates>()
         .add_event::<Event>()
