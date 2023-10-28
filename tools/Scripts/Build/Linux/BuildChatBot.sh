@@ -8,7 +8,7 @@ PACKAGE_LOCATION=$2
 cd ${CHAT_BOT_LOCATION}
 
 ## Build
-pyinstaller chat_bot.py
+pyinstaller --onefile --exclude ./Game/config/ChibiChatBotConfig.json chat_bot.py
 
 ## Copy chat bot to package
-cp -r ${CHAT_BOT_LOCATION}/dist/chat_bot ${PACKAGE_LOCATION}
+cp ${CHAT_BOT_LOCATION}/dist/chat_bot ${PACKAGE_LOCATION}
