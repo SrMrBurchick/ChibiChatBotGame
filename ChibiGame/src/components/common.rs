@@ -3,6 +3,7 @@ use bevy::prelude::*;
 
 pub mod sprite_index;
 pub mod events;
+pub mod message;
 
 use crate::components::{
     actions::Actions,
