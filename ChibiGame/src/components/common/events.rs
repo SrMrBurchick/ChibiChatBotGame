@@ -7,7 +7,7 @@ pub enum OverlapType {
     Ended(Entity)
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub enum GameEvents {
     ActionChanged(Actions),
     SetNewAction(Actions),
@@ -23,7 +23,7 @@ pub enum SystemEvents {
     PlayerConfigured(bool),
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub enum Events {
     GameEvents(GameEvents),
     SystemEvents(SystemEvents)

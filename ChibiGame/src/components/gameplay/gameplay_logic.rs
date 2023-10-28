@@ -69,9 +69,9 @@ impl GameplayLogicComponent {
         }
 
         // Set only when current action is unknown
-        info!("Set action {:?}", action);
-        self.current_action = action;
-        self.can_be_interrupted = !is_action_can_interrupt(action);
+        info!("Set action {:?}", action.clone());
+        self.current_action = action.clone();
+        self.can_be_interrupted = !is_action_can_interrupt(action.clone());
 
         // Assign action strategy if exists
         match action {
@@ -94,7 +94,7 @@ impl GameplayLogicComponent {
     }
 
     pub fn get_current_action(&self) -> Actions {
-        self.current_action
+        self.current_action.clone()
     }
 
     pub fn get_next_action(&mut self) -> Actions {

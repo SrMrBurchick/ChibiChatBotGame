@@ -61,7 +61,25 @@ fn parse_response(string: String) -> Actions {
     match json::parse(string.as_str()) {
         Ok(content) => {
             if content.has_key("action") {
-                action = string_to_action(content["action"].as_str().unwrap());
+                let action_str = content["action"].as_str();
+                match action_str {
+                    Some(value) => {
+                        action = string_to_action(value);
+                        match action.clone() {
+                            Actions::Unknown => {
+                                if !value.is_empty() {
+                                    match value {
+                                        _ => {
+                                            action = Actions::UserAction(String::from(value));
+                                        },
+                                    }
+                                }
+                            }
+                            _ => {},
+                        }
+                    },
+                    None => {},
+                }
             }
         }
         Err(e) => {

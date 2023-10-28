@@ -53,7 +53,7 @@ impl AIComponent {
         for action in self.actions.iter() {
             cumulative_weight += action.weight;
             if new_action_weight < cumulative_weight {
-                return action.action;
+                return action.action.clone();
             }
         }
 

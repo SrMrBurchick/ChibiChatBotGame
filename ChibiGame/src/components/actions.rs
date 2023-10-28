@@ -28,17 +28,17 @@ pub struct UserAction {
     pub animations: Vec<SpriteIndex>
 }
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-pub enum Actions {
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+pub enum Actions{
     Climb,
     Eat,
     Fall,
     PickUp,
     Sleep,
     StandBy,
-    Walk,
-    UserAction(u32),
     SwapDirection,
+    Walk,
+    UserAction(String),
     Unknown
 }
 
@@ -83,18 +83,6 @@ impl ActionComponent {
         self.user_actions.push(user_action.clone());
     }
 
-    pub fn user_action_to_action(&self, user_action: String) -> Actions {
-        match self.user_actions.iter().position(|action| action.action == user_action) {
-            Some(index) => {
-                return Actions::UserAction(index as u32);
-            },
-            _ => {
-                // Do nothing
-            }
-        }
-        return Actions::Unknown;
-    }
-
     pub fn init_animation_map(&mut self, animations_map: &AnimationsMap) {
         if !self.animation_map.is_empty() {
             self.animation_map.clear();
@@ -112,7 +100,7 @@ impl ActionComponent {
 
         for user_action in &self.user_actions {
             self.animation_map.insert(
-                self.user_action_to_action(user_action.action.clone()),
+                Actions::UserAction(user_action.action.clone()),
                 user_action.animations.clone()
             );
         }

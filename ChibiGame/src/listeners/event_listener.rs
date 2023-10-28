@@ -85,18 +85,24 @@ pub fn handle_game_events(
         &mut GameplayLogicComponent,
         &mut Velocity
     ), With<PlayerComponent>>,
+    mut message_manager_query: Query<&mut MessageManager, With<PlayerComponent>>,
     type_registry: Res<AppTypeRegistry>,
     borders: Query<(Entity, &Border), With<Border>>
 ) {
     for event in events.iter() {
-        match event.event_type {
+        match event.event_type.clone() {
             Events::GameEvents(game_event) => {
                 match game_event {
                     GameEvents::SetNewAction(new_action) => {
                         for (_, _, _, mut gameplay_logic_component, _) in components.iter_mut() {
-                            info!("Set new action {:?}", new_action);
-                            if !gameplay_logic_component.try_to_set_action(new_action) {
-                                // TODO: send error message
+                            info!("Set new action {:?}", new_action.clone());
+
+                            match new_action.clone() {
+                                _ => {
+                                    if !gameplay_logic_component.try_to_set_action(new_action.clone()) {
+                                        // TODO: send error message
+                                    }
+                                },
                             }
                         }
                     }
@@ -108,7 +114,7 @@ pub fn handle_game_events(
                             _,
                             mut velocity
                         ) in components.iter_mut() {
-                            info!("Action changed to {:?}", action);
+                            info!("Action changed to {:?}", action.clone());
                             match action {
                                 Actions::SwapDirection => {
                                     if action_component.current_action == Actions::Walk {
@@ -117,7 +123,7 @@ pub fn handle_game_events(
                                 }
                                 _ => {
                                     on_action_changed(
-                                        action,
+                                        action.clone(),
                                         &mut action_component,
                                         &mut animation_component,
                                         &mut movement_component,
@@ -181,8 +187,8 @@ fn on_action_changed(
         return;
     }
 
-    let animations = action_component.get_animation_map_by_action(new_action);
-    action_component.current_action = new_action;
+    let animations = action_component.get_animation_map_by_action(new_action.clone());
+    action_component.current_action = new_action.clone();
     animation_component.set_new_animation_sequence(&animations);
-    movement_component.on_action_changed(new_action, velocity);
+    movement_component.on_action_changed(new_action.clone(), velocity);
 }
