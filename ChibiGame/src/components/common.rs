@@ -4,6 +4,7 @@ use bevy::prelude::*;
 pub mod sprite_index;
 pub mod events;
 pub mod message;
+pub mod ui;
 
 use crate::components::{
     actions::Actions,

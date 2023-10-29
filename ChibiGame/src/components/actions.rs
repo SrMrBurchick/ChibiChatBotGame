@@ -34,6 +34,7 @@ pub enum Actions{
     Eat,
     Fall,
     PickUp,
+    Say(String),
     Sleep,
     StandBy,
     SwapDirection,

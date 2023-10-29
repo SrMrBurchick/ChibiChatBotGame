@@ -2,8 +2,11 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::components::{
-    common::events::{
-        Events, Event, SystemEvents, GameEvents
+    common::{
+        message::MessageManager,
+        events::{
+            Events, Event, SystemEvents, GameEvents
+        }
     },
     animation::AnimationComponent,
     actions::{ActionComponent, Actions},
@@ -83,6 +86,7 @@ pub fn setup_player(
             ))))
             .insert(GameplayLogicComponent::new())
             .insert(ai_component)
+            .insert(MessageManager::new())
             .insert(PlayerComponent);
     }
 

@@ -2,6 +2,9 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 use crate::components::{
     common::{
+        message::{
+            MessageManager, Message
+        },
         GameStates, events::{
             Event, Events, GameEvents, SystemEvents, OverlapType
         }
@@ -98,6 +101,18 @@ pub fn handle_game_events(
                             info!("Set new action {:?}", new_action.clone());
 
                             match new_action.clone() {
+                                Actions::Say(message_content) => {
+                                    match message_manager_query.get_single_mut() {
+                                        Ok(mut manager) => {
+                                            let message = Message {
+                                                content: message_content.clone()
+                                            };
+
+                                            manager.add_message(&message);
+                                        },
+                                        Err(_) => {},
+                                    }
+                                }
                                 _ => {
                                     if !gameplay_logic_component.try_to_set_action(new_action.clone()) {
                                         // TODO: send error message

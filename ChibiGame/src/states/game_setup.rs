@@ -1,5 +1,8 @@
 use crate::components::{
-    common::events::{Event, Events, SystemEvents},
+    common::{
+        events::{Event, Events, SystemEvents},
+        ui::TextFont
+    },
     gameplay::{
         Border, BorderType, GameTimer,
         actions_strategies::{
@@ -16,7 +19,8 @@ pub fn setup_game(
     mut commands: Commands,
     windows: Query<&Window>,
     mut event_writer: EventWriter<Event>,
-    type_registry: ResMut<AppTypeRegistry>
+    type_registry: ResMut<AppTypeRegistry>,
+    asset_server: Res<AssetServer>
 ) {
     let window = windows.single();
     let height = window.height();
@@ -80,6 +84,11 @@ pub fn setup_game(
             border_type: BorderType::RightBorder,
         });
 
+    // Setup UI
+    let font_handle: Handle<Font> = asset_server.load("fonts/CoffeeHealing.ttf");
+    commands.insert_resource(TextFont { font: font_handle });
+
+    // Go to next state
     event_writer.send(Event {
         event_type: Events::SystemEvents(SystemEvents::GameConfigured(true)),
     });

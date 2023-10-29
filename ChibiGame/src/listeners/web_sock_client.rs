@@ -69,6 +69,15 @@ fn parse_response(string: String) -> Actions {
                             Actions::Unknown => {
                                 if !value.is_empty() {
                                     match value {
+                                        "say" => {
+                                            let message_str = content["message"].as_str();
+                                            match message_str {
+                                                Some(message) => {
+                                                    action = Actions::Say(String::from(message));
+                                                },
+                                                None => {},
+                                            }
+                                        }
                                         _ => {
                                             action = Actions::UserAction(String::from(value));
                                         },

@@ -9,6 +9,7 @@ pub mod states;
 
 use crate::components::common::{
     GameStates, events::Event,
+    message
 };
 use crate::components::{
     animation, movement, gameplay::{
@@ -68,6 +69,7 @@ fn main() {
         .add_systems(Update, movement::monitor_collisions.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, ai::ai_system.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, commands_listener::handle_commands.run_if(in_state(GameStates::RunGame)))
+        .add_systems(Update, message::message_system.run_if(in_state(GameStates::RunGame)))
 
         .run();
 }
