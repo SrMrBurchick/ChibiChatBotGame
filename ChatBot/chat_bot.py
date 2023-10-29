@@ -7,16 +7,20 @@ import json
 CONFIG_FILE = "./Game/config/ChibiChatBotConfig.json"
 
 async def main():
-    with open(CONFIG_FILE) as conf_file:
-        conf_data = conf_file.read()
+    # Default commands
+    commands = ["say"]
 
-    config = json.loads(conf_data)
-    commands = []
+    try:
+        with open(CONFIG_FILE) as conf_file:
+            conf_data = conf_file.read()
+            config = json.loads(conf_data)
 
-    if config is not None:
-        for animation in config["animations"]:
-            for key in animation.keys():
-                commands.append(key)
+            if config is not None:
+                for animation in config["animations"]:
+                    for key in animation.keys():
+                        commands.append(key)
+    except:
+        pass
 
     print(commands)
 

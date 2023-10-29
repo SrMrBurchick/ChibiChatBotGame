@@ -61,9 +61,12 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         c = self.connection
 
         if cmd in self.commands:
+            # Not best but simplest and fastest solution ever )))
+            args = e.arguments[0].split()
+            args = args[1:]
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            loop.run_until_complete(self.wss.send_command(cmd, None))
+            loop.run_until_complete(self.wss.send_command(cmd, args))
         elif cmd == "commands":
             commands = ""
             print(self.commands)

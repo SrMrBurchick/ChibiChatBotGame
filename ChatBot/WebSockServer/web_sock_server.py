@@ -23,14 +23,16 @@ class WebSockServer:
     def is_client_connected(self) -> bool:
         return self.__websocket is not None
 
-    async def send_command(self, command: str, author: str):
+    async def send_command(self, command: str, arguments: list):
+        print(f'Received {command} with {arguments}')
         if self.is_client_connected():
             event = {
                 "action": command
             }
 
-            if author is not None:
-                event["author"] = author
+            # print(e.arguments)
+            if command == "say":
+                event["message"] = " ".join(arguments)
 
             await self.__websocket.send(json.dumps(event))
 

@@ -85,7 +85,7 @@ pub fn setup_game(
         });
 
     // Setup UI
-    let font_handle: Handle<Font> = asset_server.load("fonts/CoffeeHealing.ttf");
+    let font_handle: Handle<Font> = asset_server.load("fonts/ComicSansMS.ttf");
     commands.insert_resource(TextFont { font: font_handle });
 
     // Go to next state
