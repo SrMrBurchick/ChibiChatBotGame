@@ -116,38 +116,21 @@ fn spawn_notification(
     let message = message.unwrap();
 
     // TODO: Refactor style
-    let other_box_size = Vec2::new(300.0, 200.0);
     let other_box_position = Vec2::new(320.0, -250.0);
 
-    commands
-        .spawn(SpriteBundle {
-            sprite: Sprite {
-                color: Color::rgb(0.20, 0.3, 0.70),
-                custom_size: Some(Vec2::new(other_box_size.x, other_box_size.y)),
-                ..default()
+    commands.spawn(
+        Text2dBundle {
+            text: Text {
+                sections: vec![TextSection::new(
+                    message.content,
+                    TextStyle { font: text_font.font.clone(), font_size: 24.0, color: Color::RED },
+                )],
+                alignment: TextAlignment::Left,
+                linebreak_behavior: BreakLineOn::AnyCharacter,
             },
-            transform: Transform::from_translation(other_box_position.extend(0.0)),
+            transform: Transform::from_translation(Vec3::Z),
             ..default()
-        })
-        .with_children(|builder| {
-            builder.spawn(Text2dBundle {
-                text: Text {
-                    sections: vec![TextSection::new(
-                        message.content,
-                        TextStyle { font: text_font.font.clone(), font_size: 42.0, color: Color::RED },
-                    )],
-                    alignment: TextAlignment::Left,
-                    linebreak_behavior: BreakLineOn::AnyCharacter,
-                },
-                text_2d_bounds: Text2dBounds {
-                    // Wrap text in the rectangle
-                    size: other_box_size,
-                },
-                // ensure the text is drawn on top of the box
-                transform: Transform::from_translation(Vec3::Z),
-                ..default()
-            });
-        })
+    })
     .insert(TransformBundle::default())
     .insert(MessageComponent);
 
