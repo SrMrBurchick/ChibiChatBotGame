@@ -2,6 +2,7 @@ use std::collections::VecDeque;
 use bevy::prelude::*;
 use bevy::text::*;
 
+use crate::components::system::config::Config;
 use crate::components::{
     gameplay::player::PlayerComponent,
     common::ui::TextFont
@@ -55,15 +56,16 @@ pub fn message_system(
     time: Res<Time>,
     mut timer_query: Query<&mut MessageDurationTimer>,
     text_font: Res<TextFont>,
+    config_query: Query<&Config>,
     mut player_query: Query<(&mut MessageManager, &Transform), Without<MessageComponent>>,
-    mut message_query: Query<(Entity, &mut Transform), With<MessageComponent>>
+    mut message_query: Query<(Entity, &mut Transform, &TextLayoutInfo), With<MessageComponent>>
 ) {
 
     match player_query.get_single_mut() {
         Ok((mut message_manager, player_transform)) => {
             let mut is_finished: bool = false;
 
-            for (entity, mut transform) in message_query.iter_mut() {
+            for (entity, mut transform, text_info) in message_query.iter_mut() {
                 match timer_query.get_single_mut() {
                     Ok(mut timer) => {
                         timer.timer.tick(time.delta());
@@ -81,7 +83,20 @@ pub fn message_system(
                 // TODO: Move message above character if player is not on the to border
                 // Disable to message go through borders
                 transform.translation = player_transform.translation;
-                transform.translation.y += 100.0;
+                transform.translation.y += text_info.size.y;
+
+                match config_query.get_single() {
+                    Ok(config) => {
+                        match config.get_sprite_size() {
+                            Ok(sprite_size) => {
+                                let offset = sprite_size.height as f32 * player_transform.scale.y;
+                                transform.translation.y += offset;
+                            },
+                            Err(_) => {},
+                        }
+                    },
+                    Err(_) => {},
+                }
             }
 
             if is_finished {
@@ -115,9 +130,6 @@ fn spawn_notification(
 
     let message = message.unwrap();
 
-    // TODO: Refactor style
-    let other_box_position = Vec2::new(320.0, -250.0);
-
     commands.spawn(
         Text2dBundle {
             text: Text {
@@ -125,13 +137,12 @@ fn spawn_notification(
                     message.content,
                     TextStyle { font: text_font.font.clone(), font_size: 24.0, color: Color::RED },
                 )],
-                alignment: TextAlignment::Left,
+                alignment: TextAlignment::Center,
                 linebreak_behavior: BreakLineOn::AnyCharacter,
             },
             transform: Transform::from_translation(Vec3::Z),
             ..default()
     })
-    .insert(TransformBundle::default())
     .insert(MessageComponent);
 
     commands.spawn(MessageDurationTimer {

@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-use components::actions::Actions;
-use components::common::events::{Events, GameEvents};
 
 pub mod components;
 pub mod listeners;
