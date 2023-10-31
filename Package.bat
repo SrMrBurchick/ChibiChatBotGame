@@ -47,6 +47,11 @@ rem Build WASM runner
 echo Build WASM runner
 call "%~dp0tools/Scripts/Build/Win64/BuildWasmRunner.bat" %WASM_SERVER_RUNNER% %PACKAGE_TOOLS_DIRECTORY%
 
+rem Copy runners
+echo Copy runners
+copy %~dp0tools\\Scripts\\Runners\\Win64\\RunChatBot.bat %PACKAGE_DIRECTORY%
+copy %~dp0tools\\Scripts\\Runners\\Win64\\RunGame.bat %PACKAGE_DIRECTORY%
+
 rem Done!
 goto :end
 

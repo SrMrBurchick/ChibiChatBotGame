@@ -54,8 +54,8 @@ DEFINES += CONFIG_FILE="./Game/config/ChibiChatBotConfig.json"
 DEFINES += GAME_ASSET_IMAGE_PATH="./Game/assets/sprite-sheet.png"
 
 # Check if the target OS is Windows
-contains(QMAKE_TARGET.os, Windows) {
-    DEFINES += CHAT_BOT_PATH="chat_bot.exe"
+win32 {
+    DEFINES += CHAT_BOT_PATH="RunChatBot.bat"
     DEFINES += GAME_RUNNER_PATH="RunGame.bat"
 }
 
