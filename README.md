@@ -14,10 +14,18 @@ After that you be able to open browser by url that will be provided by wasm-serv
 ### Configurator
 Go to the *GameConfigurator* directory
 ```bash
-$ qmake -makefile
+$ qmake6 -makefile
 ```
 That will generate a makefile. Than just execute make command
 ```bash
-$ make --release
+$ make
 ```
 The compiled program should be by path `./GameConfigurator/build/release/GameConfigurator`
+
+## Win64 setup
+- Install [qt](https://www.qt.io/)
+- Install [scoop sh](https://scoop.sh/)
+- Install make gcc: `scoop install make gcc`
+- Install rustup: `scoop install rustup`
+- Add target: `rustup target add wasm32-unknown-unknown`
+- Install [visual studio](https://visualstudio.microsoft.com/downloads/)
