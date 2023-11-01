@@ -166,6 +166,9 @@ Item {
         }
     }
 
-    signal saveChatBotConfig()
+    function saveChatBotConfig() {
+        Config.saveChatBotConfig(ActionsManager.chatBotURL, ActionsManager.chatBotPort)
+        Config.saveConfig()
+    }
 }
 
