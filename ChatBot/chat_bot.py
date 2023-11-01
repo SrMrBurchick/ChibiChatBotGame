@@ -7,6 +7,7 @@ import json
 CONFIG_FILE = "./Game/config/ChibiChatBotConfig.json"
 
 async def main():
+    channel = ""
     # Default commands
     commands = ["say"]
 
@@ -16,6 +17,9 @@ async def main():
             config = json.loads(conf_data)
 
             if config is not None:
+                if config["twitch-channel"] is not None:
+                    channel = config["twitch-channel"]
+
                 for animation in config["animations"]:
                     for key in animation.keys():
                         commands.append(key)
@@ -23,9 +27,10 @@ async def main():
         pass
 
     print(commands)
+    print(channel)
 
     wss = WebSockServer()
-    bot = create_bot(wss, commands)
+    bot = create_bot(wss, commands, channel)
 
     wss_task = wss.run_server()
     loop = asyncio.get_running_loop()

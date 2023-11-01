@@ -80,15 +80,15 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         await self.start()
 
 
-def create_bot(wss: WebSockServer, commands: list) -> TwitchBot:
-    with open(CREDENTIALS_FILE) as creds_file:
+def create_bot(wss: WebSockServer, commands: list, channel: str) -> TwitchBot:
+    creds_path = os.path.join(sys._MEIPASS, "credentials.json") if hasattr(sys, '_MEIPASS') else CREDENTIALS_FILE
+    with open(creds_path) as creds_file:
         creds_data = creds_file.read()
 
     creds = json.loads(creds_data)
     username = "ChibiGameChatBot"
     client_id = creds["client-id"]
     token = creds["token"]
-    channel = "SrMrBurchick"
 
     return TwitchBot(username, client_id, token, channel, wss, commands)
 

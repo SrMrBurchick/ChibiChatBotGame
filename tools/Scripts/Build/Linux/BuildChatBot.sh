@@ -8,7 +8,7 @@ PACKAGE_LOCATION=$2
 cd ${CHAT_BOT_LOCATION}
 
 ## Build
-pyinstaller --onefile --exclude ./Game/config/ChibiChatBotConfig.json chat_bot.py
+pyinstaller --onefile --add-data "../credentials.json:." --exclude ./Game/config/ChibiChatBotConfig.json chat_bot.py
 
 ## Copy chat bot to package
 cp ${CHAT_BOT_LOCATION}/dist/chat_bot ${PACKAGE_LOCATION}
