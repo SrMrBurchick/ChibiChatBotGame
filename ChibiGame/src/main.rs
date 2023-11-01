@@ -1,5 +1,9 @@
-use bevy::prelude::*;
+use bevy::{
+    diagnostic::FrameTimeDiagnosticsPlugin,
+    prelude::*
+};
 use bevy_rapier2d::prelude::*;
+use components::system::debug_info;
 
 pub mod components;
 pub mod listeners;
@@ -26,6 +30,7 @@ fn main() {
                 transparent: true,
                 // Disabling window decorations to make it feel more like a widget than a window
                 decorations: false,
+                resolution: (1920.0, 1080.0).into(),
                 #[cfg(target_os = "macos")]
                 composite_alpha_mode: CompositeAlphaMode::PostMultiplied,
                 ..default()
@@ -39,6 +44,7 @@ fn main() {
                 RapierDebugRenderPlugin::default()
             }
         ))
+        .add_plugins(FrameTimeDiagnosticsPlugin)
         .add_state::<GameStates>()
         .add_event::<Event>()
 
@@ -68,6 +74,8 @@ fn main() {
         .add_systems(Update, ai::ai_system.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, commands_listener::handle_commands.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, message::message_system.run_if(in_state(GameStates::RunGame)))
+        .add_systems(OnEnter(GameStates::RunGame), debug_info::setup_debug_info)
+        .add_systems(Update, debug_info::debug_info_system.run_if(in_state(GameStates::RunGame)))
 
         .run();
 }
