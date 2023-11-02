@@ -232,7 +232,6 @@ pub fn move_player(
                     },
                 }
 
-                info!("Can move {:?}", can_move);
                 if can_move {
                     velocity.linvel =
                         movement_trait.get_velocity() * component.speed * time.delta_seconds();

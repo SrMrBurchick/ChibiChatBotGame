@@ -54,7 +54,7 @@ impl MessageManager {
 pub fn message_system(
     mut commands: Commands,
     time: Res<Time>,
-    mut timer_query: Query<&mut MessageDurationTimer>,
+    mut timer_query: Query<(Entity, &mut MessageDurationTimer)>,
     text_font: Res<TextFont>,
     config_query: Query<&Config>,
     mut player_query: Query<(&mut MessageManager, &Transform), Without<MessageComponent>>,
@@ -64,13 +64,19 @@ pub fn message_system(
     match player_query.get_single_mut() {
         Ok((mut message_manager, player_transform)) => {
             let mut is_finished: bool = false;
+            let mut is_running: bool = false;
 
             for (entity, mut transform, text_info) in message_query.iter_mut() {
                 match timer_query.get_single_mut() {
-                    Ok(mut timer) => {
+                    Ok((timer_entity, mut timer)) => {
                         timer.timer.tick(time.delta());
 
                         is_finished = timer.timer.just_finished();
+                        is_running = true;
+
+                        if is_finished {
+                            commands.entity(timer_entity).despawn_recursive();
+                        }
                     },
                     Err(_) => {},
                 }
@@ -105,7 +111,7 @@ pub fn message_system(
                     &mut message_manager,
                     &text_font
                 );
-            } else if message_manager.is_have_massage() {
+            } else if message_manager.is_have_massage() && !is_running {
                 spawn_notification(
                     &mut commands,
                     &mut message_manager,
@@ -123,11 +129,11 @@ fn spawn_notification(
     text_font: &Res<TextFont>,
 ) {
     let message = message_manager.get_next_notification();
-    info!("Spawn message: {:?}", message.clone());
     if (message.is_none()) {
         return;
     }
 
+    info!("Spawn message: {:?}", message.clone());
     let message = message.unwrap();
 
     commands.spawn(
