@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Qt.labs.platform
 import Pages
 import SystemTools
 import Base
@@ -9,6 +10,25 @@ ApplicationWindow {
     visible: true
     background: Rectangle {
         color: Style.pageBGColor
+    }
+
+    SystemTrayIcon {
+        visible: true
+        // TODO: Draw tray icon
+        // icon.source: "Docs/icon_bg.png"
+
+        menu: Menu {
+            MenuItem {
+                text: qsTr("Run Game") // TODO: Update title
+            }
+            MenuItem {
+                text: qsTr("Run ChatBot") // TODO: Update title
+            }
+            MenuItem {
+                text: qsTr("Quit")
+                onTriggered: Qt.quit()
+            }
+        }
     }
 
     StackView {
