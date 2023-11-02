@@ -26,6 +26,8 @@ bool IProcess::RunProcessWithParams(const QStringList& Args)
 
     Process.start(Program, Args);
 
+    NotificationsManager::SendNotification("Process manager", QString::asprintf("Running a\n %s", Program.toStdString().c_str()));
+
     return IsProcessRunning();
 }
 
