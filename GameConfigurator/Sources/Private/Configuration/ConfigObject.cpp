@@ -10,6 +10,12 @@
 
 // Global settings fields
 constexpr char SOURCE_FILE[] = "source-file";
+// Screen resolution
+constexpr char SCREEN_RESOLUTION[] = "screen-resolution";
+constexpr char SCREEN_RESOLUTION_WIDTH[] = "width";
+constexpr char SCREEN_RESOLUTION_HEIGHT[] = "height";
+// Twitch target channel
+constexpr char TWITCH_CHANNEL[] = "twitch-channel";
 
 // Chat bot settings fields
 constexpr char CHAT_BOT_SETTINGS[] = "chat-bot";
@@ -50,6 +56,7 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     QVariantMap JsonTableSettings = ConfigMap[TABLE_SETTINGS].toMap();
     QVariantMap JsonSpriteSettings = ConfigMap[SPRITE_SETTINGS].toMap();
     QVariantMap JsonChatBotSettings = ConfigMap[CHAT_BOT_SETTINGS].toMap();
+    QVariantMap JsonScreenResolution = ConfigMap[SCREEN_RESOLUTION].toMap();
     QJsonArray JsonActionsArray = ConfigMap[ANIMATIONS_SETTINGS].toJsonArray();
 
     // Init source file
@@ -60,6 +67,11 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     // Init sprite scale
     if (ConfigMap.contains(SPRITE_SCALE)) {
         SystemSettings.SpriteScale = ConfigMap[SPRITE_SCALE].toFloat();
+    }
+
+    // Init twitch channel
+    if (ConfigMap.contains(TWITCH_CHANNEL)) {
+        SystemSettings.TwitchTargetChannel = ConfigMap[TWITCH_CHANNEL].toString();
     }
 
     // Init chat bot settings
@@ -78,6 +90,12 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     if (JsonTableSettings.contains(TABLE_SETTINGS_ROWS) && JsonTableSettings.contains(TABLE_SETTINGS_COLUMNS)) {
         TableSettings.Columns = JsonTableSettings[TABLE_SETTINGS_COLUMNS].toInt();
         TableSettings.Rows = JsonTableSettings[TABLE_SETTINGS_ROWS].toInt();
+    }
+
+    // Init screen settings
+    if (JsonScreenResolution.contains(SCREEN_RESOLUTION_WIDTH) && JsonScreenResolution.contains(SCREEN_RESOLUTION_HEIGHT)) {
+        SystemSettings.ScreenWidth = JsonScreenResolution[SCREEN_RESOLUTION_WIDTH].toInt();
+        SystemSettings.ScreenHeight = JsonScreenResolution[SCREEN_RESOLUTION_HEIGHT].toInt();
     }
 
     // Init animation map
@@ -121,6 +139,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     QJsonObject JsonSpriteSettings;
     QJsonObject JsonChatBotSettings;
     QJsonArray JsonActionsArray;
+    QJsonObject JsonScreenResolution;
 
     // Chat bot
     JsonChatBotSettings[CHAT_BOT_SETTINGS_URL] = SystemSettings.ChatBotWebSockURL;
@@ -133,6 +152,10 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     // Sprite settings
     JsonSpriteSettings[SPRITE_SETTINGS_WIDTH] = SpriteSettings.Width;
     JsonSpriteSettings[SPRITE_SETTINGS_HEIGHT] = SpriteSettings.Height;
+
+    // Screen resolution
+    JsonScreenResolution[SCREEN_RESOLUTION_HEIGHT] = SystemSettings.ScreenHeight;
+    JsonScreenResolution[SCREEN_RESOLUTION_WIDTH] = SystemSettings.ScreenWidth;
 
     // Actions map
     for (auto Iter = Map.begin(); Iter != Map.end(); ++Iter) {
@@ -155,6 +178,8 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     Config[CHAT_BOT_SETTINGS] = JsonChatBotSettings;
     Config[TABLE_SETTINGS] = JsonTableSettings;
     Config[SPRITE_SETTINGS] = JsonSpriteSettings;
+    Config[SCREEN_RESOLUTION] = JsonScreenResolution;
+    Config[TWITCH_CHANNEL] = SystemSettings.TwitchTargetChannel;
     Config[ANIMATIONS_SETTINGS] = JsonActionsArray;
 
     QFile ConfigFile(ConfigFileName);
@@ -292,4 +317,30 @@ void ConfigObject::saveSpriteScale(const float SpriteScale)
 float ConfigObject::getSpriteScale() const
 {
     return SystemSettings.SpriteScale;
+}
+
+void ConfigObject::saveScreenResolution(const int Height, const int Width)
+{
+    SystemSettings.ScreenHeight = Height;
+    SystemSettings.ScreenWidth = Width;
+}
+
+void ConfigObject::saveTargetTwitchChannel(const QString& TargetChannel)
+{
+    SystemSettings.TwitchTargetChannel = TargetChannel;
+}
+
+int ConfigObject::getScreenHeight() const
+{
+    return SystemSettings.ScreenHeight;
+}
+
+int ConfigObject::getScreenWidth() const
+{
+    return SystemSettings.ScreenWidth;
+}
+
+QString ConfigObject::getTwitchTargeChannel() const
+{
+    return SystemSettings.TwitchTargetChannel;
 }

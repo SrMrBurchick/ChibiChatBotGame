@@ -163,11 +163,16 @@ Item {
         if (Config.isConfigLoaded()) {
             ActionsManager.chatBotURL = Config.getChatBotURL()
             ActionsManager.chatBotPort = Config.getChatBotPort()
+            ActionsManager.screenHeight = Config.getScreenHeight()
+            ActionsManager.screenWidth = Config.getScreenWidht()
+            ActionsManager.twitchChannel = Config.getTwitchTargeChannel()
         }
     }
 
     function saveChatBotConfig() {
         Config.saveChatBotConfig(ActionsManager.chatBotURL, ActionsManager.chatBotPort)
+        Config.saveScreenResolution(ActionsManager.screenHeight, ActionsManager.screenWidth)
+        Config.saveTargetTwitchChannel(ActionsManager.twitchChannel)
         Config.saveConfig()
     }
 }

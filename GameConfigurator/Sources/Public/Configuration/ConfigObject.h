@@ -30,6 +30,9 @@ struct SystemConfig {
     QString ChatBotWebSockURL;
     int ChatBotWebSockPort;
     float SpriteScale;
+    int ScreenHeight;
+    int ScreenWidth;
+    QString TwitchTargetChannel;
 };
 
 class ConfigObject : public QObject {
@@ -53,6 +56,9 @@ public:
     Q_INVOKABLE int getTableColumns() const;
     Q_INVOKABLE int getTableRows() const;
     Q_INVOKABLE float getSpriteScale() const;
+    Q_INVOKABLE int getScreenHeight() const;
+    Q_INVOKABLE int getScreenWidth() const;
+    Q_INVOKABLE QString getTwitchTargeChannel() const;
 
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
@@ -63,6 +69,8 @@ public:
     Q_INVOKABLE void saveTableSettings(const int Columns, const int Rows);
     Q_INVOKABLE void saveActions(const AnimationSequenceModel* Model);
     Q_INVOKABLE void saveSpriteScale(const float SpriteScale);
+    Q_INVOKABLE void saveScreenResolution(const int Height, const int Width);
+    Q_INVOKABLE void saveTargetTwitchChannel(const QString& TargetChannel);
 
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
