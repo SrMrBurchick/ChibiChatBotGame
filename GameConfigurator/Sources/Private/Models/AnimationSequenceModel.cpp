@@ -176,6 +176,7 @@ QVariantMap AnimationSequenceModel::getNextSprite()
 
         NextSprite["sprite_column"] = SpriteList->at(currentSpriteIndex).Column;
         NextSprite["sprite_row"] = SpriteList->at(currentSpriteIndex).Row;
+        NextSprite["isInverted"] = SpriteList->at(currentSpriteIndex).bInverted;
         ++currentSpriteIndex;
     }
 
@@ -195,4 +196,17 @@ void AnimationSequenceModel::initModel(const ActionsMap& InitMap)
 
     Map = InitMap;
     setActiveAction(Map.begin().key());
+}
+
+bool AnimationSequenceModel::isInverted(int Index) const
+{
+    if (SpriteList == nullptr) {
+        return false;
+    }
+
+    if (SpriteList->length() <= Index) {
+        return false;
+    }
+
+    return SpriteList->at(Index).bInverted;
 }

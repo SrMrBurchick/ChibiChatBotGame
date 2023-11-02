@@ -97,6 +97,7 @@ Item {
             parseInt(nextSpriteData.sprite_row) * ActionsManager.spriteSizeHeight,
             ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight
         )
+        actionPreview.mirror = nextSpriteData.isInverted;
     }
 }
 

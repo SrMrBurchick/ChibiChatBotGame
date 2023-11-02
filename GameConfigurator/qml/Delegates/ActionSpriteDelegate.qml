@@ -27,6 +27,8 @@ Rectangle {
             parseInt(sprite_column) * ActionsManager.spriteSizeWidth,
             parseInt(sprite_row) * ActionsManager.spriteSizeHeight,
             ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+
+        mirror: ActionsManager.sequenceModel.isInverted(index)
     }
 
     MouseArea {
@@ -41,7 +43,10 @@ Rectangle {
 
             ActionsManager.actionSpriteOldIndex = -1
             ActionsManager.actionSpriteNewIndex = -1
+        }
 
+        onDoubleClicked: {
+            toggleInverted(index)
         }
     }
 

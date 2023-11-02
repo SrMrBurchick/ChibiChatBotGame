@@ -38,6 +38,10 @@ Item {
                 onRemoveItem: (index) => {
                     actionsModel.removeElement(index)
                 }
+
+                onToggleInverted: (index) => {
+                    actionsModel.toggleInverted(index)
+                }
             }
         }
 

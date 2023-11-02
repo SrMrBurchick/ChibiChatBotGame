@@ -39,6 +39,7 @@ public:
 
     Q_INVOKABLE QVariantMap getNextSprite();
     Q_INVOKABLE const ActionsMap& getMap() const;
+    Q_INVOKABLE bool isInverted(int Index) const;
 
 protected:
     QList<ActionSequenceSprite>* SpriteList = nullptr;
