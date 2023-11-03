@@ -17,6 +17,7 @@ public:
 
     virtual bool RunProcess();
     virtual bool StopProcess();
+    virtual bool RestartProcess();
 
     bool RunProcessWithParams(const QStringList& Args);
     bool IsProcessRunning();

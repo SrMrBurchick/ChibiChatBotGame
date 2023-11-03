@@ -93,3 +93,43 @@ void ProcessManager::killAll()
 {
     StopAll();
 }
+
+bool ProcessManager::isChatBotRunning() const
+{
+    if (!ProcessesList.contains(eProcessType::ChatBot)) {
+        NotificationsManager::SendNotification("Chat Bot not configured");
+        return false;
+    }
+
+    return ProcessesList[eProcessType::ChatBot]->IsProcessRunning();
+}
+
+bool ProcessManager::isGameRunning() const
+{
+    if (!ProcessesList.contains(eProcessType::Game)) {
+        NotificationsManager::SendNotification("Game not configured");
+        return false;
+    }
+
+    return ProcessesList[eProcessType::Game]->IsProcessRunning();
+}
+
+void ProcessManager::stopChatBotRunning()
+{
+    if (!ProcessesList.contains(eProcessType::ChatBot)) {
+        NotificationsManager::SendNotification("Chat Bot not configured");
+        return;
+    }
+
+    ProcessesList[eProcessType::ChatBot]->Kill();
+}
+
+void ProcessManager::stopGameRunning()
+{
+    if (!ProcessesList.contains(eProcessType::Game)) {
+        NotificationsManager::SendNotification("Game not configured");
+        return;
+    }
+
+    ProcessesList[eProcessType::Game]->Kill();
+}

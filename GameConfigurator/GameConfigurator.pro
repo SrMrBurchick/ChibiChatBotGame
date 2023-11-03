@@ -52,7 +52,8 @@ DEFINES += GAME_ASSETS_PATH="./Game/assets"
 DEFINES += CONFIG_FILE="./Game/config/ChibiChatBotConfig.json"
 DEFINES += GAME_ASSET_IMAGE_PATH="./Game/assets/sprite-sheet.png"
 DEFINES += WASM_SERVER_RUNNER="./Tools/wasm-server-runner"
-DEFINES += GAME_PATH="./Game/ChibiGame.wasm"
+DEFINES += GAME_PATH="./Game"
+DEFINES += GAME="./Game/ChibiGame.wasm"
 
 # Check if the target OS is Windows
 win32 {

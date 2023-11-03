@@ -60,7 +60,7 @@ bool IProcess::StopProcess()
 
 bool IProcess::IsProcessRunning()
 {
-    return Process.state() == QProcess::Running;
+    return Process.state() != QProcess::NotRunning;
 }
 
 void IProcess::Kill()
@@ -71,4 +71,9 @@ void IProcess::Kill()
 QString IProcess::GetLastError()
 {
     return Process.readAllStandardError();
+}
+
+bool IProcess::RestartProcess()
+{
+    return Process.reset();
 }

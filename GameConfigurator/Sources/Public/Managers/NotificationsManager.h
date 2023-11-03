@@ -14,7 +14,7 @@ public:
     Q_INVOKABLE void notify(const QString& Title, const QString& Body);
     Q_INVOKABLE void addModel(NotificationListModel* Model);
 
-    static void SendNotification(const QString& Title, const QString& Body);
+    static void SendNotification(const QString& Title, const QString& Body = "");
     static QPointer<NotificationsManager> GetManager();
 
 private:

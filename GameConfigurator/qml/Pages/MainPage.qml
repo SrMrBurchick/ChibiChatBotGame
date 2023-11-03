@@ -16,16 +16,29 @@ Item {
         spacing: 24
 
         BaseButton {
-            text: "Start game"
+            id: game
+            text: ProcessManager.isGameRunning() ? "Stop game" : "Start game"
             onClicked: {
-                ProcessManager.runGame()
+                if (ProcessManager.isGameRunning()) {
+                    ProcessManager.stopGameRunning()
+                } else {
+                    ProcessManager.runGame()
+                }
+
+                game.text = ProcessManager.isGameRunning() ? "Stop game" : "Start game"
             }
         }
 
         BaseButton {
-            text: "Start chat bot"
+            id: chat_bot
+            text: ProcessManager.isChatBotRunning() ? "Stop chat bot" : "Start chat bot"
             onClicked: {
-                ProcessManager.runChatBot()
+                if (ProcessManager.isChatBotRunning()) {
+                    ProcessManager.stopChatBotRunning();
+                } else {
+                    ProcessManager.runChatBot()
+                }
+                chat_bot.text = ProcessManager.isChatBotRunning() ? "Stop chat bot" : "Start chat bot"
             }
         }
 
