@@ -303,7 +303,11 @@ void ConfigObject::CopyImageToAssets()
     }
 
     QString SystemPath = SystemSettings.ImagePath;
+#ifdef __MINGW32__
+    SystemPath.remove("file:///");
+#else
     SystemPath.remove("file://");
+#endif
     if (image.load(SystemPath)) {
         image.save(QT_STRINGIFY(GAME_ASSET_IMAGE_PATH));
     }
