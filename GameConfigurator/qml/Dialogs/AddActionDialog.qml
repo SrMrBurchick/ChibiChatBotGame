@@ -1,17 +1,19 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 Dialog {
     id: root
     property string actionName
+    property bool isCustomSelected: false
 
     title: "Add action"
     standardButtons: Dialog.Cancel | Dialog.Save
 
-    Label {
+    RowLayout {
         anchors.fill: root
         TextEdit {
-            width: root.width
+            visible: isCustomSelected
             font.pointSize: 14
 
             text: actionName
@@ -23,13 +25,35 @@ Dialog {
                 actionName = text
             }
         }
+
+        ComboBox {
+            id: actionSelector
+            visible: !isCustomSelected
+            model: ["walk", "fall", "climb", "standby", "custom"]
+
+            onActivated: {
+                if (currentText == "custom" && isCustomSelected == false) {
+                    isCustomSelected = true
+                } else {
+                    actionName = currentText
+                }
+            }
+        }
     }
 
     onAccepted: {
         addNewAction(actionName);
         actionName = ""
+        isCustomSelected = false
     }
-    onRejected: console.log("Cancel clicked")
+    onRejected: {
+        actionName = ""
+        isCustomSelected = false
+    }
 
     signal addNewAction(string newAction)
+
+    Component.onCompleted: {
+        actionName = actionSelector.currentText
+    }
 }
