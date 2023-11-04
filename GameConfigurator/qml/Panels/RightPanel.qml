@@ -85,6 +85,7 @@ Item {
     function saveActionsConfig() {
         Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
         Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+        Config.saveSpriteScale(ActionsManager.spriteScale)
         Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
         Config.saveActions(ActionsManager.sequenceModel)
         Config.saveConfig()

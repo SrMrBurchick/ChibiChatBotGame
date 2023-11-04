@@ -204,7 +204,7 @@ bool AnimationSequenceModel::isInverted(int Index) const
         return false;
     }
 
-    if (SpriteList->length() <= Index) {
+    if (SpriteList->length() <= Index || SpriteList->isEmpty()) {
         return false;
     }
 
