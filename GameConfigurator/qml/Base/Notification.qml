@@ -6,8 +6,8 @@ import Base
 
 Rectangle {
     id: root
-    width: title.width + body.width + 50
-    height: title.height + body.height + 50
+    implicitWidth: title.width + body.width
+    implicitHeight: title.height + body.height + 50
     color: Style.notificationBGColor
     radius: 10
     border.color: Style.notificationBorderColor
@@ -88,6 +88,9 @@ Rectangle {
     }
 
     Component.onCompleted: {
+        if (root.implicitWidth > 250.0) {
+            root.implicitWidth = 250.0
+        }
         show()
     }
 }

@@ -8,4 +8,5 @@ Rectangle {
     border.width: Style.buttonBorderSize
     border.color: Style.panelBorderColor
     color: Style.panelBGColor
+    radius: 2
 }

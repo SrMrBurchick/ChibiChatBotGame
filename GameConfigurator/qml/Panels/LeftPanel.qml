@@ -10,12 +10,13 @@ import Base
 Item {
     id: root
     anchors.fill: parent
-    anchors.margins: 5
+    // anchors.margins: 5
 
     property Item rootPage: Item
 
     ColumnLayout {
         anchors.fill: parent
+        spacing: 5
 
         // Actions List
         BasePanel {
@@ -29,7 +30,7 @@ Item {
                     Layout.alignment: Qt.AlignTop
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Actions List"
-                    font.pointSize: 24
+                    font.pixelSize: 32
                 }
                 ActionsListComponent {
                     Layout.fillWidth: true

@@ -17,6 +17,7 @@ Item {
 
         BaseButton {
             id: game
+            scaler: 1.5
             text: ProcessManager.isGameRunning() ? "Stop game" : "Start game"
             onClicked: {
                 if (ProcessManager.isGameRunning()) {
@@ -31,6 +32,7 @@ Item {
 
         BaseButton {
             id: chat_bot
+            scaler: 1.5
             text: ProcessManager.isChatBotRunning() ? "Stop chat bot" : "Start chat bot"
             onClicked: {
                 if (ProcessManager.isChatBotRunning()) {
@@ -44,12 +46,14 @@ Item {
 
         BaseButton {
             id: configuration
+            scaler: 1.5
             text: "Configure"
             onClicked: openConfig()
         }
 
         BaseButton {
             text: "Exit"
+            scaler: 1.5
             onClicked: {
                 ProcessManager.killAll()
                 Qt.quit()

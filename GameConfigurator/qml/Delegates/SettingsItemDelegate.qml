@@ -25,6 +25,7 @@ Rectangle {
         BaseText {
             text: fieldName
             Layout.margins: 10
+            font.pixelSize : 24
         }
         Rectangle {
             opacity: 0
@@ -32,10 +33,16 @@ Rectangle {
         }
         TextField {
             Layout.margins: 10
+            Layout.fillWidth: true
             placeholderText: fieldDescription
             horizontalAlignment: TextInput.AlignHCenter
             validator: typeValidator
+            background: Rectangle {
+                color: Style.settingsItemBorderColor
+            }
             text: defaultText
+            font.pixelSize : 18
+            color: Style.textColor
             onTextEdited: {
                 valueChanged(text)
             }

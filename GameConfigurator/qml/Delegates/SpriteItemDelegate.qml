@@ -4,9 +4,7 @@ import Base
 
 Rectangle {
     id: root
-    // TODO: Move width and height to c++
-    border.color: "black"
-    border.width: 2
+    color: Style.imagePreviewBGColor
 
     BaseText {
         text: "(" + sprite_column + " : " + sprite_row + ")"

@@ -137,21 +137,24 @@ Item {
         // Controls
         RowLayout {
             Layout.fillWidth: true
+            Layout.margins: 5
 
             BaseButton {
                 text: "Back"
+                Layout.fillWidth: true
                 onClicked: {
                     rootStack.pop()
                 }
             }
 
             Rectangle {
-                opacity: 0
+                color: "transparent"
                 Layout.fillWidth: true
             }
 
             BaseButton {
                 text: "Save"
+                Layout.fillWidth: true
                 onClicked: saveChatBotConfig()
             }
 

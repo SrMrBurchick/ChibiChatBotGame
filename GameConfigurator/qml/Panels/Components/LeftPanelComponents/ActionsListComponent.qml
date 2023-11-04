@@ -23,8 +23,7 @@ ScrollView {
 
         delegate: ActionListDelegate {
             actionIndex: index
-            width: parent.width
-            height: 30
+            anchors.horizontalCenter: parent.horizontalCenter
             onRemoveElement: {
                 actionsModel.removeElement(index)
             }

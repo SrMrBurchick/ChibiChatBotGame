@@ -38,14 +38,17 @@ Item {
     RowLayout {
         id: main
         anchors.fill: parent
+        anchors.margins: 5
 
         // Left panel
         ColumnLayout {
-            Layout.maximumWidth: 300
+            Layout.maximumWidth: 400
             BasePanel {
                 border.width: 0
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                color: Style.pageBGColor
+                anchors.rightMargin: 0
                 AddActionDialog {
                     id: actionDialog
                 }
@@ -99,7 +102,7 @@ Item {
 
             BasePanel {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 200
+                Layout.minimumHeight: 350
                 border.width: 0
                 anchors.margins: 0
 
@@ -112,7 +115,7 @@ Item {
 
         // Right panel
         ColumnLayout {
-            Layout.maximumWidth: 300
+            Layout.maximumWidth: 400
             BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true

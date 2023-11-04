@@ -8,6 +8,10 @@ import Base
 
 ApplicationWindow {
     visible: true
+    title: "ChibiGame Configurator"
+    visibility: Window.Maximized
+    width: 1920
+    height: 1080
     background: Rectangle {
         color: Style.pageBGColor
     }
@@ -54,10 +58,13 @@ ApplicationWindow {
     }
 
     ListView {
+        property real maxWidth: 250
         id: notificationsList
         anchors.right: parent.right
-        anchors.margins: 5
-        width: 200
+        anchors.top: parent.top
+        anchors.rightMargin: 5
+        anchors.topMargin: 5
+        width: maxWidth
         spacing: 5
         model: notificationModel
         delegate: notification

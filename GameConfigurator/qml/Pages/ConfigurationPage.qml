@@ -17,16 +17,19 @@ Item {
         spacing: 24
 
         BaseButton {
+            scaler: 1.5
             text: "Setup Actions"
             onClicked: goActionsConfiguration()
         }
 
         BaseButton {
+            scaler: 1.5
             text: "Setup ChatBot"
             onClicked: goChatBotConfiguration()
         }
 
         BaseButton {
+            scaler: 1.5
             text: "Back"
             onClicked: goBack()
         }

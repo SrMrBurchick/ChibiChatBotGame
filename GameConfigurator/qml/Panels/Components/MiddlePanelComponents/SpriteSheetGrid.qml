@@ -19,6 +19,7 @@ Item {
             anchors.margins: 5
             anchors.horizontalCenter: panel.horizontalCenter
             text: "Sprite sheet"
+            font.pixelSize : 32
         }
 
         BasePanel {

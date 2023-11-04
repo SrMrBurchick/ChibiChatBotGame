@@ -36,12 +36,14 @@ Item {
                     id: title
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Animation preview"
+                    font.pixelSize : 32
                 }
 
                 Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: 200
                     height: 200
+                    color: Style.imagePreviewBGColor
                     Image {
                         id: actionPreview
                         anchors.fill: parent
@@ -52,10 +54,12 @@ Item {
 
                 RowLayout {
                     anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.fillWidth: true
 
                     spacing: 4
 
                     BaseButton {
+                        Layout.fillWidth: true
                         text: "Play"
                         onClicked: {
                             timer.running = true
@@ -63,6 +67,7 @@ Item {
                     }
 
                     BaseButton {
+                        Layout.fillWidth: true
                         text: "Pause"
                         onClicked: {
                             timer.running = false

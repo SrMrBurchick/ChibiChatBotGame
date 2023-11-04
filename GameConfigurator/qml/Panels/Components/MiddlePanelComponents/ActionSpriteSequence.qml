@@ -10,6 +10,7 @@ import Base
 Item {
     id: root
     anchors.fill: parent
+    anchors.margins: 10
 
     BasePanel {
         id: panel
@@ -21,6 +22,7 @@ Item {
             anchors.margins: 5
             anchors.horizontalCenter: panel.horizontalCenter
             text: "Action animation sequence"
+            font.pixelSize : 32
         }
 
         DelegateModel {

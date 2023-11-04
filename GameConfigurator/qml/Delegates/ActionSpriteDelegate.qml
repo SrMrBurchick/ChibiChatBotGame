@@ -9,9 +9,7 @@ Rectangle {
     property string imageSource
     property int frameSize
 
-    // TODO: Move width and height to c++
-    border.color: "black"
-    border.width: 2
+    color: Style.imagePreviewBGColor
 
     Drag.active: dragArea.drag.active
 

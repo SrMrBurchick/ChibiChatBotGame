@@ -6,13 +6,16 @@ import Dialogs
 Rectangle {
     id: root
     property int actionIndex: 0
-
-    border.color: actionIndex == delegateManager.currentIndex ? "lightblue" : "black"
+    color: Style.actionListItemBGColor
+    border.color: actionIndex == delegateManager.currentIndex ? Style.actionListItemBorderSelectedColor : Style.actionListItemBorderColor
     border.width: 2
+    width: parent.width - 5
+    height: 50
 
     RowLayout {
-        anchors.margins: 4
+        id: panel
         anchors.fill: root
+        anchors.margins: 5
 
         MouseArea {
             Layout.fillWidth: true
@@ -21,7 +24,10 @@ Rectangle {
             BaseText {
                 anchors.fill: parent
                 id: actionName
+                font.pixelSize : 24
                 text: name
+                anchors.verticalCenter: parent.verticalCenter
+                // anchors.centerIn: panel
             }
 
             ChangeActionDialog {
@@ -41,6 +47,7 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            color: "transparent"
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
@@ -52,6 +59,7 @@ Rectangle {
         Rectangle {
             width: 20
             height: 20
+            color: "transparent"
 
             MouseArea {
                 anchors.fill: parent
@@ -64,6 +72,10 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+
     }
 
     signal removeElement(int index)
