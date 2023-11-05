@@ -27,6 +27,11 @@ public:
     Q_INVOKABLE void stopChatBotRunning();
     Q_INVOKABLE void stopGameRunning();
 
+signals:
+    void gameStarted();
+    void gameEnded();
+    void chatBotStarted();
+    void chatBotEnded();
 
 private:
     QMap<eProcessType, QPointer<IProcess>> ProcessesList;

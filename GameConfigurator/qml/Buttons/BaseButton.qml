@@ -9,7 +9,7 @@ Button {
     property real scaler: 1.0
 
     onClicked: {
-        console.log("Clicked! " + button.text)
+        console.log("Clicked! " + root.text)
     }
 
     contentItem: Text {

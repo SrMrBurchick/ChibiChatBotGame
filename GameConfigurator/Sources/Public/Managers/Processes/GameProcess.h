@@ -7,4 +7,10 @@ public:
     GameProcess();
     virtual ~GameProcess();
     virtual bool RunProcess();
+
+signals:
+    void gameRunningAt(QString Address);
+
+private slots:
+    void ReadyGetGameOutput();
 };

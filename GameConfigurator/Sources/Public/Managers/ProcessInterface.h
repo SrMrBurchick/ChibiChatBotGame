@@ -27,6 +27,8 @@ public:
     eProcessType GetType() const {return Type;}
     QString GetLastError();
 
+    QPointer<QProcess> GetProcess();
+
 private:
     QProcess Process;
     QString Program;

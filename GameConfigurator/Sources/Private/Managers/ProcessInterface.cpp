@@ -59,6 +59,8 @@ bool IProcess::StopProcess()
 
     Process.close();
 
+    NotificationsManager::SendNotification("Process manager", QString::asprintf("Stop a\n %s", Program.toStdString().c_str()));
+
     return !IsProcessRunning();
 }
 
@@ -69,6 +71,7 @@ bool IProcess::IsProcessRunning()
 
 void IProcess::Kill()
 {
+    NotificationsManager::SendNotification("Process manager", QString::asprintf("Kill a\n %s", Program.toStdString().c_str()));
     Process.terminate();
 }
 
@@ -80,4 +83,9 @@ QString IProcess::GetLastError()
 bool IProcess::RestartProcess()
 {
     return Process.reset();
+}
+
+QPointer<QProcess> IProcess::GetProcess()
+{
+    return QPointer<QProcess>(&Process);
 }

@@ -16,31 +16,32 @@ Item {
         spacing: 24
 
         BaseButton {
-            id: game
+            id: gameButton
             scaler: 1.5
-            text: ProcessManager.isGameRunning() ? "Stop game" : "Start game"
+            property bool isRunning: false
+            text: isRunning ? "Stop game" : "Start game"
             onClicked: {
-                if (ProcessManager.isGameRunning()) {
+                gameButton.enabled = false
+                if (isRunning) {
                     ProcessManager.stopGameRunning()
                 } else {
                     ProcessManager.runGame()
                 }
-
-                game.text = ProcessManager.isGameRunning() ? "Stop game" : "Start game"
             }
         }
 
         BaseButton {
-            id: chat_bot
+            id: chatBotButton
             scaler: 1.5
-            text: ProcessManager.isChatBotRunning() ? "Stop chat bot" : "Start chat bot"
+            property bool isRunning: false
+            text: isRunning ? "Stop chat bot" : "Start chat bot"
             onClicked: {
+                chatBotButton.enabled = false
                 if (ProcessManager.isChatBotRunning()) {
                     ProcessManager.stopChatBotRunning();
                 } else {
                     ProcessManager.runChatBot()
                 }
-                chat_bot.text = ProcessManager.isChatBotRunning() ? "Stop chat bot" : "Start chat bot"
             }
         }
 
@@ -61,5 +62,24 @@ Item {
 
         }
     }
-}
 
+    Component.onCompleted: {
+        ProcessManager.onGameStarted.connect(function() {
+            gameButton.isRunning = true
+            gameButton.enabled = true
+        })
+        ProcessManager.onGameEnded.connect(function() {
+            gameButton.isRunning = false
+            gameButton.enabled = true
+        })
+
+        ProcessManager.onChatBotStarted.connect(function() {
+            chatBotButton.isRunning = true
+            chatBotButton.enabled = true
+        })
+        ProcessManager.onChatBotEnded.connect(function() {
+            chatBotButton.isRunning = false
+            chatBotButton.enabled = true
+        })
+    }
+}

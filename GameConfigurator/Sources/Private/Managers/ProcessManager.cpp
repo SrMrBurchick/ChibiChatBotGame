@@ -1,6 +1,8 @@
 #include "Managers/ProcessManager.h"
 #include "Managers/NotificationsManager.h"
 
+#include <iostream>
+
 ProcessManager::ProcessManager(QObject* Parent)
     :QObject(Parent)
 {
@@ -53,6 +55,35 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
     if (ProcessesList.contains(Process->GetType())) {
         return false;
     }
+
+    // Connect signals
+    QObject::connect(
+        Process->GetProcess().get(), &QProcess::finished,
+        [=]() {
+            switch (Process->GetType()) {
+                case eProcessType::Game:
+                    emit gameEnded();
+                    break;
+                case eProcessType::ChatBot:
+                    emit chatBotEnded();
+                    break;
+            }
+        }
+    );
+
+    QObject::connect(
+        Process->GetProcess().get(), &QProcess::started,
+        [=]() {
+            switch (Process->GetType()) {
+                case eProcessType::Game:
+                    emit gameStarted();
+                    break;
+                case eProcessType::ChatBot:
+                    emit chatBotStarted();
+                    break;
+            }
+        }
+    );
 
     ProcessesList.insert(Process->GetType(), Process);
 
