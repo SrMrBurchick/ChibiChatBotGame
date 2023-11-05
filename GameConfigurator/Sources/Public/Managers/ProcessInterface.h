@@ -19,7 +19,7 @@ public:
     virtual bool StopProcess();
     virtual bool RestartProcess();
 
-    bool RunProcessWithParams(const QStringList& Args);
+    bool RunProcessWithParams(const QStringList& Args, QProcessEnvironment* Env = nullptr);
     bool IsProcessRunning();
 
     void Kill();

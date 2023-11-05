@@ -14,7 +14,7 @@ IProcess::~IProcess()
     Kill();
 }
 
-bool IProcess::RunProcessWithParams(const QStringList& Args)
+bool IProcess::RunProcessWithParams(const QStringList& Args, QProcessEnvironment* Env)
 {
     if (IsProcessRunning()) {
         return true;
@@ -22,6 +22,10 @@ bool IProcess::RunProcessWithParams(const QStringList& Args)
 
     if (Program.isEmpty()) {
         return false;
+    }
+
+    if (nullptr != Env) {
+        Process.setProcessEnvironment(*Env);
     }
 
     Process.start(Program, Args);
