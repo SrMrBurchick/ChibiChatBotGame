@@ -259,6 +259,28 @@ impl GameplayLogicComponent {
     pub fn is_movement_enabled(&self) -> bool {
         self.movement_enabled
     }
+
+    pub fn prepare_next_action(&mut self) {
+        self.current_action = self.get_next_action().clone();
+        self.can_be_interrupted = !is_action_can_interrupt(self.current_action.clone());
+
+        // Assign action strategy if exists
+        match self.current_action {
+            Actions::Climb => {
+                self.current_strategy = Some(Box::new(
+                    ClimbStrategy::new()
+                ));
+            }
+            Actions::Walk => {
+                self.current_strategy = Some(Box::new(
+                    WalkStrategy::new()
+                ));
+            }
+            _ => {
+                self.current_strategy = None;
+            },
+        }
+    }
 }
 
 pub fn game_logic_system(
@@ -318,13 +340,13 @@ pub fn game_logic_system(
                     match movement_query.get_single() {
                         Ok(movement) => {
                             if movement.landed {
-                                on_action_completed(&mut gameplay_component, event_writer);
+                                on_action_completed(&mut gameplay_component);
                             }
                         }
                         _ => {},
                     }
                 } else {
-                    on_action_completed(&mut gameplay_component, event_writer);
+                    on_action_completed(&mut gameplay_component);
                 }
 
                 return;
@@ -334,7 +356,6 @@ pub fn game_logic_system(
             if gameplay_component.is_interruption_available() {
                 interrupt_current_action(
                     &mut commands,
-                    event_writer,
                     &mut gameplay_component,
                     timer_entity
                 );
@@ -363,6 +384,7 @@ fn start_new_action(
     commands: &mut Commands,
     mut event_writer: EventWriter<Event>,
 ) {
+    info!("Start new action {:?}", gameplay_component.get_current_action());
     if gameplay_component.get_current_action() != Actions::Fall {
         commands.spawn(ActionDurationTimer{
             timer: Timer::from_seconds(
@@ -382,27 +404,13 @@ fn start_new_action(
 
 fn on_action_completed(
     gameplay_component: &mut GameplayLogicComponent,
-    mut event_writer: EventWriter<Event>,
 ) {
     gameplay_component.stop_action();
-
-    let next_action = gameplay_component.get_next_action();
-    if next_action != Actions::Unknown {
-        event_writer.send(Event {
-            event_type: Events::GameEvents(GameEvents::SetNewAction(next_action))
-        });
-    } else {
-        event_writer.send(Event {
-            event_type: Events::GameEvents(
-                GameEvents::ActionChanged(next_action)
-            )}
-        );
-    }
+    gameplay_component.prepare_next_action();
 }
 
 fn interrupt_current_action(
     commands: &mut Commands,
-    mut event_writer: EventWriter<Event>,
     gameplay_component: &mut GameplayLogicComponent,
     timer_entity: Option<Entity>,
 ) {
@@ -411,9 +419,5 @@ fn interrupt_current_action(
     }
 
     gameplay_component.stop_action();
-    event_writer.send(Event {
-        event_type: Events::GameEvents(
-            GameEvents::SetNewAction(gameplay_component.get_next_action())
-        ) }
-    );
+    gameplay_component.prepare_next_action();
 }
