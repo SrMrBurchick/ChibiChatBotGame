@@ -6,13 +6,12 @@ use crate::components::{
         Border, BorderType,
         actions_strategies::{
             ActionLogicStrategy, climb_strategy::ClimbStrategy,
-            walk_strategy::WalkStrategy
+            walk_strategy::WalkStrategy, ReflectActionLogicStrategy
         }
     }, movement::PlayerMovementComponent,
 };
 use bevy::prelude::*;
-
-use super::actions_strategies::ReflectActionLogicStrategy;
+use std::collections::VecDeque;
 
 #[derive(Component, Debug)]
 pub struct ActionDurationTimer {
@@ -21,8 +20,8 @@ pub struct ActionDurationTimer {
 
 #[derive(Component)]
 pub struct GameplayLogicComponent {
-    pending_actions: Vec<Actions>,
-    high_priority_actions: Vec<Actions>,
+    pending_actions: VecDeque<Actions>,
+    high_priority_actions: VecDeque<Actions>,
     is_action_running: bool,
     current_action: Actions,
     can_be_interrupted: bool,
@@ -33,8 +32,8 @@ pub struct GameplayLogicComponent {
 impl GameplayLogicComponent {
     pub fn new() -> Self {
         GameplayLogicComponent {
-            pending_actions: vec![],
-            high_priority_actions: vec![],
+            pending_actions: VecDeque::new(),
+            high_priority_actions: VecDeque::new(),
             is_action_running: false,
             current_action: Actions::Unknown,
             can_be_interrupted: false,
@@ -52,7 +51,8 @@ impl GameplayLogicComponent {
         // to the low_priority actions. Even if the next action cannot be interrupted either
         if !self.can_be_interrupted && self.is_current_action_valid() {
             if !self.pending_actions.contains(&action) {
-                self.pending_actions.push(action);
+                self.pending_actions.push_back(action.clone());
+                info!("Add low priority action: {:?}", action.clone());
                 return true;
             }
             return false;
@@ -62,7 +62,9 @@ impl GameplayLogicComponent {
         // to hight priority, even if the new action can be interrupted
         if self.can_be_interrupted && self.is_current_action_valid() {
             if !self.high_priority_actions.contains(&action) {
-                self.high_priority_actions.push(action);
+                self.high_priority_actions.push_back(action.clone());
+
+                info!("Add high priority action: {:?}", action.clone());
                 return true;
             }
             return false;
@@ -99,7 +101,7 @@ impl GameplayLogicComponent {
 
     pub fn get_next_action(&mut self) -> Actions {
         if !self.high_priority_actions.is_empty() {
-            return self.high_priority_actions.pop().unwrap();
+            return self.high_priority_actions.pop_front().unwrap();
         }
 
         if self.pending_actions.is_empty() {
@@ -108,7 +110,7 @@ impl GameplayLogicComponent {
             return Actions::StandBy;
         }
 
-        return self.pending_actions.pop().unwrap();
+        return self.pending_actions.pop_front().unwrap();
     }
 
     pub fn get_action_duration(&self) -> f32 {
@@ -171,6 +173,13 @@ impl GameplayLogicComponent {
     }
 
     pub fn stop_action(&mut self) {
+        match self.current_action {
+            Actions::Climb => {
+                self.high_priority_actions.push_front(Actions::Fall);
+            }
+            _ => {},
+        }
+
         self.current_action = Actions::Unknown;
         self.is_action_running = false;
         self.can_be_interrupted = true;
@@ -310,7 +319,7 @@ pub fn game_logic_system(
                 }
             }
 
-            is_action_timer_finished = action_timer.timer.finished();
+            is_action_timer_finished = action_timer.timer.just_finished();
 
             if is_action_timer_finished {
                 commands.entity(entity).despawn();

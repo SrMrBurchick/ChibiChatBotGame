@@ -284,8 +284,15 @@ pub fn monitor_collisions(
     }
 }
 
+
+#[derive(Resource)]
+pub struct MonitorMovementInfo {
+    pub fall_populated: bool
+}
+
 pub fn monitor_movement(
     mut event_writer: EventWriter<Event>,
+    mut monitor_info: ResMut<MonitorMovementInfo>,
     components: Query<(&Velocity, &GameplayLogicComponent, &PlayerMovementComponent), With<PlayerComponent>>
 ) {
     for (velocity, gameplay, movement) in components.iter() {
@@ -299,13 +306,22 @@ pub fn monitor_movement(
             if gameplay.get_current_action() != Actions::Climb &&
                gameplay.get_current_action() != Actions::Fall
             {
+                if monitor_info.fall_populated {
+                    continue;
+                }
+
                 event_writer.send(
                     Event {
                         event_type: Events::GameEvents(GameEvents::SetNewAction(Actions::Fall))
                     }
                 );
+
+                monitor_info.fall_populated = true;
+            } else {
+                if monitor_info.fall_populated {
+                    monitor_info.fall_populated = false;
+                }
             }
         }
     }
 }
-

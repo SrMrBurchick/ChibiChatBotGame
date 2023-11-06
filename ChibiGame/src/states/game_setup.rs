@@ -10,7 +10,7 @@ use crate::components::{
             walk_strategy::WalkStrategy
         }
     },
-    movement::{WalkComponent, ClimbComponent}
+    movement::{WalkComponent, ClimbComponent, MonitorMovementInfo}
 };
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
@@ -87,6 +87,11 @@ pub fn setup_game(
     // Setup UI
     let font_handle: Handle<Font> = asset_server.load("fonts/ComicSansMS.ttf");
     commands.insert_resource(TextFont { font: font_handle });
+
+    // Init movement monitor resource
+    commands.insert_resource(MonitorMovementInfo {
+        fall_populated: false
+    });
 
     // Go to next state
     event_writer.send(Event {

@@ -137,9 +137,9 @@ impl Default for ActionComponent {
 pub fn is_action_can_interrupt(action: Actions) -> bool {
     match action {
         Actions::Walk => false,
-        Actions::Climb => false,
         Actions::Unknown => false,
         Actions::SwapDirection => false,
+        Actions::StandBy => false,
         _ => true
     }
 }
