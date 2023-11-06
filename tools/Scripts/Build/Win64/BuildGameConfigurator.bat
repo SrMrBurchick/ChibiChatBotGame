@@ -20,4 +20,8 @@ rem Copy GameConfigurator to package
 echo Copy GameConfigurator to package
 copy "%GAME_CONFIGURATOR%" "%PACKAGE_LOCATION%"
 
+rem Deploy configurator
+echo Deploy configurator
+windeployqt --release --qmldir %GAME_CONFIGURATOR_LOCATION%\\qml --libdir %PACKAGE_LOCATION%\\Libraries  --plugindir %PACKAGE_LOCATION%\\Plugins  %GAME_CONFIGURATOR%
+
 popd
