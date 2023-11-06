@@ -137,16 +137,9 @@ impl PlayerMovementComponent {
 
             }
             Actions::Climb => {
-                if current_move_direction.y >= 0.0 {
-                    self.movement = Some(Box::new(ClimbComponent {
-                        direction: ClimbDirection::Up
-                    }));
-                } else {
-                    self.movement = Some(Box::new(ClimbComponent {
-                        direction: ClimbDirection::Down
-                    }));
-                }
-
+                self.movement = Some(Box::new(ClimbComponent {
+                    direction: ClimbDirection::Up
+                }));
             }
             _ => {
                 info!("Disable movement");
