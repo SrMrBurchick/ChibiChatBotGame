@@ -27,109 +27,140 @@ Item {
             font.bold: true
         }
 
-        ColumnLayout {
+        Component {
+            id: chatBotSettings
+            ColumnLayout {
+                width: parent.width
+
+                SettingsItemDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+
+                    fieldName: "Chanel name:"
+                    fieldDescription: "Twitch chanel target"
+                    onValueChanged:(text) => {
+                        ActionsManager.twitchChannel = text
+                    }
+                }
+
+                SettingsItemDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+
+                    fieldName: "Chat bot URL:"
+                    defaultText: ActionsManager.chatBotURL
+                    onValueChanged:(text) => {
+                        ActionsManager.chatBotURL = text
+                    }
+                }
+
+                SettingsItemDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+
+                    fieldName: "Chat bot port:"
+                    defaultText: ActionsManager.chatBotPort
+                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                    onValueChanged:(text) => {
+                        ActionsManager.chatBotPort = parseInt(text)
+                    }
+                }
+            }
+        }
+
+        Component {
+            id: systemSettings
+            ColumnLayout {
+                width: parent.width
+
+                SettingsItemDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+
+                    fieldName: "screen width:"
+                    defaultText: ActionsManager.screenWidth
+                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                    onValueChanged:(text) => {
+                        ActionsManager.screenWidth = parseInt(text)
+                    }
+                }
+
+                SettingsItemDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+
+                    fieldName: "screen height:"
+                    defaultText: ActionsManager.screenHeight
+                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                    onValueChanged:(text) => {
+                        ActionsManager.screenHeight = parseInt(text)
+                    }
+                }
+            }
+        }
+
+        ListModel {
+            id: settingsModel
+        }
+
+        BasePanel {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            // Chat bot settings
-            BasePanel {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                ColumnLayout {
-                    id: chat_bot_settings
+            ScrollView {
+                anchors.fill: parent
+                anchors.margins: 10
+                clip: true
+                ListView {
                     width: parent.width
+                    spacing: 10
+                    model: settingsModel
 
-                    BaseText {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: "ChatBot"
-                        font.pointSize: 14
-                        font.bold: true
-                    }
+                    delegate: Rectangle {
+                        id: delegate
+                        property bool isExpanded: false
+                        color: Style.settingsDelegateBGColor
+                        border.color: Style.settingsDelegateBorderColor
+                        border.width: 2
+                        width: parent.width
+                        height: isExpanded ? content.height + contentLoader.height + 5 : content.height
+                        RowLayout {
+                            id: content
+                            spacing: 10
+                            BaseText {
+                                id: description
+                                text: name
+                                font.pixelSize: 32
+                                font.bold: true
+                            }
 
-                    SettingsItemDelegate {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.margins: 10
+                            BaseText {
+                                text: delegate.isExpanded ? "▼" : "►"
+                                font.pixelSize: 32
+                                font.bold: true
 
-                        fieldName: "Chanel name:"
-                        fieldDescription: "Twitch chanel target"
-                        onValueChanged:(text) => {
-                            ActionsManager.twitchChannel = text
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        delegate.isExpanded = !delegate.isExpanded
+                                    }
+                                }
+                            }
+                        }
+
+                        Loader {
+                            id: contentLoader
+                            visible: delegate.isExpanded
+                            anchors.top: content.bottom
+                            width: delegate.width
+                            sourceComponent: component
                         }
                     }
-
-                    SettingsItemDelegate {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.margins: 10
-
-                        fieldName: "Chat bot URL:"
-                        defaultText: ActionsManager.chatBotURL
-                        onValueChanged:(text) => {
-                            ActionsManager.chatBotURL = text
-                        }
-                    }
-
-                    SettingsItemDelegate {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.margins: 10
-
-                        fieldName: "Chat bot port:"
-                        defaultText: ActionsManager.chatBotPort
-                        typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                        onValueChanged:(text) => {
-                            ActionsManager.chatBotPort = parseInt(text)
-                        }
-                    }
-
-                }
-            }
-
-            // Game settings
-            BasePanel {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                // height: game_settings.height
-
-                ColumnLayout {
-                    id: game_settings
-                    width: parent.width
-
-                    BaseText {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Game"
-                        font.pointSize: 14
-                        font.bold: true
-                    }
-
-                    SettingsItemDelegate {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.margins: 10
-
-                        fieldName: "Game screen width:"
-                        defaultText: ActionsManager.screenWidth
-                        typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                        onValueChanged:(text) => {
-                            ActionsManager.screenWidth = parseInt(text)
-                        }
-                    }
-
-                    SettingsItemDelegate {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.margins: 10
-
-                        fieldName: "Game screen height:"
-                        defaultText: ActionsManager.screenHeight
-                        typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                        onValueChanged:(text) => {
-                            ActionsManager.screenHeight = parseInt(text)
-                        }
-                    }
-
                 }
             }
         }
@@ -139,12 +170,25 @@ Item {
             Layout.fillWidth: true
             Layout.margins: 5
 
+            Rectangle {
+                color: "transparent"
+                Layout.fillWidth: true
+            }
+
             BaseButton {
                 text: "Back"
                 Layout.fillWidth: true
+                Layout.maximumWidth: 400
                 onClicked: {
                     rootStack.pop()
                 }
+            }
+
+            BaseButton {
+                text: "Save"
+                Layout.fillWidth: true
+                Layout.maximumWidth: 400
+                onClicked: saveChatBotConfig()
             }
 
             Rectangle {
@@ -152,17 +196,14 @@ Item {
                 Layout.fillWidth: true
             }
 
-            BaseButton {
-                text: "Save"
-                Layout.fillWidth: true
-                onClicked: saveChatBotConfig()
-            }
-
         }
 
     }
 
     Component.onCompleted: {
+        settingsModel.append({"name": "System Settings", "component": systemSettings})
+        settingsModel.append({"name": "ChatBot Settings", "component": chatBotSettings})
+
         if (Config.isConfigLoaded()) {
             ActionsManager.chatBotURL = Config.getChatBotURL()
             ActionsManager.chatBotPort = Config.getChatBotPort()

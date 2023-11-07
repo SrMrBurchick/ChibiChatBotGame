@@ -24,6 +24,9 @@ QtObject {
     readonly property color darkActionListItemBGColor: "#24243B"
     readonly property color darkActionListItemBorderColor: "#363659"
     readonly property color darkActionListItemBorderSelectedColor: "#54548A"
+    readonly property color darkSettingsDelegateBGColor: "#4B4B82"
+    readonly property color darkSettingsDelegateBorderColor: "#4545B5"
+
 
     // Light colors
     readonly property color lightTextColor: "black"
@@ -42,6 +45,8 @@ QtObject {
     readonly property color lightActionListItemBGColor: "#474747"
     readonly property color lightActionListItemBorderColor: "#474747"
     readonly property color lightActionListItemBorderSelectedColor: "#474747"
+    readonly property color lightSettingsDelegateBGColor: "#474747"
+    readonly property color lightSettingsDelegateBorderColor: "#474747"
 
     // Style
     // Colors
@@ -62,6 +67,8 @@ QtObject {
     readonly property color actionListItemBGColor: bIsDarkTheme ? darkActionListItemBGColor : lightActionListItemBGColor
     readonly property color actionListItemBorderColor: bIsDarkTheme ? darkImagePreviewBorderColor : lightImagePreviewBorderColor
     readonly property color actionListItemBorderSelectedColor: bIsDarkTheme ? darkActionListItemBorderSelectedColor : lightActionListItemBorderSelectedColor
+    readonly property color settingsDelegateBGColor: bIsDarkTheme ? darkSettingsDelegateBGColor : lightSettingsDelegateBGColor
+    readonly property color settingsDelegateBorderColor: bIsDarkTheme ? darkSettingsDelegateBorderColor : lightSettingsDelegateBorderColor
 
     // Sizes
     readonly property int buttonBorderSize: 2
