@@ -3,6 +3,7 @@
 #include "Managers/ProcessInterface.h"
 
 class GameProcess: public IProcess {
+    Q_OBJECT
 public:
     GameProcess();
     virtual ~GameProcess();
