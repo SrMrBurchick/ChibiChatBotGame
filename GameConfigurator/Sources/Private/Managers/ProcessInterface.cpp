@@ -72,7 +72,7 @@ bool IProcess::IsProcessRunning()
 void IProcess::Kill()
 {
     NotificationsManager::SendNotification("Process manager", QString::asprintf("Kill a\n %s", Program.toStdString().c_str()));
-    Process.terminate();
+    Process.kill();
 }
 
 QString IProcess::GetLastError()
