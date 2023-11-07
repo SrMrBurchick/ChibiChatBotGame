@@ -30,7 +30,6 @@ fn main() {
                 transparent: true,
                 // Disabling window decorations to make it feel more like a widget than a window
                 decorations: false,
-                resolution: (1920.0, 1080.0).into(),
                 #[cfg(target_os = "macos")]
                 composite_alpha_mode: CompositeAlphaMode::PostMultiplied,
                 ..default()

@@ -322,4 +322,21 @@ impl Config {
     pub fn get_user_actions(&self) -> Vec<UserAction> {
         return self.user_actions.clone();
     }
+
+    pub fn get_screen_resolution(&self) -> (f32, f32) {
+        let mut width: f32 = 0.0;
+        let mut height: f32 = 0.0;
+
+        match self.get_value("screen-resolution") {
+            Ok(resolution) => {
+                if resolution.has_key("height") || resolution.has_key("width") {
+                    width = resolution["width"].as_f32().unwrap();
+                    height = resolution["height"].as_f32().unwrap();
+                }
+            },
+            Err(_) => {},
+        }
+
+        return (width, height);
+    }
 }

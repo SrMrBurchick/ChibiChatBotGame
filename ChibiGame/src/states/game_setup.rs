@@ -10,6 +10,7 @@ use crate::components::{
             walk_strategy::WalkStrategy
         }
     },
+    system::config::Config,
     movement::{WalkComponent, ClimbComponent, MonitorMovementInfo}
 };
 use bevy::prelude::*;
@@ -17,15 +18,18 @@ use bevy_rapier2d::prelude::*;
 
 pub fn setup_game(
     mut commands: Commands,
-    windows: Query<&Window>,
+    mut windows: Query<&mut Window>,
+    config_query: Query<&Config>,
     mut event_writer: EventWriter<Event>,
     type_registry: ResMut<AppTypeRegistry>,
     asset_server: Res<AssetServer>
 ) {
-    let window = windows.single();
-    let height = window.height();
-    let width = window.width();
-    let border_size = 10.0;
+    let config = config_query.single();
+    let (width, height) = config.get_screen_resolution();
+
+    // Set Window resolution
+    let mut window = windows.single_mut();
+    window.resolution.set(width, height);
 
     // Register movement components traits
     type_registry.write().register::<WalkComponent>();
@@ -36,6 +40,8 @@ pub fn setup_game(
     type_registry.write().register::<WalkStrategy>();
 
     // Setup borders
+    let border_size = 10.0;
+
     // Top border
     commands
         .spawn(SpriteBundle {
