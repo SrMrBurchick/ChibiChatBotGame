@@ -5,6 +5,7 @@ import Buttons
 import Delegates
 import Panels
 import ConfigComponent
+import Dialogs
 import Base
 
 Item {
@@ -104,6 +105,47 @@ Item {
             }
         }
 
+        // TODO: Move to C++ model
+        ListModel {
+            id: actionsModel
+        }
+
+        Component {
+            id: predefinedActions
+            ColumnLayout {
+                width: parent.width
+
+                ListView {
+                    width: parent.width
+                    height: 200
+                    clip: true
+                    model: actionsModel
+                    spacing: 10
+                    delegate: PredefinedActionDelegate {
+                    }
+                }
+
+                BaseButton {
+                    text: "Add action"
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: 400
+                    AddPredefinedActionDialog {
+                        id: addActionDialog
+                        onAddNewAction: (newAction) => {
+                            console.log("Add new action: ", newAction)
+                            if (newAction != "") {
+                                actionsModel.append({"name": newAction})
+                            }
+                        }
+                    }
+
+                    onClicked: {
+                        addActionDialog.open()
+                    }
+                }
+            }
+        }
+
         ListModel {
             id: settingsModel
         }
@@ -165,6 +207,7 @@ Item {
     Component.onCompleted: {
         settingsModel.append({"name": "System Settings", "component": systemSettings})
         settingsModel.append({"name": "ChatBot Settings", "component": chatBotSettings})
+        settingsModel.append({"name": "Predefined actions", "component": predefinedActions})
 
         if (Config.isConfigLoaded()) {
             ActionsManager.chatBotURL = Config.getChatBotURL()

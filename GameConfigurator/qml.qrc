@@ -35,11 +35,13 @@
         <file>qml/Delegates/ActionListDelegate.qml</file>
         <file>qml/Delegates/PropertyDelegate.qml</file>
         <file>qml/Delegates/SettingsDelegate.qml</file>
+        <file>qml/Delegates/PredefinedActionDelegate.qml</file>
 
         <!-- Dialogs -->
         <file>qml/Dialogs/qmldir</file>
         <file>qml/Dialogs/AddActionDialog.qml</file>
         <file>qml/Dialogs/ChangeActionDialog.qml</file>
+        <file>qml/Dialogs/AddPredefinedActionDialog.qml</file>
 
         <!-- Images -->
         <file>qml/Images/trash_can.png</file>
