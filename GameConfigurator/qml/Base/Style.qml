@@ -17,8 +17,8 @@ QtObject {
     readonly property color darkPanelBorderColor: "#8F8FF2"
     readonly property color darkNotificationBGColor: "#B78FF2"
     readonly property color darkNotificationBorderColor: "#7C728C"
-    readonly property color darkSettingsItemBGColor: "#24243B"
-    readonly property color darkSettingsItemBorderColor: "#363659"
+    readonly property color darkPropertyDelegateBGColor: "#24243B"
+    readonly property color darkPropertyDelegateBorderColor: "#363659"
     readonly property color darkImagePreviewBGColor: "#222238"
     readonly property color darkImagePreviewBorderColor: "#2D2D4A"
     readonly property color darkActionListItemBGColor: "#24243B"
@@ -38,8 +38,8 @@ QtObject {
     readonly property color lightPanelBorderColor: "#7a7a7a"
     readonly property color lightNotificationBGColor: "#cfcfcf"
     readonly property color lightNotificationBorderColor: "#7a7a7a"
-    readonly property color lightSettingsItemBGColor: "#8b8b8b"
-    readonly property color lightSettingsItemBorderColor: "#474747"
+    readonly property color lightPropertyDelegateBGColor: "#8b8b8b"
+    readonly property color lightPropertyDelegateBorderColor: "#474747"
     readonly property color lightImagePreviewBGColor: "#222238"
     readonly property color lightImagePreviewBorderColor: "#2D2D4A"
     readonly property color lightActionListItemBGColor: "#474747"
@@ -60,8 +60,8 @@ QtObject {
     readonly property color panelBorderColor: bIsDarkTheme ? darkPanelBGColor : lightPanelBorderColor
     readonly property color notificationBGColor: bIsDarkTheme ? darkNotificationBGColor : lightNotificationBGColor
     readonly property color notificationBorderColor: bIsDarkTheme ? darkNotificationBorderColor : lightNotificationBorderColor
-    readonly property color settingsItemBGColor: bIsDarkTheme ? darkSettingsItemBGColor : lightSettingsItemBGColor
-    readonly property color settingsItemBorderColor: bIsDarkTheme ? darkSettingsItemBorderColor : lightSettingsItemBorderColor
+    readonly property color propertyDelegateBGColor: bIsDarkTheme ? darkPropertyDelegateBGColor : lightPropertyDelegateBGColor
+    readonly property color propertyDelegateBorderColor: bIsDarkTheme ? darkPropertyDelegateBorderColor : lightPropertyDelegateBorderColor
     readonly property color imagePreviewBGColor: bIsDarkTheme ? darkImagePreviewBGColor : lightImagePreviewBGColor
     readonly property color imagePreviewBorderColor: bIsDarkTheme ? darkImagePreviewBorderColor : lightImagePreviewBorderColor
     readonly property color actionListItemBGColor: bIsDarkTheme ? darkActionListItemBGColor : lightActionListItemBGColor

@@ -19,7 +19,7 @@ ColumnLayout {
     ColumnLayout {
         Layout.fillWidth: true
 
-        SettingsItemDelegate {
+        PropertyDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
 
@@ -33,7 +33,7 @@ ColumnLayout {
             }
         }
 
-        SettingsItemDelegate {
+        PropertyDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
 
@@ -58,7 +58,7 @@ ColumnLayout {
         spacing: 5
         Layout.fillWidth: true
 
-        SettingsItemDelegate {
+        PropertyDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
 
@@ -71,7 +71,7 @@ ColumnLayout {
             }
         }
 
-        SettingsItemDelegate {
+        PropertyDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
 
@@ -84,7 +84,7 @@ ColumnLayout {
             }
         }
 
-        SettingsItemDelegate {
+        PropertyDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
 

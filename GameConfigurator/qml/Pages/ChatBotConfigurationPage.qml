@@ -32,7 +32,7 @@ Item {
             ColumnLayout {
                 width: parent.width
 
-                SettingsItemDelegate {
+                PropertyDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
@@ -44,7 +44,7 @@ Item {
                     }
                 }
 
-                SettingsItemDelegate {
+                PropertyDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
@@ -56,7 +56,7 @@ Item {
                     }
                 }
 
-                SettingsItemDelegate {
+                PropertyDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
@@ -76,7 +76,7 @@ Item {
             ColumnLayout {
                 width: parent.width
 
-                SettingsItemDelegate {
+                PropertyDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
@@ -89,7 +89,7 @@ Item {
                     }
                 }
 
-                SettingsItemDelegate {
+                PropertyDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
@@ -121,45 +121,7 @@ Item {
                     spacing: 10
                     model: settingsModel
 
-                    delegate: Rectangle {
-                        id: delegate
-                        property bool isExpanded: false
-                        color: Style.settingsDelegateBGColor
-                        border.color: Style.settingsDelegateBorderColor
-                        border.width: 2
-                        width: parent.width
-                        height: isExpanded ? content.height + contentLoader.height + 5 : content.height
-                        RowLayout {
-                            id: content
-                            spacing: 10
-                            BaseText {
-                                id: description
-                                text: name
-                                font.pixelSize: 32
-                                font.bold: true
-                            }
-
-                            BaseText {
-                                text: delegate.isExpanded ? "▼" : "►"
-                                font.pixelSize: 32
-                                font.bold: true
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        delegate.isExpanded = !delegate.isExpanded
-                                    }
-                                }
-                            }
-                        }
-
-                        Loader {
-                            id: contentLoader
-                            visible: delegate.isExpanded
-                            anchors.top: content.bottom
-                            width: delegate.width
-                            sourceComponent: component
-                        }
+                    delegate: SettingsDelegate {
                     }
                 }
             }
@@ -220,4 +182,3 @@ Item {
         Config.saveConfig()
     }
 }
-

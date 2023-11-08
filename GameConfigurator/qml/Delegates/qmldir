@@ -2,4 +2,5 @@ module Delegates
 SpriteItemDelegate 1.0 SpriteItemDelegate.qml
 ActionSpriteDelegate 1.0 ActionSpriteDelegate.qml
 ActionListDelegate 1.0 ActionListDelegate.qml
-SettingsItemDelegate 1.0 SettingsItemDelegate.qml
+PropertyDelegate 1.0 PropertyDelegate.qml
+SettingsDelegate 1.0 SettingsDelegate.qml

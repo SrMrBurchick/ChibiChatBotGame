@@ -13,8 +13,8 @@ Rectangle {
     property string fieldDescription: ""
     property RegularExpressionValidator typeValidator: RegularExpressionValidator{}
 
-    color: Style.settingsItemBGColor
-    border.color: Style.settingsItemBorderColor
+    color: Style.propertyDelegateBGColor
+    border.color: Style.propertyDelegateBorderColor
     border.width: 2
 
     RowLayout {
@@ -38,7 +38,7 @@ Rectangle {
             horizontalAlignment: TextInput.AlignHCenter
             validator: typeValidator
             background: Rectangle {
-                color: Style.settingsItemBorderColor
+                color: Style.propertyDelegateBorderColor
             }
             text: defaultText
             font.pixelSize : 18

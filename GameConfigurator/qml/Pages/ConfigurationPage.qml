@@ -24,7 +24,7 @@ Item {
 
         BaseButton {
             scaler: 1.5
-            text: "Setup ChatBot"
+            text: "Common settings"
             onClicked: goChatBotConfiguration()
         }
 
