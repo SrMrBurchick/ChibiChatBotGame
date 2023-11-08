@@ -38,6 +38,8 @@ Item {
     Component.onCompleted: {
         if (Config.isConfigLoaded() == false) {
             Config.loadConfig()
+            Config.initActionsListModel(ActionsManager.actionsListModel)
+            Config.initAnimationsSequenceModel(ActionsManager.sequenceModel)
         }
     }
 

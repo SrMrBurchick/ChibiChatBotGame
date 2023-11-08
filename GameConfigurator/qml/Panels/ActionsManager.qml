@@ -26,6 +26,7 @@ QtObject {
     property int screenWidth: 1920
     property int screenHeight: 1200
 
+    property ActionsListModel actionsListModel: ActionsListModel {}
     property AnimationSequenceModel sequenceModel: AnimationSequenceModel {}
     property SpriteSheetModel spriteSheetModel: SpriteSheetModel {}
 }

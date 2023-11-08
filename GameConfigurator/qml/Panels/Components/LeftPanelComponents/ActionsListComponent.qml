@@ -12,9 +12,7 @@ ScrollView {
     ListView {
         spacing: 5
         id: actionsList
-        model: ActionsListModel {
-            id: actionsModel
-        }
+        model: ActionsManager.actionsListModel
 
         Item {
             id: delegateManager
@@ -40,17 +38,9 @@ ScrollView {
         }
     }
 
-    Component.onCompleted: {
-        if (Config.isConfigLoaded()) {
-            Config.initActionsListModel(actionsModel)
-        }
-
-        ActionsManager.sequenceModel = actionsModel
-    }
-
     function addAction(action) {
         console.log("Add new action: " + action)
-        actionsModel.addNewAction(action)
+        ActionsManager.actionsListModel.addNewAction(action)
     }
 }
 

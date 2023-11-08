@@ -27,22 +27,20 @@ Item {
 
         DelegateModel {
             id: actionsDelegateModel
-            model: AnimationSequenceModel {
-                id: actionsModel
-            }
+            model: ActionsManager.sequenceModel
 
             delegate: ActionSpriteDelegate {
                 width: scrollView.height
                 height: scrollView.height
                 onPlaceItemAtPosition: (oldIndex, newIndex) => {
-                    actionsModel.placeItemAt(oldIndex, newIndex);
+                    ActionsManager.sequenceModel.placeItemAt(oldIndex, newIndex);
                 }
                 onRemoveItem: (index) => {
-                    actionsModel.removeElement(index)
+                    ActionsManager.sequenceModel.removeElement(index)
                 }
 
                 onToggleInverted: (index) => {
-                    actionsModel.toggleInverted(index)
+                    ActionsManager.sequenceModel.toggleInverted(index)
                 }
             }
         }
@@ -64,17 +62,9 @@ Item {
         }
     }
 
-    Component.onCompleted: {
-        if (Config.isConfigLoaded()) {
-            Config.initAnimationsSequenceModel(actionsModel)
-        }
-
-        ActionsManager.sequenceModel = actionsModel
-    }
-
     function clearModel() {
         console.log("Clear sequence")
-        actionsModel.clearModel();
+        ActionsManager.sequenceModel.clearModel();
     }
 }
 

@@ -39,9 +39,7 @@ Item {
                     flow: GridView.LeftToRight
                     cellWidth: (spritesGrid.width / ActionsManager.tableSettingsColumns)
                     cellHeight:(spritesGrid.width / ActionsManager.tableSettingsColumns)
-                    model: SpriteSheetModel {
-                        id: spriteSheetModel
-                    }
+                    model: ActionsManager.spriteSheetModel
 
                     delegate: SpriteItemDelegate {
                         id: sprite
@@ -59,13 +57,9 @@ Item {
     }
 
     function initModel() {
-        spriteSheetModel.initModel(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
+        ActionsManager.spriteSheetModel.initModel(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
     }
     function clearModel() {
-        spriteSheetModel.clearModel()
-    }
-
-    Component.onCompleted: {
-        ActionsManager.spriteSheetModel = spriteSheetModel
+        ActionsManager.spriteSheetModel.clearModel()
     }
 }
