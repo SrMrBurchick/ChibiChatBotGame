@@ -7,6 +7,7 @@ import Panels
 import ConfigComponent
 import Dialogs
 import Base
+import ConfigTools
 
 Item {
     id: root
@@ -105,8 +106,7 @@ Item {
             }
         }
 
-        // TODO: Move to C++ model
-        ListModel {
+        PredefinedActionsModel {
             id: actionsModel
         }
 
@@ -135,11 +135,10 @@ Item {
                     Layout.maximumWidth: 400
                     AddPredefinedActionDialog {
                         id: addActionDialog
-                        onAddNewAction: (newAction) => {
+                        onAddNewAction: (newAction, chance) => {
                             console.log("Add new action: ", newAction)
-                            if (newAction != "") {
-                                actionsModel.append({"name": newAction})
-                            }
+
+                            actionsModel.addNewAction(newAction, chance);
                         }
                     }
 

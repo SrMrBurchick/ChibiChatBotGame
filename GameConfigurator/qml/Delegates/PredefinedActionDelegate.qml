@@ -37,7 +37,7 @@ Rectangle {
             background: Rectangle {
                 color: Style.propertyDelegateBorderColor
             }
-            text: percentage
+            text: chance
             font.pixelSize : 18
             color: Style.textColor
             onTextEdited: {
@@ -64,5 +64,5 @@ Rectangle {
     }
 
     signal removeElement(int index)
-    signal changePercentage(int index, real percetage)
+    signal changeChance(int index, real chance)
 }

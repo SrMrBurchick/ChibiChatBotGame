@@ -8,7 +8,7 @@ import Base
 Dialog {
     id: root
     property string actionName
-    property real percentage
+    property real chance
 
     title: "Add action"
     standardButtons: Dialog.Cancel | Dialog.Save
@@ -42,20 +42,20 @@ Dialog {
             font.pixelSize : 18
             color: Style.textColor
             onTextEdited: {
-                percentage = parseFloat(text)
+                chance = parseFloat(text)
             }
         }
     }
 
     onAccepted: {
-        addNewAction(actionName, percentage);
+        addNewAction(actionName, chance);
         actionName = ""
     }
     onRejected: {
         actionName = ""
     }
 
-    signal addNewAction(string newAction, real percentage)
+    signal addNewAction(string newAction, real chance)
 
     Component.onCompleted: {
         actionName = actionSelector.currentText
