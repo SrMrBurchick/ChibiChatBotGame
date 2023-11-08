@@ -113,15 +113,19 @@ Item {
         Component {
             id: predefinedActions
             ColumnLayout {
+                id: predefinedColumn
                 width: parent.width
 
                 ListView {
-                    width: parent.width
-                    height: 200
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     clip: true
                     model: actionsModel
                     spacing: 10
                     delegate: PredefinedActionDelegate {
+                    }
+                    onCountChanged: {
+                        predefinedColumn.height += 60
                     }
                 }
 
