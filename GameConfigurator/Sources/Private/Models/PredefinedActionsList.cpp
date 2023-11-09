@@ -77,3 +77,17 @@ void PredefinedActionsListModel::addNewAction(const QString& NewAction, const fl
     );
     endInsertRows();
 }
+
+const QVector<PredefinedAction>& PredefinedActionsListModel::getList() const
+{
+    return PredefinedActionsList;
+}
+
+void PredefinedActionsListModel::initModel(QVector<PredefinedAction>& ActionsList)
+{
+    if (!PredefinedActionsList.isEmpty()) {
+        PredefinedActionsList.clear();
+    }
+
+    PredefinedActionsList = ActionsList;
+}

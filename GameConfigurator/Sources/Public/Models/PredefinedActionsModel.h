@@ -29,9 +29,12 @@ public:
 
     static void registerModel(const QString& ModelName);
 
+    void initModel(QVector<PredefinedAction>& ActionsList);
+
     Q_INVOKABLE void removeElement(const int Index);
     Q_INVOKABLE void addNewAction(const QString& NewAction, const float Chance);
 
+    Q_INVOKABLE const QVector<PredefinedAction>& getList() const;
 protected:
     QVector<PredefinedAction> PredefinedActionsList;
 };

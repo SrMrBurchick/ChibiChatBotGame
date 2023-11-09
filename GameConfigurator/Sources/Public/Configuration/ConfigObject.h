@@ -6,8 +6,9 @@
 #include <QString>
 
 #include "Components/ActionComponent.h"
-#include "Models/AnimationSequenceModel.h"
 #include "Models/ActionsListModel.h"
+#include "Models/AnimationSequenceModel.h"
+#include "Models/PredefinedActionsModel.h"
 
 struct SpriteSize {
     int Height;
@@ -47,6 +48,7 @@ public:
 
     Q_INVOKABLE void initActionsListModel(ActionsListModel* Model);
     Q_INVOKABLE void initAnimationsSequenceModel(AnimationSequenceModel* Model);
+    Q_INVOKABLE void initPredefinedActionsListModel(PredefinedActionsListModel* Model);
 
     Q_INVOKABLE QString getSpriteSheetPath() const;
     Q_INVOKABLE QString getChatBotURL() const;
@@ -71,6 +73,7 @@ public:
     Q_INVOKABLE void saveSpriteScale(const float SpriteScale);
     Q_INVOKABLE void saveScreenResolution(const int Height, const int Width);
     Q_INVOKABLE void saveTargetTwitchChannel(const QString& TargetChannel);
+    Q_INVOKABLE void savePredefinedActions(const PredefinedActionsListModel* Model);
 
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
@@ -85,4 +88,7 @@ protected:
 
     // List of the animations
     ActionsMap Map;
+
+    // List of the predefined actions
+    QVector<PredefinedAction> PredefinedActionsList;
 };

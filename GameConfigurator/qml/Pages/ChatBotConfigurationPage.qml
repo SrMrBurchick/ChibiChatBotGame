@@ -216,8 +216,9 @@ Item {
             ActionsManager.chatBotURL = Config.getChatBotURL()
             ActionsManager.chatBotPort = Config.getChatBotPort()
             ActionsManager.screenHeight = Config.getScreenHeight()
-            ActionsManager.screenWidth = Config.getScreenWidht()
+            ActionsManager.screenWidth = Config.getScreenWidth()
             ActionsManager.twitchChannel = Config.getTwitchTargeChannel()
+            Config.initPredefinedActionsListModel(actionsModel)
         }
     }
 
@@ -225,6 +226,7 @@ Item {
         Config.saveChatBotConfig(ActionsManager.chatBotURL, ActionsManager.chatBotPort)
         Config.saveScreenResolution(ActionsManager.screenHeight, ActionsManager.screenWidth)
         Config.saveTargetTwitchChannel(ActionsManager.twitchChannel)
+        Config.savePredefinedActions(actionsModel)
         Config.saveConfig()
     }
 }

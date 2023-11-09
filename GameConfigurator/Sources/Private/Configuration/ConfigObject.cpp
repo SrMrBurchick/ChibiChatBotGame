@@ -39,6 +39,11 @@ constexpr char ANIMATIONS_ITEM_COLUMN[] = "column";
 constexpr char ANIMATIONS_ITEM_ROW[] = "row";
 constexpr char ANIMATIONS_ITEM_INVERTED[] = "inverted";
 
+// Predefined actions settings fields
+constexpr char PREDEFINED_ACTIONS_SETTINGS[] = "predefined-actions";
+constexpr char PREDEFINED_ACTIONS_ITEM_ACTION[] = "action";
+constexpr char PREDEFINED_ACTIONS_ITEM_CHANCE[] = "chance";
+
 ConfigObject::ConfigObject(QObject* Parent)
     : QObject(Parent)
 {
@@ -58,6 +63,7 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     QVariantMap JsonChatBotSettings = ConfigMap[CHAT_BOT_SETTINGS].toMap();
     QVariantMap JsonScreenResolution = ConfigMap[SCREEN_RESOLUTION].toMap();
     QJsonArray JsonActionsArray = ConfigMap[ANIMATIONS_SETTINGS].toJsonArray();
+    QJsonArray JsonPredefinedActions = ConfigMap[PREDEFINED_ACTIONS_SETTINGS].toJsonArray();
 
     // Init source file
     if (ConfigMap.contains(SOURCE_FILE)) {
@@ -130,6 +136,18 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
         }
     }
 
+    // Init predefined actions
+    if (!JsonPredefinedActions.isEmpty()) {
+        for (QJsonValueConstRef Item : JsonPredefinedActions) {
+            QJsonObject JsonAction = Item.toObject();
+            PredefinedAction Action;
+            Action.ActionName = JsonAction[PREDEFINED_ACTIONS_ITEM_ACTION].toString();
+            Action.Chance = JsonAction[PREDEFINED_ACTIONS_ITEM_CHANCE].toDouble();
+
+            PredefinedActionsList.push_back(Action);
+        }
+    }
+
     bConfigLoaded = true;
 }
 
@@ -140,6 +158,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     QJsonObject JsonChatBotSettings;
     QJsonArray JsonActionsArray;
     QJsonObject JsonScreenResolution;
+    QJsonArray JsonPredefinedActions;
 
     // Chat bot
     JsonChatBotSettings[CHAT_BOT_SETTINGS_URL] = SystemSettings.ChatBotWebSockURL;
@@ -172,6 +191,14 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
         JsonActionsArray.push_back(JsonAction);
     }
 
+    // Predefined actions
+    for (const PredefinedAction& Action : PredefinedActionsList) {
+        QJsonObject JsonAction;
+        JsonAction[PREDEFINED_ACTIONS_ITEM_ACTION] = Action.ActionName;
+        JsonAction[PREDEFINED_ACTIONS_ITEM_CHANCE] = Action.Chance;
+        JsonPredefinedActions.push_back(JsonAction);
+    }
+
     QJsonObject Config;
     Config[SOURCE_FILE] = SystemSettings.ImagePath;
     Config[SPRITE_SCALE] = SystemSettings.SpriteScale;
@@ -180,6 +207,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     Config[SPRITE_SETTINGS] = JsonSpriteSettings;
     Config[SCREEN_RESOLUTION] = JsonScreenResolution;
     Config[TWITCH_CHANNEL] = SystemSettings.TwitchTargetChannel;
+    Config[PREDEFINED_ACTIONS_SETTINGS] = JsonPredefinedActions;
     Config[ANIMATIONS_SETTINGS] = JsonActionsArray;
 
     QFile ConfigFile(ConfigFileName);
@@ -347,4 +375,22 @@ int ConfigObject::getScreenWidth() const
 QString ConfigObject::getTwitchTargeChannel() const
 {
     return SystemSettings.TwitchTargetChannel;
+}
+
+void ConfigObject::savePredefinedActions(const PredefinedActionsListModel* Model)
+{
+    if (Model != nullptr) {
+        PredefinedActionsList = Model->getList();
+    }
+}
+
+void ConfigObject::initPredefinedActionsListModel(PredefinedActionsListModel* Model)
+{
+    if (!isConfigLoaded()) {
+        return;
+    }
+
+    if (Model != nullptr) {
+        Model->initModel(PredefinedActionsList);
+    }
 }
