@@ -33,7 +33,7 @@ Rectangle {
             Layout.fillWidth: true
             anchors.verticalCenter: parent.verticalCenter
             horizontalAlignment: TextInput.AlignHCenter
-            validator: RegularExpressionValidator{regularExpression: /^[0-9\./]+$/}
+            validator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
             background: Rectangle {
                 color: Style.propertyDelegateBorderColor
             }

@@ -62,7 +62,7 @@ void PredefinedActionsListModel::removeElement(const int Index)
 
 }
 
-void PredefinedActionsListModel::addNewAction(const QString& NewAction, const float Chance)
+void PredefinedActionsListModel::addNewAction(const QString& NewAction, const int Chance)
 {
     if (NewAction.isEmpty()) {
         return;

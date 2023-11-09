@@ -339,4 +339,26 @@ impl Config {
 
         return (width, height);
     }
+
+    pub fn get_predefined_actions(&self) -> Vec<(String, u8)> {
+        let mut predefined_actions: Vec<(String, u8)> = vec![];
+
+        match self.get_value("predefined-actions") {
+            Ok(actions) => {
+                if !actions.is_array() {
+                    return predefined_actions;
+                }
+
+                for item in actions.members() {
+                    let action_name = item["action"].as_str().unwrap();
+                    let chance = item["chance"].as_u8().unwrap();
+
+                    predefined_actions.push((String::from(action_name), chance));
+                }
+            },
+            Err(_) => {},
+        }
+
+        return predefined_actions;
+    }
 }

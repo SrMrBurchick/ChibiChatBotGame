@@ -142,7 +142,7 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
             QJsonObject JsonAction = Item.toObject();
             PredefinedAction Action;
             Action.ActionName = JsonAction[PREDEFINED_ACTIONS_ITEM_ACTION].toString();
-            Action.Chance = JsonAction[PREDEFINED_ACTIONS_ITEM_CHANCE].toDouble();
+            Action.Chance = JsonAction[PREDEFINED_ACTIONS_ITEM_CHANCE].toInt();
 
             PredefinedActionsList.push_back(Action);
         }

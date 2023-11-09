@@ -121,6 +121,23 @@ impl ActionComponent {
 
         return animations;
     }
+
+    pub fn get_action_from_string(&self, action_string: String) -> Actions {
+        let action: Actions = string_to_action(action_string.as_str());
+
+        match action {
+            Actions::Unknown => {
+                for user_action in self.user_actions.iter() {
+                    if user_action.action == action_string {
+                        return Actions::UserAction(action_string);
+                    }
+                }
+            }
+            _ => {},
+        }
+
+        return action;
+    }
 }
 
 impl Default for ActionComponent {

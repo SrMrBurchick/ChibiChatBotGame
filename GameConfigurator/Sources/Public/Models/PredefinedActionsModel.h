@@ -11,7 +11,7 @@ enum ePredefinedActionsListRole {
 
 struct PredefinedAction {
     QString ActionName;
-    float Chance;
+    int Chance;
 };
 
 class PredefinedActionsListModel : public QAbstractListModel
@@ -32,7 +32,7 @@ public:
     void initModel(QVector<PredefinedAction>& ActionsList);
 
     Q_INVOKABLE void removeElement(const int Index);
-    Q_INVOKABLE void addNewAction(const QString& NewAction, const float Chance);
+    Q_INVOKABLE void addNewAction(const QString& NewAction, const int Chance);
 
     Q_INVOKABLE const QVector<PredefinedAction>& getList() const;
 protected:

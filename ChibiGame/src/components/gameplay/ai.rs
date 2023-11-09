@@ -34,14 +34,16 @@ impl AIComponent {
         }
     }
 
-    pub fn add_new_action(&mut self, action: Actions, weight: f32) {
+    pub fn add_new_action(&mut self, action: Actions, weight: u8) {
+        info!("Add new Action: {:?} with chance {:?} %", action, weight);
         let action_comp = AIActionComponent{
             action,
-            weight
+            weight: weight as f32 / 100.0
         };
 
         if !self.actions.contains(&action_comp) {
             self.total_weight += action_comp.weight;
+            info!("Total weight {:?} %", self.total_weight);
             self.actions.push(action_comp);
         }
     }

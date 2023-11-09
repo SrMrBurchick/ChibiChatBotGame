@@ -52,21 +52,28 @@ pub fn setup_player(
 
         info!("Action component {:?}", action_component);
 
+        // Setup AI component
+        let mut ai_component = AIComponent::new();
+        let predefined_actions = config.get_predefined_actions();
+        for predefined_action in predefined_actions.iter() {
+            ai_component.add_new_action(
+                action_component.get_action_from_string(predefined_action.0.clone()),
+                predefined_action.1
+            );
+        }
+
+        ai_component.add_new_action(Actions::SwapDirection, 1); // 1% chance to swap current direction
+
+        commands.insert_resource(AITimer {
+            timer: Timer::from_seconds(15.0, TimerMode::Repeating),
+        });
+
         let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
         let mut player = Player::new();
         player.set_texture_atlas(texture_atlas_handle);
         player.set_animation_component(animation_component);
         player.set_action_component(action_component);
-
-        // Setup AI component
-        let mut ai_component = AIComponent::new();
-        ai_component.add_new_action(Actions::Walk, 0.2); // 20% chance to pick walk action
-        ai_component.add_new_action(Actions::Climb, 0.4); // 40% chance to active a climb action
-        ai_component.add_new_action(Actions::SwapDirection, 0.01); // 1% chance to swap current direction
-        commands.insert_resource(AITimer {
-            timer: Timer::from_seconds(15.0, TimerMode::Repeating),
-        });
 
         commands
             .spawn(player)
