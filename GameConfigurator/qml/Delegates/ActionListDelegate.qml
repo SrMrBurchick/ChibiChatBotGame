@@ -5,9 +5,8 @@ import Dialogs
 
 Rectangle {
     id: root
-    property int actionIndex: 0
     color: Style.actionListItemBGColor
-    border.color: actionIndex == delegateManager.currentIndex ? Style.actionListItemBorderSelectedColor : Style.actionListItemBorderColor
+    border.color: index == delegateManager.currentIndex ? Style.actionListItemBorderSelectedColor : Style.actionListItemBorderColor
     border.width: 2
     width: parent.width - 5
     height: 50
@@ -34,7 +33,7 @@ Rectangle {
                 id: changeActionDialog
                 actionName: actionName.text
                 onChangeAction: {
-                    changeElement(actionIndex, action);
+                    changeElement(index, action);
                 }
 
             }
@@ -51,7 +50,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    elementSelected(actionIndex, name)
+                    elementSelected(index, name)
                 }
             }
         }
@@ -68,7 +67,7 @@ Rectangle {
                     source: Style.trashCanImage
                 }
                 onClicked: {
-                    removeElement(actionIndex);
+                    removeElement(index)
                 }
             }
         }

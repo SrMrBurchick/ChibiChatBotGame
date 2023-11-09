@@ -20,13 +20,12 @@ ScrollView {
         }
 
         delegate: ActionListDelegate {
-            actionIndex: index
             anchors.horizontalCenter: parent.horizontalCenter
             onRemoveElement: {
-                actionsModel.removeElement(index)
+                ActionsManager.actionsListModel.removeElement(index)
             }
             onChangeElement: {
-                actionsModel.changeElement(index, action)
+                ActionsManager.actionsListModel.changeElement(index, action)
             }
             onElementSelected: {
                 delegateManager.currentIndex = index
