@@ -1,6 +1,7 @@
 #include "Models/ActionsListModel.h"
 
 #include <QQmlEngine>
+#include <QTimer>
 #include <iostream>
 
 ActionsListModel::ActionsListModel(QObject* Parent)
@@ -87,6 +88,10 @@ void ActionsListModel::addNewAction(const QString& NewAction)
     beginInsertRows(QModelIndex(), ActionsList.size(), ActionsList.size());
     ActionsList.push_back(NewAction);
     endInsertRows();
+
+    if (ActionsList.size() == 1) {
+        QTimer::singleShot(0, this, &ActionsListModel::setDefaultSelected);
+    }
 }
 
 int ActionsListModel::getSelectedActionIndex() const
@@ -97,7 +102,7 @@ int ActionsListModel::getSelectedActionIndex() const
 const QString ActionsListModel::getSelectedAction() const
 {
     if (SelectedActionIndex >= ActionsList.size() || ActionsList.isEmpty()) {
-        return "None";
+        return QString();
     }
 
     return ActionsList.at(SelectedActionIndex);
