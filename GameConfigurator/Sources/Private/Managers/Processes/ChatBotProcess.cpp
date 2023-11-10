@@ -8,3 +8,8 @@ ChatBotProcess::ChatBotProcess()
 ChatBotProcess::~ChatBotProcess()
 {
 }
+
+void ChatBotProcess::Kill()
+{
+    Terminate();
+}

@@ -22,7 +22,8 @@ public:
     bool RunProcessWithParams(const QStringList& Args, QProcessEnvironment* Env = nullptr);
     bool IsProcessRunning();
 
-    void Kill();
+    virtual void Kill();
+    void Terminate();
 
     eProcessType GetType() const {return Type;}
     QString GetLastError();

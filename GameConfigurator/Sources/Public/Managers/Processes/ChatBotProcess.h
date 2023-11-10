@@ -6,4 +6,6 @@ class ChatBotProcess : public IProcess {
 public:
     ChatBotProcess();
     virtual ~ChatBotProcess();
+
+    virtual void Kill();
 };

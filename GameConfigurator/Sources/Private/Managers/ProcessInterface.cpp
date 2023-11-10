@@ -89,3 +89,9 @@ QPointer<QProcess> IProcess::GetProcess()
 {
     return QPointer<QProcess>(&Process);
 }
+
+void IProcess::Terminate()
+{
+    NotificationsManager::SendNotification("Process manager", QString::asprintf("Kill a\n %s", Program.toStdString().c_str()));
+    Process.terminate();
+}
