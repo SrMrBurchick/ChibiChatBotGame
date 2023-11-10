@@ -14,11 +14,6 @@ ScrollView {
         id: actionsList
         model: ActionsManager.actionsListModel
 
-        Item {
-            id: delegateManager
-            property int currentIndex
-        }
-
         delegate: ActionListDelegate {
             anchors.horizontalCenter: parent.horizontalCenter
             onRemoveElement: {
@@ -28,11 +23,7 @@ ScrollView {
                 ActionsManager.actionsListModel.changeElement(index, action)
             }
             onElementSelected: {
-                delegateManager.currentIndex = index
-
-                if (ActionsManager.sequenceModel != undefined) {
-                    ActionsManager.sequenceModel.setActiveAction(action);
-                }
+                ActionsManager.actionsListModel.setSelectedActionIndex(index)
             }
         }
     }

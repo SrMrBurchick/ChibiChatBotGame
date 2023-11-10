@@ -35,11 +35,16 @@ public:
     Q_INVOKABLE void toggleInverted(int Index);
     Q_INVOKABLE void placeItemAt(int SourceIndex, int TargetIndex);
     Q_INVOKABLE void setActiveAction(const QString& Action);
+    Q_INVOKABLE void removeAction(const QString& Action);
     Q_INVOKABLE void clearModel();
 
     Q_INVOKABLE QVariantMap getNextSprite();
     Q_INVOKABLE const ActionsMap& getMap() const;
     Q_INVOKABLE bool isInverted(int Index) const;
+    void initSpriteActions(ActionGridSprite& ActionSprite);
+
+signals:
+    void spriteRemoved(int Column, int Row);
 
 protected:
     QList<ActionSequenceSprite>* SpriteList = nullptr;

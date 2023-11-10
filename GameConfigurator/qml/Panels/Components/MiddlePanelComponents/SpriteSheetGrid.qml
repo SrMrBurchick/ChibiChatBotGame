@@ -46,9 +46,19 @@ Item {
                         height: gridView.cellHeight
                         width: gridView.cellWidth
                         onToggleSelected:(index, column, row) => {
+                            ActionsManager.spriteSheetModel.addAction(
+                                index,
+                                ActionsManager.actionsListModel.getSelectedAction()
+                            )
+
                             if (ActionsManager.sequenceModel != undefined) {
                                 ActionsManager.sequenceModel.addNewAction(column, row)
                             }
+                        }
+                        Component.onCompleted: {
+                            root.onSequenceUpdated.connect(function(){
+                                sprite.sequenceUpdated()
+                            })
                         }
                     }
                 }
@@ -56,10 +66,27 @@ Item {
         }
     }
 
-    function initModel() {
-        ActionsManager.spriteSheetModel.initModel(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
+    Component.onCompleted: {
+        ActionsManager.sequenceModel.onSpriteRemoved.connect(function (column, row) {
+            ActionsManager.spriteSheetModel.removeAction(
+                column, row,
+                ActionsManager.actionsListModel.getSelectedAction()
+            )
+            sequenceUpdated()
+        })
     }
+
+    function initModel() {
+        ActionsManager.spriteSheetModel.initModel(
+            ActionsManager.tableSettingsColumns,
+            ActionsManager.tableSettingsRows,
+            ActionsManager.sequenceModel
+        )
+    }
+
     function clearModel() {
         ActionsManager.spriteSheetModel.clearModel()
     }
+
+    signal sequenceUpdated()
 }

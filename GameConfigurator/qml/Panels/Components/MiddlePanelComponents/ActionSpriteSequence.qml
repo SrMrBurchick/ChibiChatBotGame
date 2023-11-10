@@ -63,8 +63,18 @@ Item {
     }
 
     function clearModel() {
-        console.log("Clear sequence")
         ActionsManager.sequenceModel.clearModel();
+    }
+
+    Component.onCompleted: {
+        ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
+            ActionsManager.sequenceModel.setActiveAction(action);
+        })
+        ActionsManager.actionsListModel.onActionRemoved.connect(function (action) {
+            ActionsManager.sequenceModel.removeAction(action);
+        })
+
+        ActionsManager.actionsListModel.setDefaultSelected()
     }
 }
 

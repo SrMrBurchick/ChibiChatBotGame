@@ -2,11 +2,13 @@ import QtQuick
 import QtQuick.Layouts
 import Base
 import Dialogs
+import Panels
 
 Rectangle {
     id: root
     color: Style.actionListItemBGColor
-    border.color: index == delegateManager.currentIndex ? Style.actionListItemBorderSelectedColor : Style.actionListItemBorderColor
+    property bool isSelected: false
+    border.color: isSelected ? Style.actionListItemBorderSelectedColor : Style.actionListItemBorderColor
     border.width: 2
     width: parent.width - 5
     height: 50
@@ -74,7 +76,9 @@ Rectangle {
     }
 
     Component.onCompleted: {
-
+        ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
+            root.isSelected = index == ActionsManager.actionsListModel.getSelectedActionIndex()
+        })
     }
 
     signal removeElement(int index)

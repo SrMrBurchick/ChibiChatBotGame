@@ -82,7 +82,7 @@ void NotificationListModel::addNotification(const QString& Title, const QString&
 
 void NotificationListModel::removeNotification(int Index)
 {
-    if (Index > NotificationList.size() && Index <= 0) {
+    if (Index > NotificationList.size() || Index <= 0) {
         return;
     }
 

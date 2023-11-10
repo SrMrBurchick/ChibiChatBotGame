@@ -28,7 +28,16 @@ public:
     Q_INVOKABLE void removeElement(int Index);
     Q_INVOKABLE void changeElement(int Index, const QString& NewActionName);
     Q_INVOKABLE void addNewAction(const QString& NewAction);
+    Q_INVOKABLE int getSelectedActionIndex() const;
+    Q_INVOKABLE const QString getSelectedAction() const;
+    Q_INVOKABLE void setSelectedActionIndex(int Index);
+    Q_INVOKABLE void setDefaultSelected();
+
+signals:
+    void actionSelected(QString Action);
+    void actionRemoved(QString Action);
 
 protected:
     QVector<QString> ActionsList;
+    int SelectedActionIndex = 0;
 };

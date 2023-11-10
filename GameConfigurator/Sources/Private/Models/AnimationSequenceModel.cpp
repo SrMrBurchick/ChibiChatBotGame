@@ -30,6 +30,10 @@ QVariant AnimationSequenceModel::data(const QModelIndex& Index, int Role) const
         return Data;
     }
 
+    if (SpriteList->length() <= Index.row() || SpriteList->isEmpty()) {
+        return false;
+    }
+
     switch (Role) {
         case eActionsSequenceListRole::Column:
             Data = QVariant::fromValue(SpriteList->at(Index.row()).Column);
@@ -78,8 +82,10 @@ void AnimationSequenceModel::removeElement(int Index)
     }
 
     beginRemoveRows(QModelIndex(), Index, Index);
-    SpriteList->removeAt(Index);
+    ActionSequenceSprite Sprite = SpriteList->takeAt(Index);
     endRemoveRows();
+
+    emit spriteRemoved(Sprite.Column, Sprite.Row);
 }
 
 void AnimationSequenceModel::addNewAction(int Column, int Row)
@@ -195,18 +201,38 @@ void AnimationSequenceModel::initModel(const ActionsMap& InitMap)
     }
 
     Map = InitMap;
-    setActiveAction(Map.begin().key());
 }
 
 bool AnimationSequenceModel::isInverted(int Index) const
 {
-    if (SpriteList == nullptr) {
+    if (SpriteList == nullptr || Index < 0) {
         return false;
     }
 
-    if (SpriteList->length() <= Index || SpriteList->isEmpty()) {
+    if (SpriteList->size() <= Index || SpriteList->isEmpty()) {
         return false;
     }
 
     return SpriteList->at(Index).bInverted;
+}
+
+void AnimationSequenceModel::initSpriteActions(ActionGridSprite& ActionSprite)
+{
+    for (auto Iter = Map.begin(); Iter != Map.end(); ++Iter) {
+        if (Iter.value().contains(ActionSprite)) {
+            ActionSprite.Actions.push_back(Iter.key());
+        }
+    }
+}
+
+void AnimationSequenceModel::removeAction(const QString& Action)
+{
+    QMutexLocker MutexLocker(&SpriteListMutex);
+    if (Map.contains(Action)) {
+        Map.remove(Action);
+    }
+
+    if (CurrentAction == Action) {
+        SpriteList = nullptr;
+    }
 }

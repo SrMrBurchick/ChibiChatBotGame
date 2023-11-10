@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Components/ActionComponent.h"
+#include "Models/AnimationSequenceModel.h"
+
 #include <QAbstractListModel>
 #include <QObject>
 #include <QVector>
-#include "Components/ActionComponent.h"
 
 enum eSpriteSheetRoles {
     SpriteColumn = Qt::UserRole,
@@ -27,9 +29,13 @@ public:
 
     void updateData();
 
-    Q_INVOKABLE void initModel(int Columns, int Rows);
+    Q_INVOKABLE void initModel(int Columns, int Rows, AnimationSequenceModel* Model = nullptr);
     Q_INVOKABLE void clearModel();
+    Q_INVOKABLE bool containsAction(const int Index, const QString& Action);
+    Q_INVOKABLE void addAction(const int Index, const QString& Action);
+    Q_INVOKABLE void removeAction(int Column, int Row, const QString& Action);
+    Q_INVOKABLE int getActionsCount(const int Index, const QString& Action) const;
 
 protected:
-    QVector<ActionSequenceSprite> SpriteSheet;
+    QVector<ActionGridSprite> SpriteSheet;
 };

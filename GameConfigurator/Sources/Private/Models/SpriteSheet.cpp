@@ -56,13 +56,17 @@ void SpriteSheetModel::updateData()
     emit dataChanged(createIndex(0,0), createIndex(SpriteSheet.size(), 0));
 }
 
-void SpriteSheetModel::initModel(int Columns, int Rows)
+void SpriteSheetModel::initModel(int Columns, int Rows, AnimationSequenceModel* Model)
 {
     SpriteSheet.clear();
 
     for (int Row = 0; Row < Rows; Row++) {
         for (int Column = 0; Column < Columns; Column++) {
-            SpriteSheet.push_back(ActionSequenceSprite(Column, Row));
+            ActionGridSprite GridSprite = ActionGridSprite(Column, Row);
+            if (Model != nullptr) {
+                Model->initSpriteActions(GridSprite);
+            }
+            SpriteSheet.push_back(GridSprite);
         }
     }
 
@@ -76,4 +80,46 @@ void SpriteSheetModel::clearModel()
 
     beginResetModel();
     endResetModel();
+}
+
+bool SpriteSheetModel::containsAction(const int Index, const QString& Action)
+{
+    if (Index >= SpriteSheet.size() || Index < 0) {
+        return false;
+    }
+
+    return SpriteSheet.at(Index).Actions.contains(Action);
+}
+
+void SpriteSheetModel::addAction(const int Index, const QString& Action)
+{
+    if (Index >= SpriteSheet.size() || Index < 0) {
+        return;
+    }
+
+    // Can be multiple copies of the sprite at the same action
+    SpriteSheet[Index].Actions.push_back(Action);
+}
+
+void SpriteSheetModel::removeAction(int Column, int Row, const QString& Action)
+{
+    ActionGridSprite GridSprite(Column, Row);
+
+    if (SpriteSheet.contains(GridSprite)) {
+        int Index = SpriteSheet.indexOf(GridSprite);
+        ActionGridSprite& Sprite = SpriteSheet[Index];
+
+        if (Sprite.Actions.contains(Action)) {
+            Sprite.Actions.removeAt(Sprite.Actions.indexOf(Action));
+        }
+    }
+}
+
+int SpriteSheetModel::getActionsCount(const int Index, const QString& Action) const
+{
+    if (Index >= SpriteSheet.size()) {
+        return 0;
+    }
+
+    return SpriteSheet.at(Index).Actions.count(Action);
 }

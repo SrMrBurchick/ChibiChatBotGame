@@ -18,10 +18,9 @@ int ActionsListModel::rowCount(const QModelIndex& Parent) const
 QVariant ActionsListModel::data(const QModelIndex& Index, int Role) const
 {
     QVariant Data;
-    if (!Index.isValid() || Index.row() > rowCount(Index)) {
+    if (!Index.isValid() || Index.row() > rowCount(Index) || ActionsList.isEmpty()) {
         return Data;
     }
-
 
     switch (Role) {
         case eActionsListRole::NameRole:
@@ -56,18 +55,20 @@ void ActionsListModel::updateData()
 
 void ActionsListModel::removeElement(int Index)
 {
-    if (Index > ActionsList.size() && Index <= 0) {
+    if ((Index > ActionsList.size() && Index <= 0) || ActionsList.isEmpty()) {
         return;
     }
 
     beginRemoveRows(QModelIndex(), Index, Index);
-    ActionsList.removeAt(Index);
+    QString Action = ActionsList.takeAt(Index);
     endRemoveRows();
+
+    emit actionRemoved(Action);
 }
 
 void ActionsListModel::changeElement(int Index, const QString& NewActionName)
 {
-    if (Index > ActionsList.size() && Index <= 0) {
+    if ((Index > ActionsList.size() && Index <= 0) || ActionsList.isEmpty()) {
         return;
     }
 
@@ -86,4 +87,39 @@ void ActionsListModel::addNewAction(const QString& NewAction)
     beginInsertRows(QModelIndex(), ActionsList.size(), ActionsList.size());
     ActionsList.push_back(NewAction);
     endInsertRows();
+}
+
+int ActionsListModel::getSelectedActionIndex() const
+{
+    return SelectedActionIndex;
+}
+
+const QString ActionsListModel::getSelectedAction() const
+{
+    if (SelectedActionIndex >= ActionsList.size() || ActionsList.isEmpty()) {
+        return "None";
+    }
+
+    return ActionsList.at(SelectedActionIndex);
+}
+
+void ActionsListModel::setSelectedActionIndex(int Index)
+{
+    if (Index >= ActionsList.size() || ActionsList.isEmpty() || Index < 0) {
+        return;
+    }
+
+    SelectedActionIndex = Index;
+    QString Action = ActionsList.at(SelectedActionIndex);
+
+    emit actionSelected(Action);
+}
+
+void ActionsListModel::setDefaultSelected()
+{
+    if (ActionsList.isEmpty()) {
+        return;
+    }
+
+    setSelectedActionIndex(0);
 }

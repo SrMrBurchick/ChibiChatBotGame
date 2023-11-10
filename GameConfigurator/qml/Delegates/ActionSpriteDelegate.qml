@@ -14,7 +14,8 @@ Rectangle {
     Drag.active: dragArea.drag.active
 
     BaseText {
-        text: "(" + sprite_column + " : " + sprite_row + ")"
+        text: "(" + sprite_row + " : " + sprite_column + ")"
+        font.pixelSize : 24
     }
 
     Image {

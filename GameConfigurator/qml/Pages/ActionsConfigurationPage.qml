@@ -139,6 +139,7 @@ Item {
             ActionsManager.spriteSheetConfigured = true
             splitImageToSprites()
         }
+
     }
 
     function splitImageToSprites() {
