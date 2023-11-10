@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Panels
 
 Dialog {
     id: root
@@ -9,6 +10,7 @@ Dialog {
 
     title: "Add action"
     standardButtons: Dialog.Cancel | Dialog.Save
+    readonly property var defaultActions: ["walk", "fall", "climb", "standby", "custom"]
 
     RowLayout {
         anchors.fill: root
@@ -29,7 +31,7 @@ Dialog {
         ComboBox {
             id: actionSelector
             visible: !isCustomSelected
-            model: ["walk", "fall", "climb", "standby", "custom"]
+            model: defaultActions
 
             onActivated: {
                 if (currentText == "custom" && isCustomSelected == false) {
@@ -37,6 +39,10 @@ Dialog {
                 } else {
                     actionName = currentText
                 }
+            }
+
+            Component.onCompleted: {
+                setupDialog()
             }
         }
     }
@@ -54,6 +60,41 @@ Dialog {
     signal addNewAction(string newAction)
 
     Component.onCompleted: {
+        ActionsManager.actionsListModel.onActionAdded.connect(function (action) {
+            if (defaultActions.includes(action) && actionSelector.model.includes(action)) {
+                console.log("Action to remove: ", action)
+                actionSelector.model = actionSelector.model.filter(function (item) {
+                    return item != action;
+                })
+            }
+        })
+        ActionsManager.actionsListModel.onActionRemoved.connect(function (action) {
+            if (defaultActions.includes(action) && !actionSelector.model.includes(action)) {
+                console.log("Action to add: ", action)
+                var tempList = actionSelector.model
+                tempList = [action].concat(tempList)
+
+                actionSelector.model = tempList;
+            }
+        })
+
+        var loadedActions = ActionsManager.actionsListModel.getActions()
+        loadedActions.forEach(function(action) {
+            if (defaultActions.includes(action) && actionSelector.model.includes(action)) {
+                actionSelector.model = actionSelector.model.filter(function (item) {
+                    return item != action;
+                })
+            }
+        })
+
         actionName = actionSelector.currentText
+    }
+
+    function setupDialog() {
+        if (actionSelector.currentText == "custom" && isCustomSelected == false) {
+            root.isCustomSelected = true
+        } else {
+            root.actionName = actionSelector.currentText
+        }
     }
 }

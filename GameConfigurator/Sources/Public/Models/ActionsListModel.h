@@ -32,10 +32,12 @@ public:
     Q_INVOKABLE const QString getSelectedAction() const;
     Q_INVOKABLE void setSelectedActionIndex(int Index);
     Q_INVOKABLE void setDefaultSelected();
+    Q_INVOKABLE QVector<QString> getActions() const;
 
 signals:
     void actionSelected(QString Action);
     void actionRemoved(QString Action);
+    void actionAdded(QString Action);
 
 protected:
     QVector<QString> ActionsList;

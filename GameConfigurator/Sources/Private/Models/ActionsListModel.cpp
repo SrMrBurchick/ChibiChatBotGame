@@ -92,6 +92,8 @@ void ActionsListModel::addNewAction(const QString& NewAction)
     if (ActionsList.size() == 1) {
         QTimer::singleShot(0, this, &ActionsListModel::setDefaultSelected);
     }
+
+    emit actionAdded(NewAction);
 }
 
 int ActionsListModel::getSelectedActionIndex() const
@@ -127,4 +129,9 @@ void ActionsListModel::setDefaultSelected()
     }
 
     setSelectedActionIndex(0);
+}
+
+QVector<QString> ActionsListModel::getActions() const
+{
+    return ActionsList;
 }

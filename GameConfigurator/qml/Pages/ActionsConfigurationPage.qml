@@ -49,9 +49,6 @@ Item {
                 Layout.fillHeight: true
                 color: Style.pageBGColor
                 anchors.rightMargin: 0
-                AddActionDialog {
-                    id: actionDialog
-                }
 
                 LeftPanel {
                     rootPage: root

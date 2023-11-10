@@ -50,6 +50,7 @@ Item {
                     }
 
                     onClicked: {
+                        addActionDialog.setupDialog()
                         addActionDialog.open()
                     }
                     Layout.fillWidth: true
