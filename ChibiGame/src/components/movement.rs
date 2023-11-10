@@ -103,6 +103,7 @@ pub struct PlayerMovementComponent {
     pub landed: bool,
     pub can_climb: bool,
     pub speed: f32,
+    pub last_walk_direction: WalkDirection
 }
 
 impl PlayerMovementComponent {
@@ -112,7 +113,8 @@ impl PlayerMovementComponent {
             active: false,
             landed: false,
             can_climb: false,
-            speed: 3500.0
+            speed: 3500.0,
+            last_walk_direction: WalkDirection::Right
         }
     }
 
@@ -125,16 +127,9 @@ impl PlayerMovementComponent {
         self.active = true;
         match action {
             Actions::Walk => {
-                if current_move_direction.x >= 0.0 {
-                    self.movement = Some(Box::new(WalkComponent {
-                        direction: WalkDirection::Right
-                    }));
-                } else {
-                    self.movement = Some(Box::new(WalkComponent {
-                        direction: WalkDirection::Left
-                    }));
-                }
-
+                self.movement = Some(Box::new(WalkComponent {
+                    direction: self.last_walk_direction
+                }));
             }
             Actions::Climb => {
                 self.movement = Some(Box::new(ClimbComponent {
@@ -168,7 +163,16 @@ impl PlayerMovementComponent {
 
                 self.movement = Some(movement);
             },
-            None => {},
+            None => {
+                match self.last_walk_direction {
+                    WalkDirection::Right => {
+                        self.last_walk_direction = WalkDirection::Left;
+                    },
+                    WalkDirection::Left => {
+                        self.last_walk_direction = WalkDirection::Right;
+                    }
+                }
+            },
         }
     }
 
@@ -195,12 +199,15 @@ impl PlayerMovementComponent {
 pub fn move_player(
     time: Res<Time>,
     type_registry: Res<AppTypeRegistry>,
-    mut query: Query<(&PlayerMovementComponent, &GameplayLogicComponent, &ActionComponent, &mut Velocity)>,
+    mut query: Query<(&mut PlayerMovementComponent, &GameplayLogicComponent, &ActionComponent, &mut Velocity)>,
 ) {
-    for (component, gameplay, action, mut velocity) in &mut query {
+    for (mut component, gameplay, action, mut velocity) in &mut query {
         if component.active == false || gameplay.is_movement_enabled() == false {
             continue;
         }
+
+        let mut direction = WalkDirection::Right;
+        let mut can_move: bool = false;
 
         match component.movement.as_deref() {
             Some(movement) => {
@@ -212,9 +219,14 @@ pub fn move_player(
                 let movement_trait: &dyn MovementComponent =
                     reflect_movement.get(&*movement).unwrap();
 
-                let can_move: bool;
                 match action.current_action {
                     Actions::Walk => {
+                        match movement_trait.get_movement_type() {
+                            MoveType::Walk(walk) => {
+                                direction = walk;
+                            }
+                            _ => {},
+                        }
                         can_move = component.landed;
                     }
                     Actions::Climb => {
@@ -231,6 +243,10 @@ pub fn move_player(
                 }
             }
             _ => {}
+        }
+
+        if can_move && gameplay.get_current_action() == Actions::Walk {
+            component.last_walk_direction = direction;
         }
     }
 }

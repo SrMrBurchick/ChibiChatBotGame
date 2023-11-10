@@ -70,6 +70,13 @@ pub fn animation_system(
             atlas.index = next_sprite_index as usize % texture_atlas.textures.len();
 
             let mut inverted: bool = next_sprite.inverted;
+            match movement_component.last_walk_direction {
+                WalkDirection::Left => {
+                    inverted = !next_sprite.inverted;
+                },
+                _ => {}
+            }
+
             match movement_component.get_move_type(&type_registry) {
                 Some(move_type) => {
                     match move_type {
