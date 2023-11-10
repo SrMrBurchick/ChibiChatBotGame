@@ -165,6 +165,27 @@ Item {
             }
         }
 
+        Component {
+            id: gameSettings
+            ColumnLayout {
+                width: parent.width
+
+                PropertyDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+
+                    fieldName: "Action execution time:"
+                    defaultText: GlobalConfig.actionExecutionTime
+                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
+                    onValueChanged:(text) => {
+                        GlobalConfig.actionExecutionTime = parseReal(text)
+                    }
+                }
+            }
+        }
+
+
         ListModel {
             id: settingsModel
         }
@@ -226,6 +247,7 @@ Item {
     Component.onCompleted: {
         settingsModel.append({"name": "System Settings", "component": systemSettings})
         settingsModel.append({"name": "ChatBot Settings", "component": chatBotSettings})
+        settingsModel.append({"name": "Game settings", "component": gameSettings})
         settingsModel.append({"name": "Predefined actions", "component": predefinedActions})
 
         if (Config.isConfigLoaded()) {
