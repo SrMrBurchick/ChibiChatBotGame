@@ -9,6 +9,9 @@ Dialog {
     id: root
     property string actionName
     property real chance
+    property var notSupportedActions: ["fall"]
+    width: 300
+    height: 300
 
     title: "Add action"
     standardButtons: Dialog.Cancel | Dialog.Save
@@ -18,12 +21,13 @@ Dialog {
     }
 
     RowLayout {
+        id: predefinedConfigurator
         anchors.fill: root
         spacing: 10
 
         ComboBox {
             id: actionSelector
-            model: ActionsManager.actionsListModel
+            model: ActionsManager.actionsListModel.getActions()
 
             onActivated: {
                 actionName = currentText
@@ -48,9 +52,15 @@ Dialog {
                 }
             }
         }
+    }
 
-
-
+    Label {
+        id: configuredText
+        anchors.fill: root
+        visible: false
+        BaseText {
+            text: "All actions already configured"
+        }
     }
 
     onAccepted: {
@@ -64,6 +74,50 @@ Dialog {
     signal addNewAction(string newAction, real chance)
 
     Component.onCompleted: {
+        notSupportedActions.forEach(function(action) {
+            if (actionSelector.model.includes(action)) {
+                actionSelector.model = actionSelector.model.filter(function (item) {
+                    return item != action;
+                })
+            }
+        })
         actionName = actionSelector.currentText
+    }
+
+    function onActionAdded(action) {
+        if (actionSelector.model.includes(action)) {
+            actionSelector.model = actionSelector.model.filter(function (item) {
+                return item != action;
+            })
+        }
+    }
+
+    function onActionRemoved(action) {
+        if (!actionSelector.model.includes(action)) {
+            var tempList = actionSelector.model
+            tempList = [action].concat(tempList)
+
+            actionSelector.model = tempList;
+        }
+    }
+
+    function setupDialog(actions) {
+        actions.forEach(function(action) {
+            if (actionSelector.model.includes(action)) {
+                actionSelector.model = actionSelector.model.filter(function (item) {
+                    return item != action;
+                })
+            }
+        })
+
+        if (actionSelector.count == 0) {
+            predefinedConfigurator.visible = false
+            configuredText.visible = true
+            actionName = ""
+        } else {
+            predefinedConfigurator.visible = true
+            configuredText.visible = false
+            actionName = actionSelector.currentText
+        }
     }
 }

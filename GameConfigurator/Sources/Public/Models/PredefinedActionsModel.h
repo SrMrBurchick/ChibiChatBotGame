@@ -35,6 +35,12 @@ public:
     Q_INVOKABLE void addNewAction(const QString& NewAction, const int Chance);
 
     Q_INVOKABLE const QVector<PredefinedAction>& getList() const;
+    Q_INVOKABLE QVector<QString> getActions() const;
+
+signals:
+    void actionRemoved(QString Action);
+    void actionAdded(QString Action);
+
 protected:
     QVector<PredefinedAction> PredefinedActionsList;
 };

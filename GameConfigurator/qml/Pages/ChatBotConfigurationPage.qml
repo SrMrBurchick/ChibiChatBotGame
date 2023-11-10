@@ -123,13 +123,18 @@ Item {
                     model: actionsModel
                     spacing: 10
                     delegate: PredefinedActionDelegate {
+                        onRemoveElement: (index) => {
+                            actionsModel.removeElement(index)
+                        }
                     }
                     onCountChanged: {
-                        predefinedColumn.height += 60
+                        predefinedColumn.height = 60 * count
+                        predefinedColumn.height += addActionButton.height
                     }
                 }
 
                 BaseButton {
+                    id: addActionButton
                     text: "Add action"
                     Layout.fillWidth: true
                     Layout.maximumWidth: 400
@@ -140,9 +145,19 @@ Item {
 
                             actionsModel.addNewAction(newAction, chance);
                         }
+
+                        Component.onCompleted: {
+                            actionsModel.onActionAdded.connect(function(action) {
+                                addActionDialog.onActionAdded(action)
+                            })
+                            actionsModel.onActionRemoved.connect(function(action) {
+                                addActionDialog.onActionRemoved(action)
+                            })
+                        }
                     }
 
                     onClicked: {
+                        addActionDialog.setupDialog(actionsModel.getActions())
                         addActionDialog.open()
                     }
                 }

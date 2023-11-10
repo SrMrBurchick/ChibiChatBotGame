@@ -57,9 +57,10 @@ void PredefinedActionsListModel::removeElement(const int Index)
     }
 
     beginRemoveRows(QModelIndex(), Index, Index);
-    PredefinedActionsList.remove(Index);
+    PredefinedAction Action = PredefinedActionsList.takeAt(Index);
     endRemoveRows();
 
+    emit actionRemoved(Action.ActionName);
 }
 
 void PredefinedActionsListModel::addNewAction(const QString& NewAction, const int Chance)
@@ -76,6 +77,8 @@ void PredefinedActionsListModel::addNewAction(const QString& NewAction, const in
         }
     );
     endInsertRows();
+
+    emit actionAdded(NewAction);
 }
 
 const QVector<PredefinedAction>& PredefinedActionsListModel::getList() const
@@ -90,4 +93,15 @@ void PredefinedActionsListModel::initModel(QVector<PredefinedAction>& ActionsLis
     }
 
     PredefinedActionsList = ActionsList;
+}
+
+QVector<QString> PredefinedActionsListModel::getActions() const
+{
+    QVector<QString> Actions;
+
+    for (const PredefinedAction& Action : PredefinedActionsList) {
+        Actions.push_back(Action.ActionName);
+    }
+
+    return Actions;
 }
