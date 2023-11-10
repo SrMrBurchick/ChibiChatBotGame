@@ -28,19 +28,26 @@ Rectangle {
             color: "transparent"
         }
 
-        TextField {
-            Layout.margins: 10
-            Layout.fillWidth: true
-            anchors.verticalCenter: parent.verticalCenter
-            horizontalAlignment: TextInput.AlignHCenter
-            validator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-            background: Rectangle {
-                color: Style.propertyDelegateBorderColor
+        SpinBox {
+            id: spinbox
+            from: 0
+            to: 100
+            value: chance
+            editable: true
+            contentItem: TextInput {
+                text: spinbox.textFromValue(spinbox.value, spinbox.locale)
+                font: spinbox.font
+                horizontalAlignment: Qt.AlignHCenter
+                verticalAlignment: Qt.AlignVCenter
+                readOnly: !spinbox.editable
+                validator: spinbox.validator
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                onTextChanged: {
+                    spinbox.value = parseInt(text);
+                }
             }
-            text: chance
-            font.pixelSize : 18
-            color: Style.textColor
-            onTextEdited: {
+            onValueModified: {
+                chance = spinbox.value
             }
         }
 

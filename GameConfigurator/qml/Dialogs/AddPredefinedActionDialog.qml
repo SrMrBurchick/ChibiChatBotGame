@@ -30,21 +30,27 @@ Dialog {
             }
         }
 
-        TextField {
-            Layout.margins: 10
-            Layout.fillWidth: true
-            horizontalAlignment: TextInput.AlignHCenter
-            validator: RegularExpressionValidator{regularExpression: /^[0-9\./]+$/}
-            background: Rectangle {
-                color: Style.propertyDelegateBorderColor
-            }
-            text: "0.0"
-            font.pixelSize : 18
-            color: Style.textColor
-            onTextEdited: {
-                chance = parseFloat(text)
+        SpinBox {
+            id: spinbox
+            from: 0
+            to: 100
+            editable: true
+            contentItem: TextInput {
+                text: spinbox.textFromValue(spinbox.value, spinbox.locale)
+                font: spinbox.font
+                horizontalAlignment: Qt.AlignHCenter
+                verticalAlignment: Qt.AlignVCenter
+                readOnly: !spinbox.editable
+                validator: spinbox.validator
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                onTextChanged: {
+                   root.chance = parseInt(text);
+                }
             }
         }
+
+
+
     }
 
     onAccepted: {
