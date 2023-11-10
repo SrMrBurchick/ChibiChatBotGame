@@ -41,8 +41,9 @@ Item {
 
                     fieldName: "Chanel name:"
                     fieldDescription: "Twitch chanel target"
+                    defaultText: GlobalConfig.twitchChannel
                     onValueChanged:(text) => {
-                        ActionsManager.twitchChannel = text
+                        GlobalConfig.twitchChannel = text
                     }
                 }
 
@@ -52,9 +53,9 @@ Item {
                     anchors.margins: 10
 
                     fieldName: "Chat bot URL:"
-                    defaultText: ActionsManager.chatBotURL
+                    defaultText: GlobalConfig.chatBotURL
                     onValueChanged:(text) => {
-                        ActionsManager.chatBotURL = text
+                        GlobalConfig.chatBotURL = text
                     }
                 }
 
@@ -64,10 +65,10 @@ Item {
                     anchors.margins: 10
 
                     fieldName: "Chat bot port:"
-                    defaultText: ActionsManager.chatBotPort
+                    defaultText: GlobalConfig.chatBotPort
                     typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
                     onValueChanged:(text) => {
-                        ActionsManager.chatBotPort = parseInt(text)
+                        GlobalConfig.chatBotPort = parseInt(text)
                     }
                 }
             }
@@ -84,10 +85,10 @@ Item {
                     anchors.margins: 10
 
                     fieldName: "screen width:"
-                    defaultText: ActionsManager.screenWidth
+                    defaultText: GlobalConfig.screenWidth
                     typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
                     onValueChanged:(text) => {
-                        ActionsManager.screenWidth = parseInt(text)
+                        GlobalConfig.screenWidth = parseInt(text)
                     }
                 }
 
@@ -97,10 +98,10 @@ Item {
                     anchors.margins: 10
 
                     fieldName: "screen height:"
-                    defaultText: ActionsManager.screenHeight
+                    defaultText: GlobalConfig.screenHeight
                     typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
                     onValueChanged:(text) => {
-                        ActionsManager.screenHeight = parseInt(text)
+                        GlobalConfig.screenHeight = parseInt(text)
                     }
                 }
             }
@@ -228,19 +229,19 @@ Item {
         settingsModel.append({"name": "Predefined actions", "component": predefinedActions})
 
         if (Config.isConfigLoaded()) {
-            ActionsManager.chatBotURL = Config.getChatBotURL()
-            ActionsManager.chatBotPort = Config.getChatBotPort()
-            ActionsManager.screenHeight = Config.getScreenHeight()
-            ActionsManager.screenWidth = Config.getScreenWidth()
-            ActionsManager.twitchChannel = Config.getTwitchTargeChannel()
+            GlobalConfig.chatBotURL = Config.getChatBotURL()
+            GlobalConfig.chatBotPort = Config.getChatBotPort()
+            GlobalConfig.screenHeight = Config.getScreenHeight()
+            GlobalConfig.screenWidth = Config.getScreenWidth()
+            GlobalConfig.twitchChannel = Config.getTwitchTargeChannel()
             Config.initPredefinedActionsListModel(actionsModel)
         }
     }
 
     function saveChatBotConfig() {
-        Config.saveChatBotConfig(ActionsManager.chatBotURL, ActionsManager.chatBotPort)
-        Config.saveScreenResolution(ActionsManager.screenHeight, ActionsManager.screenWidth)
-        Config.saveTargetTwitchChannel(ActionsManager.twitchChannel)
+        Config.saveChatBotConfig(GlobalConfig.chatBotURL, GlobalConfig.chatBotPort)
+        Config.saveScreenResolution(GlobalConfig.screenHeight, GlobalConfig.screenWidth)
+        Config.saveTargetTwitchChannel(GlobalConfig.twitchChannel)
         Config.savePredefinedActions(actionsModel)
         Config.saveConfig()
     }

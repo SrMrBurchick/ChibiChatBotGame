@@ -7,6 +7,7 @@
         <file>qml/Base/Notification.qml</file>
         <file>qml/Base/BaseText.qml</file>
         <file>qml/Base/BasePanel.qml</file>
+        <file>qml/Base/GlobalConfig.qml</file>
 
         <file>qml/Buttons/qmldir</file>
         <file>qml/Buttons/ImageSelect.qml</file>

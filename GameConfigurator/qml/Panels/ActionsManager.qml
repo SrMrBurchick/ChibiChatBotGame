@@ -19,13 +19,6 @@ QtObject {
     property int spriteSizeWidth
     property real spriteScale: 1.0
 
-    // System settings
-    property string twitchChannel
-    property string chatBotURL: "localhost"
-    property int chatBotPort: 6565
-    property int screenWidth: 1920
-    property int screenHeight: 1200
-
     property ActionsListModel actionsListModel: ActionsListModel {}
     property AnimationSequenceModel sequenceModel: AnimationSequenceModel {}
     property SpriteSheetModel spriteSheetModel: SpriteSheetModel {}
