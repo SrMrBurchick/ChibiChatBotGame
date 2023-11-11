@@ -182,7 +182,7 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: 10
                     minValue: 5.0
-                    maxValue: 1800.0
+                    maxValue: 15.0
 
                     fieldName: "Action execution time(seconds):"
                     defaultValue: GlobalConfig.actionExecutionTime

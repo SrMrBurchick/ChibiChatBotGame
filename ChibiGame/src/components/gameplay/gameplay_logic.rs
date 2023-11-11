@@ -27,6 +27,7 @@ pub struct GameplayLogicComponent {
     can_be_interrupted: bool,
     movement_enabled: bool,
     current_strategy: Option<Box<dyn Reflect>>,
+    action_execution_time: f32,
 }
 
 impl GameplayLogicComponent {
@@ -38,7 +39,8 @@ impl GameplayLogicComponent {
             current_action: Actions::Unknown,
             can_be_interrupted: false,
             current_strategy: None,
-            movement_enabled: false
+            movement_enabled: false,
+            action_execution_time: 5.0,
         }
     }
 
@@ -113,9 +115,11 @@ impl GameplayLogicComponent {
         return self.pending_actions.pop_front().unwrap();
     }
 
+    pub fn set_action_duration(&mut self, action_duration: f32) {
+        self.action_execution_time = action_duration;
+    }
     pub fn get_action_duration(&self) -> f32 {
-        // TODO: Provide random
-        return 5.0;
+        return self.action_execution_time;
     }
 
     pub fn on_player_hit_border(

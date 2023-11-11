@@ -68,8 +68,13 @@ pub fn setup_player(
             timer: Timer::from_seconds(15.0, TimerMode::Repeating),
         });
 
+        // Setup gameplay logic component
+        let mut gameplay_logic = GameplayLogicComponent::new();
+        gameplay_logic.set_action_duration(config.get_action_execution_time());
+
         let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
+        // Setup player
         let mut player = Player::new();
         player.set_texture_atlas(texture_atlas_handle);
         player.set_animation_component(animation_component);
@@ -91,7 +96,7 @@ pub fn setup_player(
             .insert(TransformBundle::from(Transform::from_scale(Vec3::splat(
                 config.get_sprite_scale(),
             ))))
-            .insert(GameplayLogicComponent::new())
+            .insert(gameplay_logic)
             .insert(ai_component)
             .insert(MessageManager::new())
             .insert(PlayerComponent);
