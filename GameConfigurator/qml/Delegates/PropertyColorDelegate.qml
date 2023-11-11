@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Dialogs
 import Base
 
 Rectangle {
@@ -8,7 +9,7 @@ Rectangle {
     height: settings_item.height
     width: parent.width
 
-    property string defaultText
+    property color defaultValue: "red"
     property string fieldName: ""
     property string fieldDescription: ""
     property RegularExpressionValidator typeValidator: RegularExpressionValidator{}
@@ -23,6 +24,7 @@ Rectangle {
         anchors.centerIn: root
 
         BaseText {
+            id: description
             text: fieldName
             Layout.margins: 10
             font.pixelSize : 24
@@ -33,24 +35,32 @@ Rectangle {
             Layout.fillWidth: true
         }
 
-        TextField {
+        Rectangle {
+            id: textColor
             Layout.margins: 10
-            Layout.fillWidth: true
-            placeholderText: fieldDescription
-            horizontalAlignment: TextInput.AlignHCenter
-            validator: typeValidator
-            background: Rectangle {
-                color: Style.propertyDelegateBorderColor
-            }
-            text: defaultText
-            font.pixelSize : 18
-            color: Style.textColor
-            onTextEdited: {
-                valueChanged(text)
+            height: description.height
+            width: 100
+            radius: 10
+            color: defaultValue
+            MouseArea {
+                anchors.fill: parent
+                ColorDialog {
+                    id: colorDialog
+                    title: "Please choose a color"
+                    selectedColor: textColor.color
+                    onAccepted: {
+                        textColor.color = colorDialog.selectedColor
+                        valueChanged(textColor.color)
+                    }
+                }
+
+                onClicked: {
+                    colorDialog.open()
+                }
             }
         }
     }
 
-    signal valueChanged(string text)
+    signal valueChanged(color value)
 }
 

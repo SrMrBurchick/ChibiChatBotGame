@@ -9,4 +9,5 @@ QtObject {
     property int screenWidth: 1920
     property int screenHeight: 1200
     property real actionExecutionTime: 10 // seconds
+    property color messageTextColor: "red"
 }

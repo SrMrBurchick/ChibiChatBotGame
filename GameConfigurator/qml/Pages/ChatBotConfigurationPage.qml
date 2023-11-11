@@ -188,6 +188,19 @@ Item {
                         GlobalConfig.actionExecutionTime = value
                     }
                 }
+
+                PropertyColorDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+
+                    fieldName: "Message color:"
+                    defaultValue: GlobalConfig.messageTextColor
+                    onValueChanged:(value) => {
+                        GlobalConfig.messageTextColor = value
+                    }
+                }
+
             }
         }
 
