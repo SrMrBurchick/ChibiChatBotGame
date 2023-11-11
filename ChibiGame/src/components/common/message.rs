@@ -5,7 +5,7 @@ use bevy::text::*;
 use crate::components::system::config::Config;
 use crate::components::{
     gameplay::player::PlayerComponent,
-    common::ui::TextFont
+    common::ui::UISettings
 };
 
 #[derive(Debug, Clone)]
@@ -55,7 +55,7 @@ pub fn message_system(
     mut commands: Commands,
     time: Res<Time>,
     mut timer_query: Query<(Entity, &mut MessageDurationTimer)>,
-    text_font: Res<TextFont>,
+    text_font: Res<UISettings>,
     config_query: Query<&Config>,
     mut player_query: Query<(&mut MessageManager, &Transform), Without<MessageComponent>>,
     mut message_query: Query<(Entity, &mut Transform, &TextLayoutInfo), With<MessageComponent>>
@@ -126,7 +126,7 @@ pub fn message_system(
 fn spawn_notification(
     commands: &mut Commands,
     message_manager: &mut MessageManager,
-    text_font: &Res<TextFont>,
+    ui_settings: &Res<UISettings>,
 ) {
     let message = message_manager.get_next_notification();
     if (message.is_none()) {
@@ -141,7 +141,11 @@ fn spawn_notification(
             text: Text {
                 sections: vec![TextSection::new(
                     message.content,
-                    TextStyle { font: text_font.font.clone(), font_size: 24.0, color: Color::RED },
+                    TextStyle {
+                        font: ui_settings.font.clone(),
+                        font_size: 24.0,
+                        color: Color::hex(ui_settings.message_color.as_str()).unwrap()
+                    },
                 )],
                 alignment: TextAlignment::Center,
                 linebreak_behavior: BreakLineOn::AnyCharacter,

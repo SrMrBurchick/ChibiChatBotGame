@@ -5,14 +5,14 @@ use bevy::{
     prelude::*
 };
 
-use crate::components::common::ui::TextFont;
+use crate::components::common::ui::UISettings;
 
 #[derive(Component)]
 pub struct TextChanges;
 
 pub fn setup_debug_info(
     mut commands: Commands,
-    text_font: Res<TextFont>,
+    text_font: Res<UISettings>,
 ) {
     commands.spawn((
         TextBundle::from_sections([

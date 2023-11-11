@@ -1,7 +1,7 @@
 use crate::components::{
     common::{
         events::{Event, Events, SystemEvents},
-        ui::TextFont
+        ui::UISettings
     },
     gameplay::{
         Border, BorderType, GameTimer,
@@ -92,7 +92,10 @@ pub fn setup_game(
 
     // Setup UI
     let font_handle: Handle<Font> = asset_server.load("fonts/ComicSansMS.ttf");
-    commands.insert_resource(TextFont { font: font_handle });
+    commands.insert_resource(UISettings {
+        font: font_handle,
+        message_color: config.get_message_text_color()
+    });
 
     // Init movement monitor resource
     commands.insert_resource(MonitorMovementInfo {

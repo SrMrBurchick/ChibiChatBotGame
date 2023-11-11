@@ -361,4 +361,30 @@ impl Config {
 
         return predefined_actions;
     }
+
+    pub fn get_message_text_color(&self) -> String {
+        let mut color = String::from("#000000");
+
+        match self.get_value("message-text-color") {
+            Ok(config_color) => {
+                color = String::from(config_color.as_str().unwrap());
+            },
+            Err(_) => {},
+        }
+
+        return color;
+    }
+
+    pub fn get_action_execution_time(&self) -> f32 {
+        let mut action_execution_time: f32 = 15.0;
+
+        match self.get_value("action-execution-time") {
+            Ok(config_action) => {
+                action_execution_time = config_action.as_f32().unwrap();
+            },
+            Err(_) => {},
+        }
+
+        return action_execution_time;
+    }
 }

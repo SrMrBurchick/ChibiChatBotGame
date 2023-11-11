@@ -10,12 +10,20 @@
 
 // Global settings fields
 constexpr char SOURCE_FILE[] = "source-file";
+
 // Screen resolution
 constexpr char SCREEN_RESOLUTION[] = "screen-resolution";
 constexpr char SCREEN_RESOLUTION_WIDTH[] = "width";
 constexpr char SCREEN_RESOLUTION_HEIGHT[] = "height";
+
 // Twitch target channel
 constexpr char TWITCH_CHANNEL[] = "twitch-channel";
+
+// Action execution time
+constexpr char ACTION_EXECUTION_TIME[] = "action-execution-time";
+
+// Message text color
+constexpr char MESSAGE_TEXT_COLOR[] = "message-text-color";
 
 // Chat bot settings fields
 constexpr char CHAT_BOT_SETTINGS[] = "chat-bot";
@@ -78,6 +86,16 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     // Init twitch channel
     if (ConfigMap.contains(TWITCH_CHANNEL)) {
         SystemSettings.TwitchTargetChannel = ConfigMap[TWITCH_CHANNEL].toString();
+    }
+
+    // Init action execution time
+    if (ConfigMap.contains(ACTION_EXECUTION_TIME)) {
+        SystemSettings.ActionExecutionTime = ConfigMap[ACTION_EXECUTION_TIME].toFloat();
+    }
+
+    // Init message text color
+    if (ConfigMap.contains(MESSAGE_TEXT_COLOR)) {
+        SystemSettings.MessageTextColor = QColor(ConfigMap[MESSAGE_TEXT_COLOR].toString());
     }
 
     // Init chat bot settings
@@ -201,7 +219,9 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 
     QJsonObject Config;
     Config[SOURCE_FILE] = SystemSettings.ImagePath;
-    Config[SPRITE_SCALE] = SystemSettings.SpriteScale;
+    Config[ACTION_EXECUTION_TIME] = QJsonValue::fromVariant(SystemSettings.ActionExecutionTime);
+    Config[MESSAGE_TEXT_COLOR] = SystemSettings.MessageTextColor.name();
+    Config[SPRITE_SCALE] = QJsonValue::fromVariant(SystemSettings.SpriteScale);
     Config[CHAT_BOT_SETTINGS] = JsonChatBotSettings;
     Config[TABLE_SETTINGS] = JsonTableSettings;
     Config[SPRITE_SETTINGS] = JsonSpriteSettings;
@@ -393,4 +413,24 @@ void ConfigObject::initPredefinedActionsListModel(PredefinedActionsListModel* Mo
     if (Model != nullptr) {
         Model->initModel(PredefinedActionsList);
     }
+}
+
+float ConfigObject::getActionExecutionTime() const
+{
+    return SystemSettings.ActionExecutionTime;
+}
+
+QColor ConfigObject::getMessageTextColor() const
+{
+    return SystemSettings.MessageTextColor;
+}
+
+void ConfigObject::saveActionExecutionTime(const float ActionExecutionTime)
+{
+    SystemSettings.ActionExecutionTime = ActionExecutionTime;
+}
+
+void ConfigObject::saveMessageTextColor(const QColor& MessageTextColor)
+{
+    SystemSettings.MessageTextColor = MessageTextColor;
 }

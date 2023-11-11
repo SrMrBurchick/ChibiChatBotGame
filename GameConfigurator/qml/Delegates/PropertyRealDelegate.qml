@@ -62,8 +62,7 @@ Rectangle {
             }
 
             onValueModified: {
-                console.log("Value modified: ", realValue)
-                valueChanged(realValue)
+                changeValue(realValue)
             }
 
             background: Rectangle {
@@ -86,6 +85,11 @@ Rectangle {
             }
 
         }
+    }
+
+    function changeValue(value) {
+        valueChanged(value)
+        console.log("Value modified: ", value)
     }
 
     signal valueChanged(real value)

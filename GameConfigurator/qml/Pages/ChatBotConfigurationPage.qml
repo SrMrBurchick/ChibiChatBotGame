@@ -181,10 +181,13 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
+                    minValue: 5.0
+                    maxValue: 1800.0
 
-                    fieldName: "Action execution time:"
+                    fieldName: "Action execution time(seconds):"
                     defaultValue: GlobalConfig.actionExecutionTime
                     onValueChanged:(value) => {
+                        console.log("Update action execution time: ", value)
                         GlobalConfig.actionExecutionTime = value
                     }
                 }
@@ -275,6 +278,8 @@ Item {
             GlobalConfig.screenHeight = Config.getScreenHeight()
             GlobalConfig.screenWidth = Config.getScreenWidth()
             GlobalConfig.twitchChannel = Config.getTwitchTargeChannel()
+            GlobalConfig.actionExecutionTime = Config.getActionExecutionTime()
+            GlobalConfig.messageTextColor = Config.getMessageTextColor()
             Config.initPredefinedActionsListModel(actionsModel)
         }
     }
@@ -284,6 +289,8 @@ Item {
         Config.saveScreenResolution(GlobalConfig.screenHeight, GlobalConfig.screenWidth)
         Config.saveTargetTwitchChannel(GlobalConfig.twitchChannel)
         Config.savePredefinedActions(actionsModel)
+        Config.saveActionExecutionTime(GlobalConfig.actionExecutionTime)
+        Config.saveMessageTextColor(GlobalConfig.messageTextColor)
         Config.saveConfig()
     }
 }
