@@ -5,3 +5,7 @@ ActionListDelegate 1.0 ActionListDelegate.qml
 PropertyDelegate 1.0 PropertyDelegate.qml
 SettingsDelegate 1.0 SettingsDelegate.qml
 PredefinedActionDelegate 1.0 PredefinedActionDelegate.qml
+PropertyRealDelegate 1.0 PropertyRealDelegate.qml
+PropertyIntDelegate 1.0 PropertyIntDelegate.qml
+PropertyStringDelegate 1.0 PropertyStringDelegate.qml
+PropertyColorDelegate 1.0 PropertyColorDelegate.qml

@@ -59,16 +59,15 @@ Item {
                     }
                 }
 
-                PropertyDelegate {
+                PropertyIntDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
 
                     fieldName: "Chat bot port:"
-                    defaultText: GlobalConfig.chatBotPort
-                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                    onValueChanged:(text) => {
-                        GlobalConfig.chatBotPort = parseInt(text)
+                    defaultValue: GlobalConfig.chatBotPort
+                    onValueChanged:(value) => {
+                        GlobalConfig.chatBotPort = value
                     }
                 }
             }
@@ -79,29 +78,27 @@ Item {
             ColumnLayout {
                 width: parent.width
 
-                PropertyDelegate {
+                PropertyIntDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
 
                     fieldName: "screen width:"
-                    defaultText: GlobalConfig.screenWidth
-                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                    onValueChanged:(text) => {
-                        GlobalConfig.screenWidth = parseInt(text)
+                    defaultValue: GlobalConfig.screenWidth
+                    onValueChanged:(value) => {
+                        GlobalConfig.screenWidth = value
                     }
                 }
 
-                PropertyDelegate {
+                PropertyIntDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
 
                     fieldName: "screen height:"
-                    defaultText: GlobalConfig.screenHeight
-                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                    onValueChanged:(text) => {
-                        GlobalConfig.screenHeight = parseInt(text)
+                    defaultValue: GlobalConfig.screenHeight
+                    onValueChanged:(value) => {
+                        GlobalConfig.screenHeight = value
                     }
                 }
             }
@@ -123,13 +120,23 @@ Item {
                     clip: true
                     model: actionsModel
                     spacing: 10
-                    delegate: PredefinedActionDelegate {
-                        onRemoveElement: (index) => {
-                            actionsModel.removeElement(index)
+                    Component {
+                        id: predefinedDelegate
+                        PredefinedActionDelegate {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.margins: 10
+
+                            onRemoveElement: (index) => {
+                                actionsModel.removeElement(index)
+                            }
                         }
                     }
+                    delegate: predefinedDelegate
+
                     onCountChanged: {
-                        predefinedColumn.height = 60 * count
+                        predefinedColumn.height = contentItem.children[0].height * count
+                        predefinedColumn.height += spacing * count
                         predefinedColumn.height += addActionButton.height
                     }
                 }
@@ -170,16 +177,15 @@ Item {
             ColumnLayout {
                 width: parent.width
 
-                PropertyDelegate {
+                PropertyRealDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
 
                     fieldName: "Action execution time:"
-                    defaultText: GlobalConfig.actionExecutionTime
-                    typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-                    onValueChanged:(text) => {
-                        GlobalConfig.actionExecutionTime = parseReal(text)
+                    defaultValue: GlobalConfig.actionExecutionTime
+                    onValueChanged:(value) => {
+                        GlobalConfig.actionExecutionTime = value
                     }
                 }
             }

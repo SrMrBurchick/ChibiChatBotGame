@@ -2,29 +2,31 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Base
-import Dialogs
-import Delegates
 
 Rectangle {
     id: root
-    width: parent.width
-    height: panel.height
+    height: settings_item.height
+
+    property int defaultValue
+    property string fieldName: ""
+    property string fieldDescription: ""
+    property int minValue: 0
+    property int maxValue
 
     color: Style.propertyDelegateBGColor
     border.color: Style.propertyDelegateBorderColor
     border.width: 2
 
     RowLayout {
-        id: panel
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 10
+        id: settings_item
+        width: root.width
+        anchors.centerIn: root
+        spacing: 0
 
         BaseText {
-            id: actionName
+            text: fieldName
+            Layout.margins: 10
             font.pixelSize : 24
-            text: name
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         Rectangle {
@@ -36,12 +38,12 @@ Rectangle {
         SpinBox {
             Layout.margins: 10
             id: spinbox
-            from: 1
-            to: 100
-            value: chance
+            from: minValue
+            to: maxValue
+            value: defaultValue
             editable: true
             contentItem: TextField {
-                text: chance
+                text: defaultValue
                 font: spinbox.font
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
@@ -64,29 +66,11 @@ Rectangle {
             }
 
             onValueModified: {
-                changeChance(index, spinbox.value)
-            }
-        }
-
-        Rectangle {
-            width: 20
-            height: 20
-            color: "transparent"
-            anchors.verticalCenter: parent.verticalCenter
-
-            MouseArea {
-                anchors.fill: parent
-                Image {
-                    anchors.fill: parent
-                    source: Style.trashCanImage
-                }
-                onClicked: {
-                    removeElement(index);
-                }
+                valueChanged(spinbox.value)
             }
         }
     }
 
-    signal removeElement(int index)
-    signal changeChance(int index, real chance)
+    signal valueChanged(int value)
 }
+

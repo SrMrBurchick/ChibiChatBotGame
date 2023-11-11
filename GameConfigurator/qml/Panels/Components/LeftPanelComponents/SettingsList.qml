@@ -19,30 +19,32 @@ ColumnLayout {
     ColumnLayout {
         Layout.fillWidth: true
 
-        PropertyDelegate {
+        PropertyIntDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
 
             fieldName: "Columns:"
             fieldDescription: "Columns count"
-            defaultText: ActionsManager.tableSettingsColumns
-            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-            onValueChanged:(text) => {
-                ActionsManager.tableSettingsColumns = parseInt(text)
+            defaultValue: ActionsManager.tableSettingsColumns
+            minValue: 1
+            maxValue: 24
+            onValueChanged:(value) => {
+                ActionsManager.tableSettingsColumns = value
                 console.log(ActionsManager.tableSettingsColumns)
             }
         }
 
-        PropertyDelegate {
+        PropertyIntDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
+            minValue: 1
+            maxValue: 24
 
             fieldName: "Rows:"
             fieldDescription: "Row count"
-            defaultText: ActionsManager.tableSettingsRows
-            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-            onValueChanged:(text) => {
-                ActionsManager.tableSettingsRows = parseInt(text)
+            defaultValue: ActionsManager.tableSettingsRows
+            onValueChanged:(value) => {
+                ActionsManager.tableSettingsRows = value
                 console.log(ActionsManager.tableSettingsRows)
             }
         }
@@ -58,42 +60,44 @@ ColumnLayout {
         spacing: 5
         Layout.fillWidth: true
 
-        PropertyDelegate {
+        PropertyIntDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
+            minValue: 1
 
             fieldName: "Width:"
             fieldDescription: "Sprite width"
-            defaultText: ActionsManager.spriteSizeWidth
-            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-            onValueChanged:(text) => {
-                ActionsManager.spriteSizeWidth = parseInt(text)
+            defaultValue: ActionsManager.spriteSizeWidth
+            onValueChanged:(value) => {
+                ActionsManager.spriteSizeWidth = value
+            }
+            Component.onCompleted: {
+                console.log("Configured width: ", ActionsManager.spriteSizeWidth)
             }
         }
 
-        PropertyDelegate {
+        PropertyIntDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
+            minValue: 1
 
             fieldName: "Height:"
             fieldDescription: "Sprite height"
-            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9,/]+$/}
-            defaultText: ActionsManager.spriteSizeHeight
-            onValueChanged:(text) => {
-                ActionsManager.spriteSizeHeight = parseInt(text)
+            defaultValue: ActionsManager.spriteSizeHeight
+            onValueChanged:(value) => {
+                ActionsManager.spriteSizeHeight = parseInt(value)
             }
         }
 
-        PropertyDelegate {
+        PropertyRealDelegate {
             Layout.fillWidth: true
             Layout.margins: 10
 
             fieldName: "Scale:"
             fieldDescription: "Sprite scale"
-            typeValidator: RegularExpressionValidator{regularExpression: /^[0-9\./]+$/}
-            defaultText: ActionsManager.spriteScale
-            onValueChanged:(text) => {
-                ActionsManager.spriteScale = parseFloat(text)
+            defaultValue: ActionsManager.spriteScale
+            onValueChanged:(value) => {
+                ActionsManager.spriteScale = value
                 console.log(ActionsManager.spriteScale)
             }
         }

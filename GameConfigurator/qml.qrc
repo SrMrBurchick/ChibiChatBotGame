@@ -37,6 +37,10 @@
         <file>qml/Delegates/PropertyDelegate.qml</file>
         <file>qml/Delegates/SettingsDelegate.qml</file>
         <file>qml/Delegates/PredefinedActionDelegate.qml</file>
+        <file>qml/Delegates/PropertyRealDelegate.qml</file>
+        <file>qml/Delegates/PropertyIntDelegate.qml</file>
+        <file>qml/Delegates/PropertyStringDelegate.qml</file>
+        <file>qml/Delegates/PropertyColorDelegate.qml</file>
 
         <!-- Dialogs -->
         <file>qml/Dialogs/qmldir</file>
