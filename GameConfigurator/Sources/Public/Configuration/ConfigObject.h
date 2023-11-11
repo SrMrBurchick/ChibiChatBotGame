@@ -37,6 +37,8 @@ struct SystemConfig {
     QString TwitchTargetChannel;
     float ActionExecutionTime = 10.0f;
     QColor MessageTextColor = "red";
+    float MovementSpeed = 3500.0f;
+    float NextActionTimeout = 20.0f;
 };
 
 class ConfigObject : public QObject {
@@ -66,6 +68,8 @@ public:
     Q_INVOKABLE QString getTwitchTargeChannel() const;
     Q_INVOKABLE float getActionExecutionTime() const;
     Q_INVOKABLE QColor getMessageTextColor() const;
+    Q_INVOKABLE float getMovementSpeed() const;
+    Q_INVOKABLE float getNextActionTimeout() const;
 
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
@@ -81,6 +85,8 @@ public:
     Q_INVOKABLE void savePredefinedActions(const PredefinedActionsListModel* Model);
     Q_INVOKABLE void saveActionExecutionTime(const float ActionExecutionTime);
     Q_INVOKABLE void saveMessageTextColor(const QColor& MessageTextColor);
+    Q_INVOKABLE void saveMovementSpeed(const float MovementSpeed);
+    Q_INVOKABLE void saveNextActionTimeout(const float NextActionTimeout);
 
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 

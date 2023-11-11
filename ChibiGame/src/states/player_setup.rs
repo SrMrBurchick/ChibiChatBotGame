@@ -10,6 +10,7 @@ use crate::components::{
     },
     animation::AnimationComponent,
     actions::{ActionComponent, Actions},
+    movement::PlayerMovementComponent,
     gameplay::{
         player::*,
         gameplay_logic::GameplayLogicComponent,
@@ -42,6 +43,7 @@ pub fn setup_player(
             None,
             None,
         );
+        let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
         info!("Animation_component {:?}", animation_component);
 
@@ -65,20 +67,23 @@ pub fn setup_player(
         ai_component.add_new_action(Actions::SwapDirection, 1); // 1% chance to swap current direction
 
         commands.insert_resource(AITimer {
-            timer: Timer::from_seconds(15.0, TimerMode::Repeating),
+            timer: Timer::from_seconds(config.get_generate_new_action_timeout(), TimerMode::Repeating),
         });
 
         // Setup gameplay logic component
         let mut gameplay_logic = GameplayLogicComponent::new();
         gameplay_logic.set_action_duration(config.get_action_execution_time());
 
-        let texture_atlas_handle = texture_atlases.add(texture_atlas);
+        // Setup movement
+        let mut movement_component = PlayerMovementComponent::new();
+        movement_component.speed = config.get_movement_speed();
 
         // Setup player
         let mut player = Player::new();
         player.set_texture_atlas(texture_atlas_handle);
         player.set_animation_component(animation_component);
         player.set_action_component(action_component);
+        player.set_movement_component(movement_component);
 
         commands
             .spawn(player)

@@ -10,4 +10,6 @@ QtObject {
     property int screenHeight: 1200
     property real actionExecutionTime: 10 // seconds
     property color messageTextColor: "red"
+    property real movementSpeed: 3500
+    property real nextActionTimeout: 20.0
 }

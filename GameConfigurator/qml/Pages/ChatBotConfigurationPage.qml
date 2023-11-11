@@ -204,6 +204,33 @@ Item {
                     }
                 }
 
+                PropertyRealDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+                    minValue: 1000.0
+                    maxValue: 9999.0
+
+                    fieldName: "Movement speed:"
+                    defaultValue: GlobalConfig.movementSpeed
+                    onValueChanged:(value) => {
+                        GlobalConfig.movementSpeed = value
+                    }
+                }
+
+                PropertyRealDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+                    minValue: 5.0
+                    maxValue: 1800.0
+
+                    fieldName: "[AI] Timeout to generate next action:"
+                    defaultValue: GlobalConfig.nextActionTimeout
+                    onValueChanged:(value) => {
+                        GlobalConfig.nextActionTimeout = value
+                    }
+                }
             }
         }
 
@@ -280,6 +307,8 @@ Item {
             GlobalConfig.twitchChannel = Config.getTwitchTargeChannel()
             GlobalConfig.actionExecutionTime = Config.getActionExecutionTime()
             GlobalConfig.messageTextColor = Config.getMessageTextColor()
+            GlobalConfig.movementSpeed = Config.getMovementSpeed()
+            GlobalConfig.nextActionTimeout = Config.getNextActionTimeout()
             Config.initPredefinedActionsListModel(actionsModel)
         }
     }
@@ -291,6 +320,8 @@ Item {
         Config.savePredefinedActions(actionsModel)
         Config.saveActionExecutionTime(GlobalConfig.actionExecutionTime)
         Config.saveMessageTextColor(GlobalConfig.messageTextColor)
+        Config.saveMovementSpeed(GlobalConfig.movementSpeed)
+        Config.saveNextActionTimeout(GlobalConfig.nextActionTimeout)
         Config.saveConfig()
     }
 }

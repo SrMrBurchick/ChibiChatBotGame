@@ -46,4 +46,8 @@ impl Player {
     pub fn set_action_component(&mut self, action_component: ActionComponent) {
         self.action_component = action_component;
     }
+
+    pub fn set_movement_component(&mut self, movement_component: PlayerMovementComponent) {
+        self.movement_component = movement_component;
+    }
 }

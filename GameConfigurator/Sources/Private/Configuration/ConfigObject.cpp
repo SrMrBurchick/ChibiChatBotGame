@@ -25,6 +25,12 @@ constexpr char ACTION_EXECUTION_TIME[] = "action-execution-time";
 // Message text color
 constexpr char MESSAGE_TEXT_COLOR[] = "message-text-color";
 
+// Movement speed
+constexpr char MOVEMENT_SPEED[] = "movement-speed";
+
+// Next action timeout
+constexpr char NEXT_ACTION_TIMEOUT[] = "next-action-timeout";
+
 // Chat bot settings fields
 constexpr char CHAT_BOT_SETTINGS[] = "chat-bot";
 constexpr char CHAT_BOT_SETTINGS_URL[] = "url";
@@ -96,6 +102,16 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     // Init message text color
     if (ConfigMap.contains(MESSAGE_TEXT_COLOR)) {
         SystemSettings.MessageTextColor = QColor(ConfigMap[MESSAGE_TEXT_COLOR].toString());
+    }
+
+    // Init movement speed
+    if (ConfigMap.contains(MOVEMENT_SPEED)) {
+        SystemSettings.MovementSpeed = ConfigMap[MOVEMENT_SPEED].toFloat();
+    }
+
+    // Init next action timeout
+    if (ConfigMap.contains(NEXT_ACTION_TIMEOUT)) {
+        SystemSettings.NextActionTimeout = ConfigMap[NEXT_ACTION_TIMEOUT].toFloat();
     }
 
     // Init chat bot settings
@@ -222,6 +238,8 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     Config[ACTION_EXECUTION_TIME] = QJsonValue::fromVariant(SystemSettings.ActionExecutionTime);
     Config[MESSAGE_TEXT_COLOR] = SystemSettings.MessageTextColor.name();
     Config[SPRITE_SCALE] = QJsonValue::fromVariant(SystemSettings.SpriteScale);
+    Config[MOVEMENT_SPEED] = QJsonValue::fromVariant(SystemSettings.MovementSpeed);
+    Config[NEXT_ACTION_TIMEOUT] = QJsonValue::fromVariant(SystemSettings.NextActionTimeout);
     Config[CHAT_BOT_SETTINGS] = JsonChatBotSettings;
     Config[TABLE_SETTINGS] = JsonTableSettings;
     Config[SPRITE_SETTINGS] = JsonSpriteSettings;
@@ -433,4 +451,24 @@ void ConfigObject::saveActionExecutionTime(const float ActionExecutionTime)
 void ConfigObject::saveMessageTextColor(const QColor& MessageTextColor)
 {
     SystemSettings.MessageTextColor = MessageTextColor;
+}
+
+float ConfigObject::getMovementSpeed() const
+{
+    return SystemSettings.MovementSpeed;
+}
+
+void ConfigObject::saveMovementSpeed(const float MovementSpeed)
+{
+    SystemSettings.MovementSpeed = MovementSpeed;
+}
+
+float ConfigObject::getNextActionTimeout() const
+{
+    return SystemSettings.NextActionTimeout;
+}
+
+void ConfigObject::saveNextActionTimeout(const float NextActionTimeout)
+{
+    SystemSettings.NextActionTimeout = NextActionTimeout;
 }

@@ -387,4 +387,30 @@ impl Config {
 
         return action_execution_time;
     }
+
+    pub fn get_movement_speed(&self) -> f32 {
+        let mut movement_speed: f32 = 3500.0;
+
+        match self.get_value("movement-speed") {
+            Ok(config_movement) => {
+                movement_speed = config_movement.as_f32().unwrap();
+            },
+            Err(_) => {},
+        }
+
+        return movement_speed;
+    }
+
+    pub fn get_generate_new_action_timeout(&self) -> f32 {
+        let mut new_action_timeout: f32 = 20.0;
+
+        match self.get_value("next-action-timeout") {
+            Ok(config_timeout) => {
+                new_action_timeout = config_timeout.as_f32().unwrap();
+            },
+            Err(_) => {},
+        }
+
+        return new_action_timeout;
+    }
 }
