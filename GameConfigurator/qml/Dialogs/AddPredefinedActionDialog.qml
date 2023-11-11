@@ -10,55 +10,81 @@ Dialog {
     property string actionName
     property real chance
     property var notSupportedActions: ["fall"]
-    width: 300
-    height: 300
 
     title: "Add action"
+    height: 150
     standardButtons: Dialog.Cancel | Dialog.Save
 
     background: Rectangle {
         color: Style.pageBGColor
     }
 
-    RowLayout {
-        id: predefinedConfigurator
+    contentItem: RowLayout {
         anchors.fill: root
-        spacing: 10
+        RowLayout {
+            id: predefinedConfigurator
+            spacing: 10
+            visible: false
 
-        ComboBox {
-            id: actionSelector
-            model: ActionsManager.actionsListModel.getActions()
+            ComboBox {
+                id: actionSelector
+                Layout.fillWidth: true
+                model: ActionsManager.actionsListModel.getActions()
 
-            onActivated: {
-                actionName = currentText
+                onActivated: {
+                    actionName = currentText
+                }
             }
-        }
 
-        SpinBox {
-            id: spinbox
-            from: 0
-            to: 100
-            editable: true
-            contentItem: TextInput {
-                text: spinbox.textFromValue(spinbox.value, spinbox.locale)
-                font: spinbox.font
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                readOnly: !spinbox.editable
-                validator: spinbox.validator
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                onTextChanged: {
-                   root.chance = parseInt(text);
+            SpinBox {
+                Layout.margins: 10
+                id: spinbox
+                from: 1
+                to: 100
+                value: chance
+                editable: true
+                validator: IntValidator {
+                    locale: spinbox.locale.name
+                    bottom: Math.min(spinbox.from, spinbox.to)
+                    top: Math.max(spinbox.from, spinbox.to)
+                }
+                textFromValue: function(value, locale) {
+                    return Number(value).toLocaleString(locale, 'd', spinbox.decimals)
+                }
+
+                contentItem: TextField {
+                    text: spinbox.textFromValue(spinbox.value)
+                    font: spinbox.font
+                    horizontalAlignment: Qt.AlignHCenter
+                    verticalAlignment: Qt.AlignVCenter
+                    readOnly: !spinbox.editable
+                    validator: spinbox.validator
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    placeholderText: fieldDescription
+                    color: Style.textColor
+                    onTextChanged: {
+                        spinbox.value = parseInt(text);
+                    }
+                    background: Rectangle {
+                        color: Style.propertyDelegateBorderColor
+                    }
+
+                }
+
+                background: Rectangle {
+                    color: Style.propertyDelegateBorderColor
+                }
+
+                onValueModified: {
+                    root.chance = spinbox.value
                 }
             }
         }
-    }
 
-    Label {
-        id: configuredText
-        anchors.fill: root
-        visible: false
         BaseText {
+            id: configuredText
+            visible: false
+
             text: "All actions already configured"
         }
     }
@@ -115,9 +141,10 @@ Dialog {
             configuredText.visible = true
             actionName = ""
         } else {
-            predefinedConfigurator.visible = true
             configuredText.visible = false
+            predefinedConfigurator.visible = true
             actionName = actionSelector.currentText
+            chance = spinbox.value
         }
     }
 }
