@@ -21,7 +21,6 @@ Rectangle {
         id: settings_item
         width: root.width
         anchors.centerIn: root
-        spacing: 0
 
         BaseText {
             text: fieldName
@@ -37,6 +36,8 @@ Rectangle {
 
         SpinBox {
             Layout.margins: 10
+            Layout.maximumWidth: 100
+            Layout.minimumWidth: 100
             id: spinbox
             from: minValue
             to: maxValue

@@ -40,7 +40,9 @@ Rectangle {
             to: parseInt(maxValue * 100)
             value: parseInt(defaultValue * 100)
             stepSize: 1
-            anchors.centerIn: parent
+            Layout.margins: 10
+            Layout.maximumWidth: 100
+            Layout.minimumWidth: 100
 
             property int decimals: 2
             property real realValue: value / 100

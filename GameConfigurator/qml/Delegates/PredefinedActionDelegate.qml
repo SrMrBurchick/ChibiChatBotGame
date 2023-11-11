@@ -35,6 +35,9 @@ Rectangle {
 
         SpinBox {
             Layout.margins: 10
+            Layout.maximumWidth: 100
+            Layout.minimumWidth: 100
+
             id: spinbox
             from: 1
             to: 100
