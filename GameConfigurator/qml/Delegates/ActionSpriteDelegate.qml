@@ -58,7 +58,7 @@ Rectangle {
     }
     Image {
         id: removeButton
-        height: root.height / 5
+        height: root.height / 10
         width: height
         anchors.top: image.top
         anchors.right: image.right

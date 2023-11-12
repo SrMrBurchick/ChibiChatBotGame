@@ -5,7 +5,6 @@ QtObject {
     readonly property int baseSpacing: 5
 
     readonly property string mainTitle: "ChibiGame configurator"
-    readonly property string trashCanImage: "qrc:qml/Images/trash_can.png"
 
     // Dark colors
     readonly property color darkTextColor: "#FFFFFF"
@@ -86,4 +85,9 @@ QtObject {
 
     // Settings
     readonly property real notificationOpacity: 0.75
+
+    readonly property string lightTrashCanImage: "qrc:qml/Images/trash_can.png"
+    readonly property string darkTrashCanImage: "qrc:qml/Images/trash_can_dark_theme.png"
+    readonly property string trashCanImage: bIsDarkTheme ? darkTrashCanImage : lightTrashCanImage
+
 }

@@ -50,6 +50,7 @@
 
         <!-- Images -->
         <file>qml/Images/trash_can.png</file>
+        <file>qml/Images/trash_can_dark_theme.png</file>
 
     </qresource>
 </RCC>
