@@ -79,6 +79,10 @@ Rectangle {
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 placeholderText: fieldDescription
                 color: Style.textColor
+                onTextEdited: {
+                    spinbox.value = spinbox.valueFromText(text, spinbox.locale)
+                    changeValue(spinbox.value)
+                }
                 background: Rectangle {
                     color: Style.propertyDelegateBorderColor
                 }

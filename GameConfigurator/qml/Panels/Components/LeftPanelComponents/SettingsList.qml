@@ -68,6 +68,7 @@ ColumnLayout {
             defaultValue: ActionsManager.spriteSizeWidth
             onValueChanged:(value) => {
                 ActionsManager.spriteSizeWidth = value
+                console.log(ActionsManager.spriteSizeWidth)
             }
         }
 
@@ -81,6 +82,7 @@ ColumnLayout {
             defaultValue: ActionsManager.spriteSizeHeight
             onValueChanged:(value) => {
                 ActionsManager.spriteSizeHeight = value
+                console.log(ActionsManager.spriteSizeHeight)
             }
         }
 
@@ -92,6 +94,7 @@ ColumnLayout {
             defaultValue: ActionsManager.spriteScale
             onValueChanged:(value) => {
                 ActionsManager.spriteScale = value
+                console.log(ActionsManager.spriteScale)
             }
         }
     }

@@ -54,9 +54,9 @@ Rectangle {
                 validator: spinbox.validator
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 color: Style.textColor
-
-                onTextChanged: {
-                    spinbox.value = parseInt(text);
+                onTextEdited: {
+                    spinbox.value = spinbox.valueFromText(text, spinbox.locale)
+                    changeValue(spinbox.value)
                 }
 
                 background: Rectangle {
@@ -69,7 +69,7 @@ Rectangle {
             }
 
             onValueModified: {
-                valueChanged(spinbox.value)
+                changeValue(spinbox.value)
             }
         }
     }
@@ -77,6 +77,11 @@ Rectangle {
     Component.onCompleted: {
         spinbox.value = defaultValue
         console.log("Created int property with value: ", defaultValue)
+    }
+
+    function changeValue(value) {
+        console.log("Value modified: ", value)
+        valueChanged(value)
     }
 
     signal valueChanged(int value)
