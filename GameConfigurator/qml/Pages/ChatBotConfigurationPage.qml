@@ -63,6 +63,8 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
+                    minValue: 1111
+                    maxValue: 9999
 
                     fieldName: "Chat bot port:"
                     defaultValue: GlobalConfig.chatBotPort
@@ -82,6 +84,8 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
+                    minValue: 800
+                    maxValue: 2560
 
                     fieldName: "screen width:"
                     defaultValue: GlobalConfig.screenWidth
@@ -94,6 +98,8 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
+                    minValue: 600
+                    maxValue: 1440
 
                     fieldName: "screen height:"
                     defaultValue: GlobalConfig.screenHeight

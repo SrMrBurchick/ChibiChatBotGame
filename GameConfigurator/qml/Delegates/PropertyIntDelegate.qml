@@ -43,23 +43,25 @@ Rectangle {
             to: maxValue
             value: defaultValue
             editable: true
+            stepSize: 1
+
             contentItem: TextField {
-                text: defaultValue
+                text: spinbox.value
                 font: spinbox.font
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
                 readOnly: !spinbox.editable
                 validator: spinbox.validator
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
-                placeholderText: fieldDescription
                 color: Style.textColor
+
                 onTextChanged: {
                     spinbox.value = parseInt(text);
                 }
+
                 background: Rectangle {
                     color: Style.propertyDelegateBorderColor
                 }
-
             }
 
             background: Rectangle {
@@ -70,6 +72,11 @@ Rectangle {
                 valueChanged(spinbox.value)
             }
         }
+    }
+
+    Component.onCompleted: {
+        spinbox.value = defaultValue
+        console.log("Created int property with value: ", defaultValue)
     }
 
     signal valueChanged(int value)

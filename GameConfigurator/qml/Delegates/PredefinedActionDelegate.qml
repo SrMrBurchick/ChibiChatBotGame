@@ -44,14 +44,13 @@ Rectangle {
             value: chance
             editable: true
             contentItem: TextField {
-                text: chance
+                text: spinbox.value
                 font: spinbox.font
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
                 readOnly: !spinbox.editable
                 validator: spinbox.validator
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
-                placeholderText: fieldDescription
                 color: Style.textColor
                 onTextChanged: {
                     spinbox.value = parseInt(text);
