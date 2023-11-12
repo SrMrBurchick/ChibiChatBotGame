@@ -51,6 +51,7 @@
         <!-- Images -->
         <file>qml/Images/trash_can.png</file>
         <file>qml/Images/trash_can_dark_theme.png</file>
+        <file>qml/Images/sprite-sheet.png</file>
 
     </qresource>
 </RCC>
