@@ -261,6 +261,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 void ConfigObject::saveConfig()
 {
     SaveConfigToFile(QT_STRINGIFY(CONFIG_FILE));
+    bConfigLoaded = true;
 }
 
 void ConfigObject::loadConfig()

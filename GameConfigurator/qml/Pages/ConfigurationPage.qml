@@ -5,6 +5,7 @@ import Buttons
 import Panels
 import GameActions
 import ConfigComponent
+import Base
 
 Item {
     id: configuration_menu
@@ -38,9 +39,35 @@ Item {
     Component.onCompleted: {
         if (Config.isConfigLoaded() == false) {
             Config.loadConfig()
+
             Config.initActionsListModel(ActionsManager.actionsListModel)
             Config.initAnimationsSequenceModel(ActionsManager.sequenceModel)
         }
+
+        Config.onActionsConfigured.connect(function(){
+            saveDefaultConfig()
+        })
+
+        Config.onGlobalSettingsConfigured.connect(function(){
+            saveDefaultConfig()
+        })
+    }
+
+    function saveDefaultConfig() {
+        console.log("Save default")
+        Config.saveChatBotConfig(GlobalConfig.chatBotURL, GlobalConfig.chatBotPort)
+        Config.saveScreenResolution(GlobalConfig.screenHeight, GlobalConfig.screenWidth)
+        Config.saveTargetTwitchChannel(GlobalConfig.twitchChannel)
+        Config.saveActionExecutionTime(GlobalConfig.actionExecutionTime)
+        Config.saveMessageTextColor(GlobalConfig.messageTextColor)
+        Config.saveMovementSpeed(GlobalConfig.movementSpeed)
+        Config.saveNextActionTimeout(GlobalConfig.nextActionTimeout)
+        Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
+        Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+        Config.saveSpriteScale(ActionsManager.spriteScale)
+        Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
+
+        Config.saveConfig()
     }
 
     signal goBack()

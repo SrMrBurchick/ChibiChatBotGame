@@ -90,6 +90,10 @@ public:
 
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
+signals:
+    void actionsConfigured();
+    void globalSettingsConfigured();
+
 protected:
     void CopyImageToAssets();
 

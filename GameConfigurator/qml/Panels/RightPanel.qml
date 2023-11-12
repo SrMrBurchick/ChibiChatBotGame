@@ -93,7 +93,12 @@ Item {
         Config.saveSpriteScale(ActionsManager.spriteScale)
         Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
         Config.saveActions(ActionsManager.sequenceModel)
-        Config.saveConfig()
+
+        if (Config.isConfigLoaded() == false) {
+            Config.actionsConfigured()
+        } else {
+            Config.saveConfig()
+        }
     }
 
     function playAnimationPreview() {

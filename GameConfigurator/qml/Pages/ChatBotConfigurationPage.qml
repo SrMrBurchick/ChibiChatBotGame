@@ -328,6 +328,11 @@ Item {
         Config.saveMessageTextColor(GlobalConfig.messageTextColor)
         Config.saveMovementSpeed(GlobalConfig.movementSpeed)
         Config.saveNextActionTimeout(GlobalConfig.nextActionTimeout)
-        Config.saveConfig()
+
+        if (Config.isConfigLoaded() == false) {
+            Config.globalSettingsConfigured()
+        } else {
+            Config.saveConfig()
+        }
     }
 }
