@@ -92,6 +92,19 @@ QPointer<QProcess> IProcess::GetProcess()
 
 void IProcess::Terminate()
 {
-    NotificationsManager::SendNotification("Process manager", QString::asprintf("Kill a\n %s", Program.toStdString().c_str()));
+    NotificationsManager::SendNotification("Process manager", QString::asprintf("Kill a\n [%lld] %s", Process.processId(), Program.toStdString().c_str()));
+
+#ifdef Q_OS_WIN
+    QString KillCommand = QString("taskkill.exe");
+    QStringList Args = {"/F", "/T", "/PID", QString::number(Process.processId())};
+    QProcess::execute(KillCommand, Args);
+#else
     Process.terminate();
+#endif
+
+}
+
+int IProcess::GetProcessId() const
+{
+    return Process.processId();
 }

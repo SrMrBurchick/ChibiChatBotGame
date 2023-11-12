@@ -30,6 +30,8 @@ public:
 
     QPointer<QProcess> GetProcess();
 
+    int GetProcessId() const;
+
 private:
     QProcess Process;
     QString Program;

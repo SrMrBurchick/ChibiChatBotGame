@@ -369,7 +369,7 @@ void ConfigObject::CopyImageToAssets()
     }
 
     QString SystemPath = SystemSettings.ImagePath;
-#ifdef __MINGW32__
+#ifdef Q_OS_WIN
     SystemPath.remove("file:///");
 #else
     SystemPath.remove("file://");
