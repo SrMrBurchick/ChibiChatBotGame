@@ -81,7 +81,8 @@ Rectangle {
                 color: Style.textColor
                 onTextEdited: {
                     spinbox.value = spinbox.valueFromText(text, spinbox.locale)
-                    changeValue(spinbox.value)
+                    var tempValue = spinbox.textFromValue(spinbox.value, spinbox.locale)
+                    changeValue(parseFloat(tempValue))
                 }
                 background: Rectangle {
                     color: Style.propertyDelegateBorderColor
