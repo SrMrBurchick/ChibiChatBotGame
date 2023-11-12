@@ -42,6 +42,7 @@ Rectangle {
             from: 1
             to: 100
             value: chance
+            stepSize: 1
             editable: true
             contentItem: TextField {
                 text: spinbox.value

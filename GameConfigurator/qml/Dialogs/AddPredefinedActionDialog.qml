@@ -43,6 +43,7 @@ Dialog {
                 to: 100
                 value: chance
                 editable: true
+                stepSize: 1
                 validator: IntValidator {
                     locale: spinbox.locale.name
                     bottom: Math.min(spinbox.from, spinbox.to)
