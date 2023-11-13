@@ -143,7 +143,7 @@ fn spawn_notification(
                     message.content,
                     TextStyle {
                         font: ui_settings.font.clone(),
-                        font_size: 24.0,
+                        font_size: ui_settings.font_size,
                         color: Color::hex(ui_settings.message_color.as_str()).unwrap()
                     },
                 )],

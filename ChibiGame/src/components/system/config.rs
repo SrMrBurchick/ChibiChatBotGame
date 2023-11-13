@@ -23,6 +23,12 @@ pub struct SystemConfigData {
     pub chat_bot_port: u32
 }
 
+#[derive(Debug)]
+pub struct MessageSettings {
+    pub message_color: String,
+    pub font_size: f32
+}
+
 #[derive(Debug, Component)]
 pub struct Config {
     content: JsonValue,
@@ -362,17 +368,26 @@ impl Config {
         return predefined_actions;
     }
 
-    pub fn get_message_text_color(&self) -> String {
-        let mut color = String::from("#000000");
+    pub fn get_message_settings(&self) -> MessageSettings {
+        let mut settings = MessageSettings{
+            font_size: 24.0,
+            message_color: String::from("#f32344")
+        };
 
-        match self.get_value("message-text-color") {
-            Ok(config_color) => {
-                color = String::from(config_color.as_str().unwrap());
+        match self.get_value("message-settings") {
+            Ok(msg_settings) => {
+                if msg_settings.has_key("text-color") {
+                    settings.message_color = String::from(msg_settings["text-color"].as_str().unwrap());
+                }
+
+                if msg_settings.has_key("font") {
+                    settings.font_size = msg_settings["font"]["size"].as_f32().unwrap();
+                }
             },
             Err(_) => {},
         }
 
-        return color;
+        return settings;
     }
 
     pub fn get_action_execution_time(&self) -> f32 {

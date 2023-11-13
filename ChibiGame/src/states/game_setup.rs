@@ -92,9 +92,11 @@ pub fn setup_game(
 
     // Setup UI
     let font_handle: Handle<Font> = asset_server.load("fonts/ComicSansMS.ttf");
+    let msg_settings = config.get_message_settings();
     commands.insert_resource(UISettings {
         font: font_handle,
-        message_color: config.get_message_text_color()
+        message_color: msg_settings.message_color,
+        font_size: msg_settings.font_size
     });
 
     // Init movement monitor resource

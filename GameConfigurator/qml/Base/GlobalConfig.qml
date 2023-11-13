@@ -12,4 +12,5 @@ QtObject {
     property color messageTextColor: "red"
     property real movementSpeed: 3500
     property real nextActionTimeout: 20.0
+    property int fontSize: 14
 }

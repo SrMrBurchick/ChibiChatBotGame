@@ -210,6 +210,20 @@ Item {
                     }
                 }
 
+                PropertyIntDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+                    minValue: 8
+                    maxValue: 72
+
+                    fieldName: "Font size:"
+                    defaultValue: GlobalConfig.fontSize
+                    onValueChanged:(value) => {
+                        GlobalConfig.fontSize = value
+                    }
+                }
+
                 PropertyRealDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -315,6 +329,7 @@ Item {
             GlobalConfig.messageTextColor = Config.getMessageTextColor()
             GlobalConfig.movementSpeed = Config.getMovementSpeed()
             GlobalConfig.nextActionTimeout = Config.getNextActionTimeout()
+            GlobalConfig.fontSize = Config.getFontSize()
             Config.initPredefinedActionsListModel(actionsModel)
         }
     }
@@ -328,6 +343,7 @@ Item {
         Config.saveMessageTextColor(GlobalConfig.messageTextColor)
         Config.saveMovementSpeed(GlobalConfig.movementSpeed)
         Config.saveNextActionTimeout(GlobalConfig.nextActionTimeout)
+        Config.saveFontSize(GlobalConfig.fontSize)
 
         if (Config.isConfigLoaded() == false) {
             Config.globalSettingsConfigured()

@@ -22,8 +22,12 @@ constexpr char TWITCH_CHANNEL[] = "twitch-channel";
 // Action execution time
 constexpr char ACTION_EXECUTION_TIME[] = "action-execution-time";
 
-// Message text color
-constexpr char MESSAGE_TEXT_COLOR[] = "message-text-color";
+// Message settings
+constexpr char MESSAGE_SETTINGS[] = "message-settings";
+constexpr char MESSAGE_TEXT_COLOR[] = "text-color";
+constexpr char MESSAGE_FONT_SETTINGS[] = "font";
+constexpr char MESSAGE_FONT_SIZE[] = "size";
+constexpr char MESSAGE_FONT_TYPE[] = "type";
 
 // Movement speed
 constexpr char MOVEMENT_SPEED[] = "movement-speed";
@@ -76,6 +80,7 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     QVariantMap JsonSpriteSettings = ConfigMap[SPRITE_SETTINGS].toMap();
     QVariantMap JsonChatBotSettings = ConfigMap[CHAT_BOT_SETTINGS].toMap();
     QVariantMap JsonScreenResolution = ConfigMap[SCREEN_RESOLUTION].toMap();
+    QVariantMap JsonMessageSettings = ConfigMap[MESSAGE_SETTINGS].toMap();
     QJsonArray JsonActionsArray = ConfigMap[ANIMATIONS_SETTINGS].toJsonArray();
     QJsonArray JsonPredefinedActions = ConfigMap[PREDEFINED_ACTIONS_SETTINGS].toJsonArray();
 
@@ -99,11 +104,6 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
         SystemSettings.ActionExecutionTime = ConfigMap[ACTION_EXECUTION_TIME].toFloat();
     }
 
-    // Init message text color
-    if (ConfigMap.contains(MESSAGE_TEXT_COLOR)) {
-        SystemSettings.MessageTextColor = QColor(ConfigMap[MESSAGE_TEXT_COLOR].toString());
-    }
-
     // Init movement speed
     if (ConfigMap.contains(MOVEMENT_SPEED)) {
         SystemSettings.MovementSpeed = ConfigMap[MOVEMENT_SPEED].toFloat();
@@ -112,6 +112,15 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     // Init next action timeout
     if (ConfigMap.contains(NEXT_ACTION_TIMEOUT)) {
         SystemSettings.NextActionTimeout = ConfigMap[NEXT_ACTION_TIMEOUT].toFloat();
+    }
+
+    // Init message settings
+    if (JsonMessageSettings.contains(MESSAGE_TEXT_COLOR) && JsonMessageSettings.contains(MESSAGE_FONT_SETTINGS)) {
+        SystemSettings.Message.MessageTextColor = QColor(JsonMessageSettings[MESSAGE_TEXT_COLOR].toString());
+        QVariantMap JsonFontSettings = JsonMessageSettings[MESSAGE_FONT_SETTINGS].toMap();
+        if (JsonFontSettings.contains(MESSAGE_FONT_SIZE)) {
+            SystemSettings.Message.FontSize = JsonFontSettings[MESSAGE_FONT_SIZE].toInt();
+        }
     }
 
     // Init chat bot settings
@@ -190,6 +199,8 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     QJsonObject JsonTableSettings;
     QJsonObject JsonSpriteSettings;
     QJsonObject JsonChatBotSettings;
+    QJsonObject JsonMessageSettings;
+    QJsonObject JsonMessageFontSettings;
     QJsonArray JsonActionsArray;
     QJsonObject JsonScreenResolution;
     QJsonArray JsonPredefinedActions;
@@ -209,6 +220,11 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     // Screen resolution
     JsonScreenResolution[SCREEN_RESOLUTION_HEIGHT] = SystemSettings.ScreenHeight;
     JsonScreenResolution[SCREEN_RESOLUTION_WIDTH] = SystemSettings.ScreenWidth;
+
+    // Message settings
+    JsonMessageSettings[MESSAGE_TEXT_COLOR] = SystemSettings.Message.MessageTextColor.name();
+    JsonMessageFontSettings[MESSAGE_FONT_SIZE] = SystemSettings.Message.FontSize;
+    JsonMessageSettings[MESSAGE_FONT_SETTINGS] = JsonMessageFontSettings;
 
     // Actions map
     for (auto Iter = Map.begin(); Iter != Map.end(); ++Iter) {
@@ -236,7 +252,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     QJsonObject Config;
     Config[SOURCE_FILE] = SystemSettings.ImagePath;
     Config[ACTION_EXECUTION_TIME] = QJsonValue::fromVariant(SystemSettings.ActionExecutionTime);
-    Config[MESSAGE_TEXT_COLOR] = SystemSettings.MessageTextColor.name();
+    Config[MESSAGE_SETTINGS] = JsonMessageSettings;
     Config[SPRITE_SCALE] = QJsonValue::fromVariant(SystemSettings.SpriteScale);
     Config[MOVEMENT_SPEED] = QJsonValue::fromVariant(SystemSettings.MovementSpeed);
     Config[NEXT_ACTION_TIMEOUT] = QJsonValue::fromVariant(SystemSettings.NextActionTimeout);
@@ -441,7 +457,7 @@ float ConfigObject::getActionExecutionTime() const
 
 QColor ConfigObject::getMessageTextColor() const
 {
-    return SystemSettings.MessageTextColor;
+    return SystemSettings.Message.MessageTextColor;
 }
 
 void ConfigObject::saveActionExecutionTime(const float ActionExecutionTime)
@@ -451,7 +467,7 @@ void ConfigObject::saveActionExecutionTime(const float ActionExecutionTime)
 
 void ConfigObject::saveMessageTextColor(const QColor& MessageTextColor)
 {
-    SystemSettings.MessageTextColor = MessageTextColor;
+    SystemSettings.Message.MessageTextColor = MessageTextColor;
 }
 
 float ConfigObject::getMovementSpeed() const
@@ -472,4 +488,14 @@ float ConfigObject::getNextActionTimeout() const
 void ConfigObject::saveNextActionTimeout(const float NextActionTimeout)
 {
     SystemSettings.NextActionTimeout = NextActionTimeout;
+}
+
+int ConfigObject::getFontSize() const
+{
+    return SystemSettings.Message.FontSize;
+}
+
+void ConfigObject::saveFontSize(const int FontSize)
+{
+    SystemSettings.Message.FontSize = FontSize;
 }

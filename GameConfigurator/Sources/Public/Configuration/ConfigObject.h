@@ -27,6 +27,11 @@ struct AnimationSpriteInfo {
     int Row;
 };
 
+struct MessageSettings {
+    int FontSize = 24;
+    QColor MessageTextColor = "red";
+};
+
 struct SystemConfig {
     QString ImagePath;
     QString ChatBotWebSockURL;
@@ -36,9 +41,9 @@ struct SystemConfig {
     int ScreenWidth;
     QString TwitchTargetChannel;
     float ActionExecutionTime = 10.0f;
-    QColor MessageTextColor = "red";
     float MovementSpeed = 3500.0f;
     float NextActionTimeout = 20.0f;
+    MessageSettings Message;
 };
 
 class ConfigObject : public QObject {
@@ -70,6 +75,7 @@ public:
     Q_INVOKABLE QColor getMessageTextColor() const;
     Q_INVOKABLE float getMovementSpeed() const;
     Q_INVOKABLE float getNextActionTimeout() const;
+    Q_INVOKABLE int getFontSize() const;
 
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
@@ -87,6 +93,7 @@ public:
     Q_INVOKABLE void saveMessageTextColor(const QColor& MessageTextColor);
     Q_INVOKABLE void saveMovementSpeed(const float MovementSpeed);
     Q_INVOKABLE void saveNextActionTimeout(const float NextActionTimeout);
+    Q_INVOKABLE void saveFontSize(const int FontSize);
 
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
