@@ -6,6 +6,7 @@ import Panels
 import Dialogs
 import GameActions
 import Base
+import ConfigComponent
 
 Item {
     id: root
@@ -13,6 +14,7 @@ Item {
     // anchors.margins: 5
 
     property Item rootPage: Item
+    property bool showTableSettings: true
 
     ColumnLayout {
         anchors.fill: parent
@@ -20,6 +22,7 @@ Item {
 
         // Actions List
         BasePanel {
+            visible: !root.showTableSettings
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -62,9 +65,9 @@ Item {
 
         // Settings
         BasePanel {
-            // Layout.fillHeight: true
+            visible: showTableSettings
+            Layout.fillHeight: true
             Layout.fillWidth: true
-            height: settings_column.height
 
             ColumnLayout {
                 id: settings_column
@@ -72,6 +75,25 @@ Item {
 
                 SettingsList {
                     Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
+
+                BaseButton {
+                    Layout.fillWidth: true
+                    Layout.margins: 10
+                    text: "Split to sprites"
+                    onClicked: {
+                        ActionsManager.spriteSheetConfigured = true
+                        rootPage.splitImageToSprites()
+                    }
+                }
+
+                BaseButton {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: 10
+                    Layout.rightMargin: 10
+                    text: "Load sprite sheet"
+                    onClicked: loadSpriteSheet()
                 }
             }
         }
@@ -83,20 +105,10 @@ Item {
             BaseButton {
                 Layout.fillWidth: true
                 Layout.margins: 10
-                text: "Split to sprites"
+                text: root.showTableSettings ? "Hide settings" : "Show settings"
                 onClicked: {
-                    ActionsManager.spriteSheetConfigured = true
-                    rootPage.splitImageToSprites()
+                    root.showTableSettings = !root.showTableSettings
                 }
-            }
-
-            BaseButton {
-                Layout.bottomMargin: 10
-                Layout.leftMargin: 10
-                Layout.rightMargin: 10
-                text: "Load sprite sheet"
-                onClicked: loadSpriteSheet()
-                Layout.fillWidth: true
             }
 
             BaseButton {
@@ -108,6 +120,10 @@ Item {
                 Layout.fillWidth: true
             }
         }
+    }
+
+    Component.onCompleted: {
+        root.showTableSettings = !Config.isConfigLoaded()
     }
 
     signal addAction()
