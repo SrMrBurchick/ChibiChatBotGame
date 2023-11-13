@@ -38,6 +38,7 @@ Dialog {
 
             SpinBox {
                 Layout.margins: 10
+                Layout.minimumWidth: 50
                 id: spinbox
                 from: 1
                 to: 100
@@ -65,6 +66,7 @@ Dialog {
                     color: Style.textColor
                     onTextChanged: {
                         spinbox.value = parseInt(text);
+                        root.chance = spinbox.value
                     }
                     background: Rectangle {
                         color: Style.propertyDelegateBorderColor

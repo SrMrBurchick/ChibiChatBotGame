@@ -55,6 +55,7 @@ Rectangle {
                 color: Style.textColor
                 onTextChanged: {
                     spinbox.value = parseInt(text);
+                    changeChance(index, spinbox.value)
                 }
                 background: Rectangle {
                     color: Style.propertyDelegateBorderColor
