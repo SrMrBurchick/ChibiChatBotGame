@@ -4,15 +4,16 @@
 #include <QQmlApplicationEngine>
 
 #include "Configuration/ConfigObject.h"
+#include "Managers/NotificationsManager.h"
+#include "Managers/ProcessManager.h"
+#include "Managers/Processes/ChatBotProcess.h"
+#include "Managers/Processes/GameProcess.h"
 #include "Models/ActionsListModel.h"
 #include "Models/AnimationSequenceModel.h"
 #include "Models/NotificationModel.h"
 #include "Models/PredefinedActionsModel.h"
 #include "Models/SpriteSheet.h"
-#include "Managers/ProcessManager.h"
-#include "Managers/Processes/GameProcess.h"
-#include "Managers/Processes/ChatBotProcess.h"
-#include "Managers/NotificationsManager.h"
+#include "System/Logger.h"
 
 int main(int argc, char *argv[])
 {
@@ -27,6 +28,8 @@ int main(int argc, char *argv[])
     QScopedPointer<ProcessManager> Manager(new ProcessManager);
     QPointer<IProcess> Game(new GameProcess);
     QPointer<IProcess> ChatBot(new ChatBotProcess);
+
+    Logger::InitLogger("chibi_log.txt");
 
     Manager->AddProcess(Game);
     Manager->AddProcess(ChatBot);

@@ -1,4 +1,5 @@
 #include "Models/PredefinedActionsModel.h"
+#include "System/Logger.h"
 
 #include <QQmlEngine>
 
@@ -68,6 +69,8 @@ void PredefinedActionsListModel::addNewAction(const QString& NewAction, const in
     if (NewAction.isEmpty()) {
         return;
     }
+
+    LOG_INFO("Add new predefined action: %s, with chance %d", NewAction.toStdString().c_str(), Chance);
 
     beginInsertRows(QModelIndex(), PredefinedActionsList.count(), PredefinedActionsList.count());
     PredefinedActionsList.push_back(

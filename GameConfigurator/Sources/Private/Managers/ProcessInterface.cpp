@@ -1,8 +1,8 @@
 #include "Managers/ProcessInterface.h"
 #include "Managers/NotificationsManager.h"
+#include "System/Logger.h"
 
 #include <QString>
-#include <iostream>
 
 IProcess::IProcess(const QString& _Program, const eProcessType _Type)
     :QObject(), Program(_Program), Type(_Type)
@@ -31,6 +31,7 @@ bool IProcess::RunProcessWithParams(const QStringList& Args, QProcessEnvironment
     Process.start(Program, Args);
 
     NotificationsManager::SendNotification("Process manager", QString::asprintf("Running a\n %s", Program.toStdString().c_str()));
+    LOG_INFO("Running a program: %s, with params: %s", Program.toStdString().c_str(), Args.join(" ").toStdString().c_str());
 
     return IsProcessRunning();
 }
@@ -46,6 +47,7 @@ bool IProcess::RunProcess()
     }
 
     NotificationsManager::SendNotification("Process manager", QString::asprintf("Running a\n %s", Program.toStdString().c_str()));
+    LOG_INFO("Running a program: %s", Program.toStdString().c_str());
     Process.start(Program);
 
     return Process.isOpen();
@@ -60,6 +62,7 @@ bool IProcess::StopProcess()
     Process.close();
 
     NotificationsManager::SendNotification("Process manager", QString::asprintf("Stop a\n %s", Program.toStdString().c_str()));
+    LOG_INFO("Stop a program: %s", Program.toStdString().c_str());
 
     return !IsProcessRunning();
 }
@@ -72,6 +75,7 @@ bool IProcess::IsProcessRunning()
 void IProcess::Kill()
 {
     NotificationsManager::SendNotification("Process manager", QString::asprintf("Kill a\n %s", Program.toStdString().c_str()));
+    LOG_INFO("Kill a program: %s", Program.toStdString().c_str());
     Process.kill();
 }
 
@@ -93,6 +97,7 @@ QPointer<QProcess> IProcess::GetProcess()
 void IProcess::Terminate()
 {
     NotificationsManager::SendNotification("Process manager", QString::asprintf("Kill a\n [%lld] %s", Process.processId(), Program.toStdString().c_str()));
+    LOG_INFO("Terminate a program: %s", Program.toStdString().c_str());
 
 #ifdef Q_OS_WIN
     QString KillCommand = QString("taskkill.exe");

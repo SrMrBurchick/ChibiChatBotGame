@@ -1,7 +1,7 @@
 #include "Models/AnimationSequenceModel.h"
+#include "System/Logger.h"
 
 #include <QQmlEngine>
-#include <iostream>
 
 AnimationSequenceModel::AnimationSequenceModel(QObject* Parent)
     :QAbstractListModel(Parent)
@@ -142,7 +142,7 @@ void AnimationSequenceModel::placeItemAt(int SourceIndex, int TargetIndex)
 
 void AnimationSequenceModel::setActiveAction(const QString& Action)
 {
-    if (Action.isEmpty()) {
+    if (Action.isEmpty() || CurrentAction == Action) {
         return;
     }
 
@@ -155,6 +155,7 @@ void AnimationSequenceModel::setActiveAction(const QString& Action)
     if (MutexLocker.isLocked()) {
         SpriteList = &Map[CurrentAction];
         currentSpriteIndex = 0;
+        LOG_INFO("Set new active action for animation sequence: %s", Action.toStdString().c_str());
     }
 
     beginResetModel();

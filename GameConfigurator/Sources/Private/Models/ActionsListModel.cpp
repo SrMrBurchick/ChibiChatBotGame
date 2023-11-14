@@ -1,4 +1,5 @@
 #include "Models/ActionsListModel.h"
+#include "System/Logger.h"
 
 #include <QQmlEngine>
 #include <QTimer>
@@ -56,7 +57,7 @@ void ActionsListModel::updateData()
 
 void ActionsListModel::removeElement(int Index)
 {
-    if ((Index > ActionsList.size() && Index <= 0) || ActionsList.isEmpty()) {
+    if ((Index > ActionsList.size() && Index < 0) || ActionsList.isEmpty()) {
         return;
     }
 
@@ -93,6 +94,8 @@ void ActionsListModel::addNewAction(const QString& NewAction)
         QTimer::singleShot(0, this, &ActionsListModel::setDefaultSelected);
     }
 
+    LOG_INFO("New action was added: %s", NewAction.toStdString().c_str());
+
     emit actionAdded(NewAction);
 }
 
@@ -116,8 +119,14 @@ void ActionsListModel::setSelectedActionIndex(int Index)
         return;
     }
 
+    if (Index == SelectedActionIndex) {
+        return;
+    }
+
     SelectedActionIndex = Index;
     QString Action = ActionsList.at(SelectedActionIndex);
+
+    LOG_INFO("Select action: %s", Action.toStdString().c_str());
 
     emit actionSelected(Action);
 }
