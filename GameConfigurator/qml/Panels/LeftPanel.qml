@@ -33,7 +33,7 @@ Item {
                     Layout.alignment: Qt.AlignTop
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Actions List"
-                    font.pixelSize: 32
+                    font.pixelSize: 24
                 }
                 ActionsListComponent {
                     Layout.fillWidth: true
@@ -71,7 +71,7 @@ Item {
 
             ColumnLayout {
                 id: settings_column
-                width: parent.width
+                anchors.fill: parent
 
                 SettingsList {
                     Layout.fillWidth: true
@@ -92,6 +92,7 @@ Item {
                     Layout.fillWidth: true
                     Layout.leftMargin: 10
                     Layout.rightMargin: 10
+                    Layout.bottomMargin: 10
                     text: "Load sprite sheet"
                     onClicked: loadSpriteSheet()
                 }

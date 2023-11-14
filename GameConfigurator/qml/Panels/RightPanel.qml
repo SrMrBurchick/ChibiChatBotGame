@@ -36,7 +36,7 @@ Item {
                     id: title
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Animation preview"
-                    font.pixelSize : 32
+                    font.pixelSize : 28
                 }
 
                 Rectangle {
@@ -60,20 +60,11 @@ Item {
 
                     BaseButton {
                         Layout.fillWidth: true
-                        text: "Play"
+                        text: timer.running ? "Pause" : "Play"
                         onClicked: {
-                            timer.running = true
+                            timer.running = !timer.running
                         }
                     }
-
-                    BaseButton {
-                        Layout.fillWidth: true
-                        text: "Pause"
-                        onClicked: {
-                            timer.running = false
-                        }
-                    }
-
                 }
             }
         }

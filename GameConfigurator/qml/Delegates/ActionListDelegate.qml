@@ -8,6 +8,8 @@ Rectangle {
     id: root
     color: Style.actionListItemBGColor
     property bool isSelected: false
+    property bool isDefaultAction: false
+    readonly property var defaultActions: ["walk", "fall", "climb", "standby"]
     border.color: isSelected ? Style.actionListItemBorderSelectedColor : Style.actionListItemBorderColor
     border.width: 2
     width: parent.width - 5
@@ -18,41 +20,34 @@ Rectangle {
         anchors.fill: root
         anchors.margins: 5
 
-        MouseArea {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        BaseText {
+            anchors.fill: parent
+            id: actionName
+            font.pixelSize : 24
+            text: name
+            anchors.verticalCenter: parent.verticalCenter
 
-            BaseText {
-                anchors.fill: parent
-                id: actionName
-                font.pixelSize : 24
-                text: name
-                anchors.verticalCenter: parent.verticalCenter
-                // anchors.centerIn: panel
-            }
-
-            ChangeActionDialog {
-                id: changeActionDialog
-                actionName: actionName.text
-                onChangeAction: {
-                    changeElement(index, action);
-                }
-
-            }
-
-            onClicked: {
-                changeActionDialog.open()
-            }
-        }
-
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            color: "transparent"
             MouseArea {
                 anchors.fill: parent
+
+                ChangeActionDialog {
+                    id: changeActionDialog
+                    actionName: actionName.text
+                    onChangeAction: {
+                        changeElement(index, action);
+                    }
+
+                }
+
                 onClicked: {
                     elementSelected(index, name)
+                }
+
+                onDoubleClicked: {
+                    if (!root.isDefaultAction) {
+                        changeActionDialog.open()
+                    }
+
                 }
             }
         }
@@ -61,6 +56,7 @@ Rectangle {
             width: 20
             height: 20
             color: "transparent"
+            anchors.right: parent.right
 
             MouseArea {
                 anchors.fill: parent
@@ -79,6 +75,10 @@ Rectangle {
         ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
             root.isSelected = index == ActionsManager.actionsListModel.getSelectedActionIndex()
         })
+
+        if (defaultActions.includes(name)) {
+            root.isDefaultAction = true
+        }
     }
 
     signal removeElement(int index)

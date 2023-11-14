@@ -99,7 +99,7 @@ Item {
 
             BasePanel {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 350
+                Layout.minimumHeight: 250
                 border.width: 0
                 anchors.margins: 0
 
