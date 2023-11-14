@@ -126,7 +126,7 @@ Item {
     }
 
     Component.onCompleted: {
-        if (Config.isConfigLoaded()) {
+        if (GlobalConfig.isConfigLoaded && !ActionsManager.spriteSheetConfigured) {
             ActionsManager.spriteSheetPath = Config.getSpriteSheetPath();
             ActionsManager.spriteSizeWidth = Config.getSpriteWidth()
             ActionsManager.spriteSizeHeight = Config.getSpriteHeight()

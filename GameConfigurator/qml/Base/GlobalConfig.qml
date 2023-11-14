@@ -13,4 +13,5 @@ QtObject {
     property real movementSpeed: 3500
     property real nextActionTimeout: 20.0
     property int fontSize: 14
+    property bool isConfigLoaded: false
 }

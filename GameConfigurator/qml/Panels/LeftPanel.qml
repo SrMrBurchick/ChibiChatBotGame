@@ -47,7 +47,8 @@ Item {
 
                     AddActionDialog {
                         id: addActionDialog
-                        onAddNewAction: {
+                        onAddNewAction:(newAction) => {
+                            console.log("Add new action: ", newAction)
                             actionsListComponent.addAction(newAction)
                         }
                     }

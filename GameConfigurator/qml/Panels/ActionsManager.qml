@@ -8,7 +8,8 @@ QtObject {
     property int actionSpriteOldIndex
     property int actionSpriteNewIndex
     property string spriteSheetPath
-    property bool spriteSheetConfigured
+    property bool spriteSheetConfigured: false
+    property bool isActionsConfigured: false
 
     // Table settings
     property int tableSettingsColumns

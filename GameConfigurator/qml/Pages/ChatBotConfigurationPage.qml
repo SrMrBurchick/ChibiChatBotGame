@@ -319,7 +319,7 @@ Item {
         settingsModel.append({"name": "Game settings", "component": gameSettings})
         settingsModel.append({"name": "Predefined actions", "component": predefinedActions})
 
-        if (Config.isConfigLoaded()) {
+        if (GlobalConfig.isConfigLoaded) {
             GlobalConfig.chatBotURL = Config.getChatBotURL()
             GlobalConfig.chatBotPort = Config.getChatBotPort()
             GlobalConfig.screenHeight = Config.getScreenHeight()

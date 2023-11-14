@@ -60,24 +60,6 @@ Dialog {
     signal addNewAction(string newAction)
 
     Component.onCompleted: {
-        ActionsManager.actionsListModel.onActionAdded.connect(function (action) {
-            if (defaultActions.includes(action) && actionSelector.model.includes(action)) {
-                console.log("Action to remove: ", action)
-                actionSelector.model = actionSelector.model.filter(function (item) {
-                    return item != action;
-                })
-            }
-        })
-        ActionsManager.actionsListModel.onActionRemoved.connect(function (action) {
-            if (defaultActions.includes(action) && !actionSelector.model.includes(action)) {
-                console.log("Action to add: ", action)
-                var tempList = actionSelector.model
-                tempList = [action].concat(tempList)
-
-                actionSelector.model = tempList;
-            }
-        })
-
         var loadedActions = ActionsManager.actionsListModel.getActions()
         loadedActions.forEach(function(action) {
             if (defaultActions.includes(action) && actionSelector.model.includes(action)) {

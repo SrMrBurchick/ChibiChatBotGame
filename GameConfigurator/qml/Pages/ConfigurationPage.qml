@@ -37,11 +37,15 @@ Item {
     }
 
     Component.onCompleted: {
-        if (Config.isConfigLoaded() == false) {
+        if (!GlobalConfig.isConfigLoaded) {
             Config.loadConfig()
+            GlobalConfig.isConfigLoaded = Config.isConfigLoaded()
 
-            Config.initActionsListModel(ActionsManager.actionsListModel)
-            Config.initAnimationsSequenceModel(ActionsManager.sequenceModel)
+            if (!ActionsManager.isActionsConfigured) {
+                Config.initActionsListModel(ActionsManager.actionsListModel)
+                Config.initAnimationsSequenceModel(ActionsManager.sequenceModel)
+                ActionsManager.isActionsConfigured = true
+            }
         }
 
         Config.onActionsConfigured.connect(function(){
