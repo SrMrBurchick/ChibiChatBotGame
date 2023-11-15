@@ -48,7 +48,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 
     def on_pubmsg(self, c, e):
         for i in range(0, len(e.arguments)):
-            print("Recived message: " + e.arguments[i])
+            print(f"Received message from {e.source.nick}: {e.arguments[i]}")
 
         # If a chat message starts with an exclamation point, try to run it as a command
         if e.arguments[0][:1] == '!':
@@ -86,7 +86,7 @@ def create_bot(wss: WebSockServer, commands: list, channel: str) -> TwitchBot:
         creds_data = creds_file.read()
 
     creds = json.loads(creds_data)
-    username = "ChibiGameChatBot"
+    username = "ChibChatBot"
     client_id = creds["client-id"]
     token = creds["token"]
 
