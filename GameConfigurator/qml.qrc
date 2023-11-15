@@ -41,6 +41,7 @@
         <file>qml/Delegates/PropertyIntDelegate.qml</file>
         <file>qml/Delegates/PropertyStringDelegate.qml</file>
         <file>qml/Delegates/PropertyColorDelegate.qml</file>
+        <file>qml/Delegates/PropertyBoolDelegate.qml</file>
 
         <!-- Dialogs -->
         <file>qml/Dialogs/qmldir</file>

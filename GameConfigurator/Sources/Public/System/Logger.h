@@ -21,6 +21,10 @@ public:
     template <typename... Args>
     static void log(LogLevel Level, const char* format, Args&&... args)
     {
+        if (!GetLogger().bIsEnabled) {
+            return;
+        }
+
         QString logMessage = formatLogMessage(Level, format, std::forward<Args>(args)...);
         GetLogger().LogToConsole(logMessage);
         GetLogger().LogToFile(logMessage);
@@ -45,6 +49,8 @@ public:
 
     static void SignalHandler(int Signal);
 
+    static void SetLoggerEnabled(bool Enabled);
+
 private:
     static Logger& GetLogger() {
         static Logger LoggerInst;
@@ -55,4 +61,5 @@ private:
     void LogToConsole(const QString& LogMsg);
 
     QFile LogFile;
+    bool bIsEnabled = false;
 };

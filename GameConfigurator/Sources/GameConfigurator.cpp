@@ -29,12 +29,15 @@ int main(int argc, char *argv[])
     QPointer<IProcess> Game(new GameProcess);
     QPointer<IProcess> ChatBot(new ChatBotProcess);
 
-    Logger::InitLogger("chibi_log.txt");
-
     Manager->AddProcess(Game);
     Manager->AddProcess(ChatBot);
 
     engine.addImportPath(":/qml");
+
+    // Setup config signals
+    QObject::connect(Config.get(), &ConfigObject::loggerEnabled, [=](bool Enabled) {
+        Logger::SetLoggerEnabled(Enabled);
+    });
 
     ActionsListModel::registerModel("GameActions");
     AnimationSequenceModel::registerModel("GameActions");

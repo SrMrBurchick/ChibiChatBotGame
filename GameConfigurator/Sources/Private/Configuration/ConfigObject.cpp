@@ -499,3 +499,8 @@ void ConfigObject::saveFontSize(const int FontSize)
 {
     SystemSettings.Message.FontSize = FontSize;
 }
+
+void ConfigObject::setLoggerEnabled(bool Enabled)
+{
+    emit loggerEnabled(Enabled);
+}

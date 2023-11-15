@@ -80,6 +80,18 @@ Item {
             ColumnLayout {
                 width: parent.width
 
+                PropertyBoolDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+
+                    fieldName: "Logger:"
+                    defaultValue: false
+                    onValueChanged:(value) => {
+                        Config.setLoggerEnabled(value)
+                    }
+                }
+
                 PropertyIntDelegate {
                     anchors.left: parent.left
                     anchors.right: parent.right

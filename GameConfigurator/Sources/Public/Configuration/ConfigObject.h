@@ -97,9 +97,12 @@ public:
 
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
+    Q_INVOKABLE void setLoggerEnabled(bool Enabled);
+
 signals:
     void actionsConfigured();
     void globalSettingsConfigured();
+    void loggerEnabled(bool Enabled);
 
 protected:
     void CopyImageToAssets();

@@ -42,6 +42,11 @@ void Logger::LogToConsole(const QString& LogMsg)
 void Logger::InitLogger(const QString& LoggerFile)
 {
     Logger& Log = Logger::GetLogger();
+
+    if (!Log.bIsEnabled) {
+        return;
+    }
+
     Log.LogFile.setFileName(LoggerFile);
     Log.LogFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
     signal(SIGSEGV, Logger::SignalHandler);
@@ -55,4 +60,17 @@ void Logger::SignalHandler(int Signal)
     LOG_CRITICAL("Signal {%d} received! Error :%s", Signal, lastError);
     std::signal(Signal, SIG_DFL);
     std::raise(Signal);
+}
+
+void Logger::SetLoggerEnabled(bool Enabled)
+{
+    Logger& Log = Logger::GetLogger();
+    Log.bIsEnabled = Enabled;
+
+    std::cout << "Set logger enabled to :" << Enabled << std::endl;
+    if (!Log.bIsEnabled) {
+        Log.LogFile.close();
+    } else {
+        InitLogger("chibi_log.txt");
+    }
 }
