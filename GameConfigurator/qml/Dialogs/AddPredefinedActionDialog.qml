@@ -38,45 +38,12 @@ Dialog {
 
             SpinBox {
                 Layout.margins: 10
-                Layout.minimumWidth: 50
                 id: spinbox
                 from: 1
                 to: 100
                 value: chance
                 editable: true
                 stepSize: 1
-                validator: IntValidator {
-                    locale: spinbox.locale.name
-                    bottom: Math.min(spinbox.from, spinbox.to)
-                    top: Math.max(spinbox.from, spinbox.to)
-                }
-                textFromValue: function(value, locale) {
-                    return Number(value).toLocaleString(locale, 'd', spinbox.decimals)
-                }
-
-                contentItem: TextField {
-                    text: spinbox.textFromValue(spinbox.value)
-                    font: spinbox.font
-                    horizontalAlignment: Qt.AlignHCenter
-                    verticalAlignment: Qt.AlignVCenter
-                    readOnly: !spinbox.editable
-                    validator: spinbox.validator
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    placeholderText: fieldDescription
-                    color: Style.textColor
-                    onTextChanged: {
-                        spinbox.value = parseInt(text);
-                        root.chance = spinbox.value
-                    }
-                    background: Rectangle {
-                        color: Style.propertyDelegateBorderColor
-                    }
-
-                }
-
-                background: Rectangle {
-                    color: Style.propertyDelegateBorderColor
-                }
 
                 onValueModified: {
                     root.chance = spinbox.value

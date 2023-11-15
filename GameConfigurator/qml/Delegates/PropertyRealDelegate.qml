@@ -46,49 +46,29 @@ Rectangle {
 
             property int decimals: 2
             property real realValue: value / 100
+            inputMethodHints: Qt.ImhFormattedNumbersOnly
 
             editable: true
+
             validator: DoubleValidator {
                 bottom: Math.min(spinbox.from, spinbox.to)
                 top:  Math.max(spinbox.from, spinbox.to)
+                decimals: spinbox.decimals
+                notation: DoubleValidator.StandardNotation
             }
 
             textFromValue: function(value, locale) {
-                return Number(value / 100).toLocaleString(locale, 'f', spinbox.decimals)
+                let num = Number(value / Math.pow(10, decimals))
+                return Number.parseFloat(num).toFixed(decimals)
             }
 
             valueFromText: function(text, locale) {
-                return Number.fromLocaleString(locale, text) * 100
+                return Number.parseFloat(text) * Math.pow(10, decimals)
             }
 
             onValueModified: {
                 changeValue(realValue)
             }
-
-            background: Rectangle {
-                color: Style.propertyDelegateBorderColor
-            }
-
-            contentItem: TextField {
-                text: spinbox.textFromValue(spinbox.value, spinbox.locale)
-                font: spinbox.font
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                readOnly: !spinbox.editable
-                validator: spinbox.validator
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                placeholderText: fieldDescription
-                color: Style.textColor
-                onTextEdited: {
-                    spinbox.value = spinbox.valueFromText(text, spinbox.locale)
-                    var tempValue = spinbox.textFromValue(spinbox.value, spinbox.locale)
-                    changeValue(spinbox.valueFromText(tempValue, spinbox.locale) / 100)
-                }
-                background: Rectangle {
-                    color: Style.propertyDelegateBorderColor
-                }
-            }
-
         }
     }
 

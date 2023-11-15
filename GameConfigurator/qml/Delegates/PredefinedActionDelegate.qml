@@ -44,28 +44,6 @@ Rectangle {
             value: chance
             stepSize: 1
             editable: true
-            contentItem: TextField {
-                text: spinbox.value
-                font: spinbox.font
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                readOnly: !spinbox.editable
-                validator: spinbox.validator
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                color: Style.textColor
-                onTextChanged: {
-                    spinbox.value = parseInt(text);
-                    changeChance(index, spinbox.value)
-                }
-                background: Rectangle {
-                    color: Style.propertyDelegateBorderColor
-                }
-
-            }
-
-            background: Rectangle {
-                color: Style.propertyDelegateBorderColor
-            }
 
             onValueModified: {
                 changeChance(index, spinbox.value)

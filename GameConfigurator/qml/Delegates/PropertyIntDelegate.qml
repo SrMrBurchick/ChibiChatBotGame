@@ -45,29 +45,6 @@ Rectangle {
             editable: true
             stepSize: 1
 
-            contentItem: TextField {
-                text: spinbox.value
-                font: spinbox.font
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                readOnly: !spinbox.editable
-                validator: spinbox.validator
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                color: Style.textColor
-                onTextEdited: {
-                    spinbox.value = spinbox.valueFromText(text, spinbox.locale)
-                    changeValue(spinbox.value)
-                }
-
-                background: Rectangle {
-                    color: Style.propertyDelegateBorderColor
-                }
-            }
-
-            background: Rectangle {
-                color: Style.propertyDelegateBorderColor
-            }
-
             onValueModified: {
                 changeValue(spinbox.value)
             }
