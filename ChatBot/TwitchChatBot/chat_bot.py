@@ -69,9 +69,11 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             loop.run_until_complete(self.wss.send_command(cmd, args))
         elif cmd == "commands":
             commands = ""
+            blocked_commands = ["fall"]
             print(self.commands)
             for command in self.commands:
-                commands = "{} {}".format(commands, command)
+                if command not in blocked_commands:
+                    commands = "{} {}".format(commands, command)
             c.privmsg(self.channel, "Available commands: " + commands)
         else:
             c.privmsg(self.channel, "Did not understand command: " + cmd)
