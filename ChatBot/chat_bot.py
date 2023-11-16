@@ -7,6 +7,8 @@ import json
 CONFIG_FILE = "./Game/config/ChibiChatBotConfig.json"
 
 async def main():
+    port = 6565
+    url = "localhost"
     channel = ""
     # Default commands
     commands = ["say"]
@@ -20,16 +22,22 @@ async def main():
                 if config["twitch-channel"] is not None:
                     channel = config["twitch-channel"]
 
+                if config["chat-bot"] is not None:
+                    port = int(config["chat-bot"]["port"])
+                    url = config["chat-bot"]["url"]
+
                 for animation in config["animations"]:
                     for key in animation.keys():
                         commands.append(key)
     except:
         pass
 
+    print(port)
+    print(url)
     print(commands)
     print(channel)
 
-    wss = WebSockServer()
+    wss = WebSockServer(url, port)
     bot = create_bot(wss, commands, channel)
 
     wss_task = wss.run_server()

@@ -3,10 +3,10 @@ import websockets
 import json
 
 class WebSockServer:
-    def __init__(self):
+    def __init__(self, port, url):
         self.__websocket = None
-        self.__port = 6565 # Default port. TODO: add config reading
-        self.__url = "localhost"
+        self.__port = port
+        self.__url = url
 
     async def __handle_server__(self, websocket):
         self.__websocket = websocket
@@ -41,7 +41,7 @@ class WebSockServer:
         await websockets.serve(self.__handle_server__, self.__url, self.__port)
 
 async def main():
-    wss = WebSockServer()
+    wss = WebSockServer(6565, "localhost")
     wss_task = wss.run_server()
     await asyncio.gather(wss_task)
 
