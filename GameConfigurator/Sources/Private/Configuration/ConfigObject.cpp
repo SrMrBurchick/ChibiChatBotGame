@@ -1,9 +1,9 @@
 #include "Configuration/ConfigObject.h"
 #include "Managers/NotificationsManager.h"
 
-#include <iostream>
-
+#include <QClipboard>
 #include <QFile>
+#include <QGuiApplication>
 #include <QImage>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -503,4 +503,18 @@ void ConfigObject::saveFontSize(const int FontSize)
 void ConfigObject::setLoggerEnabled(bool Enabled)
 {
     emit loggerEnabled(Enabled);
+}
+
+void ConfigObject::saveDataToClipboard(const QString& Data)
+{
+    if (QClipboard* Clipboard = QGuiApplication::clipboard()) {
+        Clipboard->setText(Data);
+        NotificationsManager::SendNotification(
+            "System Clipboard",
+            QString::asprintf(
+                "Data %s was saved \nto the system clipboard",
+                Data.toStdString().c_str()
+            )
+        );
+    }
 }

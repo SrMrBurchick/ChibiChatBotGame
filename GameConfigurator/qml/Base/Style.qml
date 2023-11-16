@@ -26,6 +26,9 @@ QtObject {
     readonly property color darkSettingsDelegateBGColor: "#4B4B82"
     readonly property color darkSettingsDelegateBorderColor: "#4545B5"
     readonly property color darkSpriteItemSelectedBGColor: "#7C728C"
+    readonly property color darkGameRunningInfoBGColor: "#F5A51E"
+    readonly property color darkGameRunningInfoBorderColor: "#C2913E"
+    readonly property color darkGameRunningInfoTextColor: "#FFFFFF"
 
 
     // Light colors
@@ -48,6 +51,9 @@ QtObject {
     readonly property color lightSettingsDelegateBGColor: "#474747"
     readonly property color lightSettingsDelegateBorderColor: "#474747"
     readonly property color lightSpriteItemSelectedBGColor: "#474747"
+    readonly property color lightGameRunningInfoBGColor: "#F5A51E"
+    readonly property color lightGameRunningInfoBorderColor: "#C2913E"
+    readonly property color lightGameRunningInfoTextColor: "#FFFFFF"
 
     // Style
     // Colors
@@ -71,6 +77,9 @@ QtObject {
     readonly property color settingsDelegateBGColor: bIsDarkTheme ? darkSettingsDelegateBGColor : lightSettingsDelegateBGColor
     readonly property color settingsDelegateBorderColor: bIsDarkTheme ? darkSettingsDelegateBorderColor : lightSettingsDelegateBorderColor
     readonly property color spriteItemSelectedBGColor: bIsDarkTheme ? darkSpriteItemSelectedBGColor : lightSpriteItemSelectedBGColor
+    readonly property color gameRunningInfoBGColor: bIsDarkTheme ? darkGameRunningInfoBGColor : lightGameRunningInfoBGColor
+    readonly property color gameRunningInfoBorderColor: bIsDarkTheme ? darkGameRunningInfoBorderColor : lightGameRunningInfoBorderColor
+    readonly property color gameRunningInfoTextColor: bIsDarkTheme ? darkGameRunningInfoTextColor : lightGameRunningInfoTextColor
 
     // Sizes
     readonly property int buttonBorderSize: 2
@@ -88,6 +97,9 @@ QtObject {
 
     readonly property string lightTrashCanImage: "qrc:qml/Images/trash_can.png"
     readonly property string darkTrashCanImage: "qrc:qml/Images/trash_can_dark_theme.png"
+    readonly property string darkCopyImage: "qrc:qml/Images/copy_white.png"
+    readonly property string lightCopyImage: "qrc:qml/Images/copy.png"
     readonly property string trashCanImage: bIsDarkTheme ? darkTrashCanImage : lightTrashCanImage
+    readonly property string copyImage: bIsDarkTheme ? darkCopyImage : lightCopyImage
 
 }

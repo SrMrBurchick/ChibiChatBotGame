@@ -42,6 +42,7 @@
         <file>qml/Delegates/PropertyStringDelegate.qml</file>
         <file>qml/Delegates/PropertyColorDelegate.qml</file>
         <file>qml/Delegates/PropertyBoolDelegate.qml</file>
+        <file>qml/Delegates/GameRunningDelegate.qml</file>
 
         <!-- Dialogs -->
         <file>qml/Dialogs/qmldir</file>
@@ -53,6 +54,8 @@
         <file>qml/Images/trash_can.png</file>
         <file>qml/Images/trash_can_dark_theme.png</file>
         <file>qml/Images/sprite-sheet.png</file>
+        <file>qml/Images/copy.png</file>
+        <file>qml/Images/copy_white.png</file>
 
     </qresource>
 </RCC>

@@ -32,6 +32,7 @@ signals:
     void gameEnded();
     void chatBotStarted();
     void chatBotEnded();
+    void gameRunningAt(QString Address);
 
 private:
     QMap<eProcessType, QPointer<IProcess>> ProcessesList;

@@ -98,6 +98,7 @@ public:
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
     Q_INVOKABLE void setLoggerEnabled(bool Enabled);
+    Q_INVOKABLE void saveDataToClipboard(const QString& Data);
 
 signals:
     void actionsConfigured();

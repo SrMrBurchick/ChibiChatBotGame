@@ -1,7 +1,6 @@
 #include "Managers/ProcessManager.h"
 #include "Managers/NotificationsManager.h"
-
-#include <iostream>
+#include "Managers/Processes/GameProcess.h"
 
 ProcessManager::ProcessManager(QObject* Parent)
     :QObject(Parent)
@@ -84,6 +83,12 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
             }
         }
     );
+
+    if (Process->GetType() == eProcessType::Game) {
+        QObject::connect((GameProcess*)(Process.get()), &GameProcess::gameRunningAt, [=](QString GameInfo){
+            emit this->gameRunningAt(GameInfo);
+        });
+    }
 
     ProcessesList.insert(Process->GetType(), Process);
 

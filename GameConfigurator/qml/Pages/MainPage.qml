@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
 import ProcessesComponent
+import Delegates
 
 Item {
     id: menu
@@ -10,6 +11,12 @@ Item {
     anchors.centerIn: parent
 
     signal openConfig()
+
+
+    GameRunningDelegate {
+        id: gameRunningDelegate
+        anchors.top: menu.top
+    }
 
     ColumnLayout {
         anchors.centerIn: parent
@@ -64,13 +71,19 @@ Item {
     }
 
     Component.onCompleted: {
+        gameRunningDelegate.close()
         ProcessManager.onGameStarted.connect(function() {
             gameButton.isRunning = true
             gameButton.enabled = true
         })
         ProcessManager.onGameEnded.connect(function() {
+            gameRunningDelegate.close()
             gameButton.isRunning = false
             gameButton.enabled = true
+        })
+        ProcessManager.onGameRunningAt.connect(function(gameInfo) {
+            gameRunningDelegate.gameInfo = gameInfo
+            gameRunningDelegate.show()
         })
 
         ProcessManager.onChatBotStarted.connect(function() {
