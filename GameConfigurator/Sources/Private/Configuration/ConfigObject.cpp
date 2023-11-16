@@ -1,11 +1,13 @@
 #include "Configuration/ConfigObject.h"
 #include "Managers/NotificationsManager.h"
+#include "System/Logger.h"
 
 #include <QClipboard>
 #include <QFile>
 #include <QGuiApplication>
 #include <QImage>
 #include <QJsonArray>
+#include <QJsonDocument>
 #include <QJsonObject>
 
 // Global settings fields
@@ -73,6 +75,10 @@ ConfigObject::~ConfigObject()
 
 }
 
+float round(float Value) {
+    return qRound(Value * 100.f) / 100.f;
+}
+
 void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
 {
     QVariantMap ConfigMap = ConfigDocument.toVariant().toMap();
@@ -91,7 +97,7 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
 
     // Init sprite scale
     if (ConfigMap.contains(SPRITE_SCALE)) {
-        SystemSettings.SpriteScale = ConfigMap[SPRITE_SCALE].toFloat();
+        SystemSettings.SpriteScale = round(ConfigMap[SPRITE_SCALE].toFloat());
     }
 
     // Init twitch channel
@@ -101,17 +107,17 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
 
     // Init action execution time
     if (ConfigMap.contains(ACTION_EXECUTION_TIME)) {
-        SystemSettings.ActionExecutionTime = ConfigMap[ACTION_EXECUTION_TIME].toFloat();
+        SystemSettings.ActionExecutionTime = round(ConfigMap[ACTION_EXECUTION_TIME].toFloat());
     }
 
     // Init movement speed
     if (ConfigMap.contains(MOVEMENT_SPEED)) {
-        SystemSettings.MovementSpeed = ConfigMap[MOVEMENT_SPEED].toFloat();
+        SystemSettings.MovementSpeed =  round(ConfigMap[MOVEMENT_SPEED].toFloat());
     }
 
     // Init next action timeout
     if (ConfigMap.contains(NEXT_ACTION_TIMEOUT)) {
-        SystemSettings.NextActionTimeout = ConfigMap[NEXT_ACTION_TIMEOUT].toFloat();
+        SystemSettings.NextActionTimeout = round(ConfigMap[NEXT_ACTION_TIMEOUT].toFloat());
     }
 
     // Init message settings
@@ -251,11 +257,11 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 
     QJsonObject Config;
     Config[SOURCE_FILE] = SystemSettings.ImagePath;
-    Config[ACTION_EXECUTION_TIME] = QJsonValue::fromVariant(SystemSettings.ActionExecutionTime);
+    Config[ACTION_EXECUTION_TIME] = SystemSettings.ActionExecutionTime;
     Config[MESSAGE_SETTINGS] = JsonMessageSettings;
-    Config[SPRITE_SCALE] = QJsonValue::fromVariant(SystemSettings.SpriteScale);
-    Config[MOVEMENT_SPEED] = QJsonValue::fromVariant(SystemSettings.MovementSpeed);
-    Config[NEXT_ACTION_TIMEOUT] = QJsonValue::fromVariant(SystemSettings.NextActionTimeout);
+    Config[SPRITE_SCALE] = SystemSettings.SpriteScale;
+    Config[MOVEMENT_SPEED] = SystemSettings.MovementSpeed;
+    Config[NEXT_ACTION_TIMEOUT] = SystemSettings.NextActionTimeout;
     Config[CHAT_BOT_SETTINGS] = JsonChatBotSettings;
     Config[TABLE_SETTINGS] = JsonTableSettings;
     Config[SPRITE_SETTINGS] = JsonSpriteSettings;
@@ -266,7 +272,8 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 
     QFile ConfigFile(ConfigFileName);
     if (ConfigFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        ConfigFile.write(QJsonDocument(Config).toJson());
+        QJsonDocument ConfigDocument = QJsonDocument(Config);
+        ConfigFile.write(ConfigDocument.toJson());
         ConfigFile.close();
         NotificationsManager::SendNotification("Config", "Saved successfully!");
     } else {
