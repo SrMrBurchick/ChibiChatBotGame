@@ -51,6 +51,15 @@ Item {
                             console.log("Add new action: ", newAction)
                             actionsListComponent.addAction(newAction)
                         }
+
+                        Component.onCompleted: {
+                            ActionsManager.actionsListModel.onActionAdded.connect(function(action) {
+                                addActionDialog.onActionAdded(action)
+                            })
+                            ActionsManager.actionsListModel.onActionRemoved.connect(function(action) {
+                                addActionDialog.onActionRemoved(action)
+                            })
+                        }
                     }
 
                     onClicked: {

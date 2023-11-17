@@ -59,7 +59,24 @@ Dialog {
 
     signal addNewAction(string newAction)
 
-    Component.onCompleted: {
+    function onActionAdded(action) {
+        if (actionSelector.model.includes(action)) {
+            actionSelector.model = actionSelector.model.filter(function (item) {
+                return item != action;
+            })
+        }
+    }
+
+    function onActionRemoved(action) {
+        if (!actionSelector.model.includes(action)) {
+            var tempList = actionSelector.model
+            tempList = [action].concat(tempList)
+
+            actionSelector.model = tempList;
+        }
+    }
+
+    function setupDialog() {
         var loadedActions = ActionsManager.actionsListModel.getActions()
         loadedActions.forEach(function(action) {
             if (defaultActions.includes(action) && actionSelector.model.includes(action)) {
@@ -69,14 +86,10 @@ Dialog {
             }
         })
 
-        actionName = actionSelector.currentText
-    }
+        isCustomSelected = actionSelector.count == 1
 
-    function setupDialog() {
-        if (actionSelector.currentText == "custom" && isCustomSelected == false) {
-            root.isCustomSelected = true
-        } else {
-            root.actionName = actionSelector.currentText
+        if (!isCustomSelected) {
+            actionName = actionSelector.currentText
         }
     }
 }
