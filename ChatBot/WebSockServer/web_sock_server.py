@@ -3,7 +3,7 @@ import websockets
 import json
 
 class WebSockServer:
-    def __init__(self, port, url):
+    def __init__(self, url, port):
         self.__websocket = None
         self.__port = port
         self.__url = url
@@ -41,7 +41,7 @@ class WebSockServer:
         await websockets.serve(self.__handle_server__, self.__url, self.__port)
 
 async def main():
-    wss = WebSockServer(6565, "localhost")
+    wss = WebSockServer("localhost", 6565)
     wss_task = wss.run_server()
     await asyncio.gather(wss_task)
 
