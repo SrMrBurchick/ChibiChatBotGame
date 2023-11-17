@@ -14,7 +14,7 @@ You can configure custom commands which be represented as unique sprite or seque
 - **ChatBot** - bot which connects to the provided channel and sends commands to the game
 
 ## Setup
-Download a latest release or clone that repository. If you want to build it by you own please follow
+Download a latest [release](https://github.com/SrMrBurchick/ChibiChatBotGame/releases) or clone that repository. If you want to build it by you own please follow
 provided [guide](./Docs/Wiki/SetupGuide.md).
 
 ### Image configuration
