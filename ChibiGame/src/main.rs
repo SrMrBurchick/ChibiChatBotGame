@@ -73,8 +73,8 @@ fn main() {
         .add_systems(Update, ai::ai_system.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, commands_listener::handle_commands.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, message::message_system.run_if(in_state(GameStates::RunGame)))
-        .add_systems(OnEnter(GameStates::RunGame), debug_info::setup_debug_info)
-        .add_systems(Update, debug_info::debug_info_system.run_if(in_state(GameStates::RunGame)))
+        // .add_systems(OnEnter(GameStates::RunGame), debug_info::setup_debug_info)
+        // .add_systems(Update, debug_info::debug_info_system.run_if(in_state(GameStates::RunGame)))
 
         .run();
 }
