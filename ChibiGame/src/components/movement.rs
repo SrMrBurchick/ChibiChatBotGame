@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+use rand::prelude::*;
 
 use crate::components::{
     actions::{
@@ -123,12 +124,20 @@ impl PlayerMovementComponent {
         action: Actions,
         velocity: &mut Velocity
     ) {
-        let current_move_direction = velocity.linvel;
         self.active = true;
         match action {
             Actions::Walk => {
+                let mut rand = rand::thread_rng();
+                let direction_rand: f64 = rand.gen();
+                let walk_direction: WalkDirection;
+                if direction_rand < 0.5 {
+                    walk_direction = WalkDirection::Left;
+                } else {
+                    walk_direction = WalkDirection::Right;
+                }
+
                 self.movement = Some(Box::new(WalkComponent {
-                    direction: self.last_walk_direction
+                    direction: walk_direction
                 }));
             }
             Actions::Climb => {
