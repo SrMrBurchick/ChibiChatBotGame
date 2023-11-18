@@ -14,16 +14,16 @@ Dialog {
 
     RowLayout {
         anchors.fill: root
-        TextEdit {
+        TextField {
+            width: parent.width
+            focus: true
+            wrapMode: TextEdit.Wrap
             visible: isCustomSelected
             font.pointSize: 14
 
             text: actionName
 
-            focus: true
-            wrapMode: TextEdit.Wrap
-
-            onEditingFinished: {
+            onTextEdited: {
                 actionName = text
             }
         }
@@ -68,7 +68,7 @@ Dialog {
     }
 
     function onActionRemoved(action) {
-        if (!actionSelector.model.includes(action)) {
+        if (!actionSelector.model.includes(action) && defaultActions.includes(action)) {
             var tempList = actionSelector.model
             tempList = [action].concat(tempList)
 
