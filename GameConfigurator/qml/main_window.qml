@@ -7,6 +7,7 @@ import SystemTools
 import Base
 
 ApplicationWindow {
+    id: root
     visible: true
     title: "ChibiGame Configurator"
     visibility: Window.Maximized
@@ -71,6 +72,37 @@ ApplicationWindow {
         clip: true
     }
 
+    Rectangle {
+        anchors.fill: parent
+        opacity: 0.8
+        visible: busy.running
+        color: "black"
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+
+            }
+        }
+    }
+
+    ChibiBusyIndicator {
+        id: busy
+        anchors.centerIn: parent
+        running: GlobalConfig.isBusy
+    }
+
+    WorkerScript {
+        id: worker
+        source: "qrc:qml/pageLoader.mjs"
+        onMessage: (messageObject)=> {
+            if (messageObject.reply == "ActionsConfig") {
+                stack.push(actions_config)
+            } else if (messageObject.reply == "CommonConfig") {
+                stack.push(chatBotConfig)
+            }
+        }
+    }
+
     Component {
         id: main_menu
         MainPage {
@@ -87,10 +119,12 @@ ApplicationWindow {
                 stack.pop()
             }
             onGoActionsConfiguration: {
-                stack.push(actions_config)
+                GlobalConfig.isBusy = true
+                worker.sendMessage({'page': "ActionsConfig"})
             }
             onGoChatBotConfiguration: {
-                stack.push(chatBotConfig)
+                GlobalConfig.isBusy = true
+                worker.sendMessage({'page': "CommonConfig"})
             }
         }
     }

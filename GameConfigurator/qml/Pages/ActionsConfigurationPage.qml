@@ -137,6 +137,7 @@ Item {
             splitImageToSprites()
         }
 
+        GlobalConfig.isBusy = false
     }
 
     function splitImageToSprites() {

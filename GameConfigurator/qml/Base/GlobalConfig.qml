@@ -14,4 +14,6 @@ QtObject {
     property real nextActionTimeout: 20.0
     property int fontSize: 14
     property bool isConfigLoaded: false
+
+    property bool isBusy: false
 }

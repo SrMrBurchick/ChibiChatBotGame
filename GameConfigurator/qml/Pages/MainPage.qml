@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Buttons
 import ProcessesComponent
 import Delegates
+import Base
 
 Item {
     id: menu
@@ -29,6 +30,7 @@ Item {
             text: isRunning ? "Stop game" : "Start game"
             onClicked: {
                 gameButton.enabled = false
+                GlobalConfig.isBusy = true
                 if (isRunning) {
                     ProcessManager.stopGameRunning()
                 } else {
@@ -44,6 +46,7 @@ Item {
             text: isRunning ? "Stop chat bot" : "Start chat bot"
             onClicked: {
                 chatBotButton.enabled = false
+                GlobalConfig.isBusy = true
                 if (ProcessManager.isChatBotRunning()) {
                     ProcessManager.stopChatBotRunning();
                 } else {
@@ -72,16 +75,17 @@ Item {
 
     Component.onCompleted: {
         gameRunningDelegate.close()
-        ProcessManager.onGameStarted.connect(function() {
-            gameButton.isRunning = true
-            gameButton.enabled = true
-        })
         ProcessManager.onGameEnded.connect(function() {
             gameRunningDelegate.close()
             gameButton.isRunning = false
             gameButton.enabled = true
+            GlobalConfig.isBusy = false
         })
         ProcessManager.onGameRunningAt.connect(function(gameInfo) {
+            GlobalConfig.isBusy = false
+            gameButton.isRunning = true
+            gameButton.enabled = true
+
             gameRunningDelegate.gameInfo = gameInfo
             gameRunningDelegate.show()
         })
@@ -89,10 +93,12 @@ Item {
         ProcessManager.onChatBotStarted.connect(function() {
             chatBotButton.isRunning = true
             chatBotButton.enabled = true
+            GlobalConfig.isBusy = false
         })
         ProcessManager.onChatBotEnded.connect(function() {
             chatBotButton.isRunning = false
             chatBotButton.enabled = true
+            GlobalConfig.isBusy = false
         })
     }
 }

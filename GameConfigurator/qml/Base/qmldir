@@ -4,3 +4,4 @@ Notification 1.0 Notification.qml
 BaseText 1.0 BaseText.qml
 BasePanel 1.0 BasePanel.qml
 singleton GlobalConfig 1.0 GlobalConfig.qml
+ChibiBusyIndicator 1.0 ChibiBusyIndicator.qml

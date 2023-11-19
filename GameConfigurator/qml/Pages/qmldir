@@ -3,4 +3,3 @@ MainPage 1.0 MainPage.qml
 ConfigurationPage 1.0 ConfigurationPage.qml
 ActionsConfigurationPage 1.0 ActionsConfigurationPage.qml
 ChatBotConfigurationPage 1.0 ChatBotConfigurationPage.qml
-TestPage 1.0 TestPage.qml

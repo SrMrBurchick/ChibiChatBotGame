@@ -8,6 +8,7 @@
         <file>qml/Base/BaseText.qml</file>
         <file>qml/Base/BasePanel.qml</file>
         <file>qml/Base/GlobalConfig.qml</file>
+        <file>qml/Base/ChibiBusyIndicator.qml</file>
 
         <file>qml/Buttons/qmldir</file>
         <file>qml/Buttons/ImageSelect.qml</file>
@@ -56,6 +57,9 @@
         <file>qml/Images/sprite-sheet.png</file>
         <file>qml/Images/copy.png</file>
         <file>qml/Images/copy_white.png</file>
+
+        <!-- Scripts -->
+        <file>qml/pageLoader.mjs</file>
 
     </qresource>
 </RCC>

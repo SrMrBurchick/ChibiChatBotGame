@@ -344,6 +344,8 @@ Item {
             GlobalConfig.fontSize = Config.getFontSize()
             Config.initPredefinedActionsListModel(actionsModel)
         }
+
+        GlobalConfig.isBusy = false
     }
 
     function saveChatBotConfig() {
