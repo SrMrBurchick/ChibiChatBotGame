@@ -73,7 +73,9 @@ Rectangle {
 
     Component.onCompleted: {
         ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
-            root.isSelected = index == ActionsManager.actionsListModel.getSelectedActionIndex()
+            if (index != undefined && ActionsManager.actionsListModel != null) {
+                root.isSelected = index == ActionsManager.actionsListModel.getSelectedActionIndex()
+            }
         })
 
         if (defaultActions.includes(name)) {
