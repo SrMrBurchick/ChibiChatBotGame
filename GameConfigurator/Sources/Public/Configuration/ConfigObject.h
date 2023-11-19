@@ -36,6 +36,7 @@ struct SystemConfig {
     QString ImagePath;
     QString ChatBotWebSockURL;
     int ChatBotWebSockPort;
+    bool ChatBotAnyUser = false;
     float SpriteScale;
     int ScreenHeight;
     int ScreenWidth;
@@ -76,6 +77,7 @@ public:
     Q_INVOKABLE float getMovementSpeed() const;
     Q_INVOKABLE float getNextActionTimeout() const;
     Q_INVOKABLE int getFontSize() const;
+    Q_INVOKABLE bool getChatBotUser() const;
 
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
@@ -94,6 +96,7 @@ public:
     Q_INVOKABLE void saveMovementSpeed(const float MovementSpeed);
     Q_INVOKABLE void saveNextActionTimeout(const float NextActionTimeout);
     Q_INVOKABLE void saveFontSize(const int FontSize);
+    Q_INVOKABLE void saveChatBotUser(const bool AnyUser);
 
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 

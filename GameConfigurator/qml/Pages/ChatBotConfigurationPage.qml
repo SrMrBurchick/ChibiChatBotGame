@@ -72,6 +72,19 @@ Item {
                         GlobalConfig.chatBotPort = value
                     }
                 }
+
+                PropertyBoolDelegate {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 10
+
+                    fieldName: "Any user can execute chat command [NO=>Only streamer]:"
+                    defaultValue: false
+                    onValueChanged:(value) => {
+                        Config.saveChatBotUser(value)
+                    }
+                }
+
             }
         }
 

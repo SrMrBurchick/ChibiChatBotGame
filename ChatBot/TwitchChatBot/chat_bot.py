@@ -23,13 +23,14 @@ CREDENTIALS_FILE = "../credentials.json"
 
 
 class TwitchBot(irc.bot.SingleServerIRCBot):
-    def __init__(self, username, client_id, token, channel, wss: WebSockServer, commands: list):
+    def __init__(self, username, client_id, token, channel, wss: WebSockServer, commands: list, any_user: bool):
         self.client_id = client_id
         self.token = token
         self.channel = '#' + channel
         self.user = channel.lower()
         self.wss = wss
         self.commands = commands
+        self.any_user = any_user
 
         # Create IRC bot connection
         server = 'irc.chat.twitch.tv'
@@ -48,11 +49,16 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         c.join(self.channel)
 
     def on_pubmsg(self, c, e):
+        valid_user = False
         for i in range(0, len(e.arguments)):
             print(f"Received message from {e.source.nick} with user level {e.tags}: {e.arguments[i]}")
 
+        if self.any_user:
+            valid_user = True
+        else:
+            valid_user = e.source.nick == self.user
         # If a chat message starts with an exclamation point, try to run it as a command
-        if e.arguments[0][:1] == '!' and e.source.nick == self.user:
+        if e.arguments[0][:1] == '!' and valid_user:
             cmd = e.arguments[0].split(' ')[0][1:]
             print('Received command: ' + cmd)
             self.do_command(e, cmd)
@@ -83,7 +89,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         await self.start()
 
 
-def create_bot(wss: WebSockServer, commands: list, channel: str) -> TwitchBot:
+def create_bot(wss: WebSockServer, commands: list, channel: str, any_user: bool) -> TwitchBot:
     creds_path = os.path.join(sys._MEIPASS, "credentials.json") if hasattr(sys, '_MEIPASS') else CREDENTIALS_FILE
     with open(creds_path) as creds_file:
         creds_data = creds_file.read()
@@ -93,7 +99,7 @@ def create_bot(wss: WebSockServer, commands: list, channel: str) -> TwitchBot:
     client_id = creds["client-id"]
     token = creds["token"]
 
-    return TwitchBot(username, client_id, token, channel, wss, commands)
+    return TwitchBot(username, client_id, token, channel, wss, commands, any_user)
 
 
 if __name__ == "__main__":

@@ -41,6 +41,7 @@ constexpr char NEXT_ACTION_TIMEOUT[] = "next-action-timeout";
 constexpr char CHAT_BOT_SETTINGS[] = "chat-bot";
 constexpr char CHAT_BOT_SETTINGS_URL[] = "url";
 constexpr char CHAT_BOT_SETTINGS_PORT[] = "port";
+constexpr char CHAT_BOT_USER[] = "any-user";
 
 // Table settings fields
 constexpr char TABLE_SETTINGS[] = "table-size";
@@ -130,9 +131,13 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     }
 
     // Init chat bot settings
-    if (JsonChatBotSettings.contains(CHAT_BOT_SETTINGS_URL) && JsonChatBotSettings.contains(CHAT_BOT_SETTINGS_PORT)) {
+    if (JsonChatBotSettings.contains(CHAT_BOT_SETTINGS_URL)
+        && JsonChatBotSettings.contains(CHAT_BOT_SETTINGS_PORT)
+        && JsonChatBotSettings.contains(CHAT_BOT_USER))
+    {
         SystemSettings.ChatBotWebSockURL = JsonChatBotSettings[CHAT_BOT_SETTINGS_URL].toString();
         SystemSettings.ChatBotWebSockPort = JsonChatBotSettings[CHAT_BOT_SETTINGS_PORT].toInt();
+        SystemSettings.ChatBotAnyUser = JsonChatBotSettings[CHAT_BOT_USER].toBool();
     }
 
     // Init sprite settings
@@ -214,6 +219,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     // Chat bot
     JsonChatBotSettings[CHAT_BOT_SETTINGS_URL] = SystemSettings.ChatBotWebSockURL;
     JsonChatBotSettings[CHAT_BOT_SETTINGS_PORT] = SystemSettings.ChatBotWebSockPort;
+    JsonChatBotSettings[CHAT_BOT_USER] = SystemSettings.ChatBotAnyUser;
 
     // Table settings
     JsonTableSettings[TABLE_SETTINGS_ROWS] = TableSettings.Rows;
@@ -524,4 +530,14 @@ void ConfigObject::saveDataToClipboard(const QString& Data)
             )
         );
     }
+}
+
+bool ConfigObject::getChatBotUser() const
+{
+    return SystemSettings.ChatBotAnyUser;
+}
+
+void ConfigObject::saveChatBotUser(const bool AnyUser)
+{
+    SystemSettings.ChatBotAnyUser = AnyUser;
 }

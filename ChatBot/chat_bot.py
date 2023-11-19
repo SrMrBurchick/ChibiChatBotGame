@@ -12,6 +12,7 @@ async def main():
     channel = ""
     # Default commands
     commands = ["say"]
+    any_user = False
 
     try:
         with open(CONFIG_FILE) as conf_file:
@@ -25,6 +26,7 @@ async def main():
                 if config["chat-bot"] is not None:
                     port = int(config["chat-bot"]["port"])
                     url = config["chat-bot"]["url"]
+                    any_user = bool(config["chat-bot"]["any-user"])
 
                 for animation in config["animations"]:
                     for key in animation.keys():
@@ -34,11 +36,12 @@ async def main():
 
     print(port)
     print(url)
+    print(any_user)
     print(commands)
     print(channel)
 
     wss = WebSockServer(url, port)
-    bot = create_bot(wss, commands, channel)
+    bot = create_bot(wss, commands, channel, any_user)
 
     wss_task = wss.run_server()
     loop = asyncio.get_running_loop()
