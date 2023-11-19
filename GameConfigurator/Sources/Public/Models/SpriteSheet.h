@@ -34,6 +34,7 @@ public:
     Q_INVOKABLE bool containsAction(const int Index, const QString& Action);
     Q_INVOKABLE void addAction(const int Index, const QString& Action);
     Q_INVOKABLE void removeAction(int Column, int Row, const QString& Action);
+    Q_INVOKABLE void removeActionFromAll(const QString& Action);
     Q_INVOKABLE int getActionsCount(const int Index, const QString& Action) const;
 
 protected:

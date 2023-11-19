@@ -74,6 +74,11 @@ Item {
             )
             sequenceUpdated()
         })
+
+        ActionsManager.actionsListModel.onActionRemoved.connect(function(action) {
+            ActionsManager.spriteSheetModel.removeActionFromAll(action)
+            sequenceUpdated()
+        })
     }
 
     function initModel() {

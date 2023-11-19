@@ -123,3 +123,18 @@ int SpriteSheetModel::getActionsCount(const int Index, const QString& Action) co
 
     return SpriteSheet.at(Index).Actions.count(Action);
 }
+
+void SpriteSheetModel::removeActionFromAll(const QString& Action)
+{
+    if (SpriteSheet.isEmpty()) {
+        return;
+    }
+
+    for (ActionGridSprite& Sprite: SpriteSheet) {
+        if (Sprite.Actions.contains(Action)) {
+            Sprite.Actions.removeIf([=](QString SpriteAction) {
+                return Action == SpriteAction;
+            });
+        }
+    }
+}
