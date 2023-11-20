@@ -2,6 +2,7 @@ import asyncio
 from WebSockServer.web_sock_server import WebSockServer
 from TwitchChatBot.chat_bot import create_bot
 import json
+import logging
 
 
 CONFIG_FILE = "./Game/config/ChibiChatBotConfig.json"
@@ -13,6 +14,7 @@ async def main():
     # Default commands
     commands = ["say"]
     any_user = False
+    log_enabled = False
 
     try:
         with open(CONFIG_FILE) as conf_file:
@@ -20,6 +22,9 @@ async def main():
             config = json.loads(conf_data)
 
             if config is not None:
+                if config["logging"] is not None:
+                    log_enabled = bool(config["logging"])
+
                 if config["twitch-channel"] is not None:
                     channel = config["twitch-channel"]
 
@@ -39,6 +44,9 @@ async def main():
     print(any_user)
     print(commands)
     print(channel)
+
+    if log_enabled:
+        logging.basicConfig(filename='chat_bot.log', encoding='utf-8', level=logging.DEBUG)
 
     wss = WebSockServer(url, port)
     bot = create_bot(wss, commands, channel, any_user)

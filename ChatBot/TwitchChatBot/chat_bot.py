@@ -13,6 +13,7 @@ import requests
 import asyncio
 import json
 from WebSockServer.web_sock_server import WebSockServer
+import logging
 
 import os
 import sys
@@ -35,12 +36,12 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         # Create IRC bot connection
         server = 'irc.chat.twitch.tv'
         port = 6667
-        print('Connecting to ' + server + ' on port ' + str(port) + '...')
+        logging.debug('Connecting to ' + server + ' on port ' + str(port) + '...')
         irc.bot.SingleServerIRCBot.__init__(
             self, [(server, port, 'oauth:'+token)], username, username)
 
     def on_welcome(self, c, e):
-        print('Joining ' + self.channel)
+        logging.debug('Joining ' + self.channel)
 
         # You must request specific capabilities before you can use them
         c.cap('REQ', ':twitch.tv/membership')
@@ -51,7 +52,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def on_pubmsg(self, c, e):
         valid_user = False
         for i in range(0, len(e.arguments)):
-            print(f"Received message from {e.source.nick} with user level {e.tags}: {e.arguments[i]}")
+            logging.debug(f"Received message from {e.source.nick} with user level {e.tags}: {e.arguments[i]}")
 
         if self.any_user:
             valid_user = True
@@ -60,7 +61,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         # If a chat message starts with an exclamation point, try to run it as a command
         if e.arguments[0][:1] == '!' and valid_user:
             cmd = e.arguments[0].split(' ')[0][1:]
-            print('Received command: ' + cmd)
+            logging.debug('Received command: ' + cmd)
             self.do_command(e, cmd)
         return
 
@@ -77,11 +78,11 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         elif cmd == "commands":
             commands = ""
             blocked_commands = ["fall"]
-            print(self.commands)
             for command in self.commands:
                 if command not in blocked_commands:
                     commands = "{} {}".format(commands, command)
             c.privmsg(self.channel, "Available commands: " + commands)
+            logging.debug("Available commands: " + commands)
         else:
             c.privmsg(self.channel, "Did not understand command: " + cmd)
 

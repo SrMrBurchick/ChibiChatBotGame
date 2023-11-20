@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import json
+import logging
 
 class WebSockServer:
     def __init__(self, url, port):
@@ -34,6 +35,7 @@ class WebSockServer:
             if command == "say":
                 event["message"] = " ".join(arguments)
 
+            logging.debug(f'Send command to client: {event}')
             await self.__websocket.send(json.dumps(event))
 
     async def run_server(self):
