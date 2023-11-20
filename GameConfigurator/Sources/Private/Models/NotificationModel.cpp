@@ -1,7 +1,7 @@
 #include "Models/NotificationModel.h"
 
 #include <QQmlEngine>
-#include <iostream>
+#include "System/Logger.h"
 
 NotificationListModel::NotificationListModel(QObject* Parent)
     :QAbstractListModel(Parent)
@@ -82,14 +82,15 @@ void NotificationListModel::addNotification(const QString& Title, const QString&
 
 void NotificationListModel::removeNotification(int Index)
 {
-    if (Index > NotificationList.size() || Index <= 0) {
+    if (Index > NotificationList.size() || Index < 0 || NotificationList.isEmpty()) {
         return;
     }
 
     beginRemoveRows(QModelIndex(), Index, Index);
     NotificationList.removeAt(Index);
     endRemoveRows();
-    emit notificationsCountChanged(NotificationList.count());
+    LOG_INFO("Notifications model count: %d", NotificationList.count());
+    emit notificationsCountChanged(NotificationList.size());
 }
 
 int NotificationListModel::getNotificationsCount()

@@ -111,7 +111,7 @@ QVector<QString> PredefinedActionsListModel::getActions() const
 
 void PredefinedActionsListModel::updateChance(const int Index, const int Chance)
 {
-    if (Index < 0 && PredefinedActionsList.isEmpty() && PredefinedActionsList.count() < Index) {
+    if (Index < 0 || PredefinedActionsList.isEmpty() || PredefinedActionsList.count() < Index) {
         return;
     }
 
