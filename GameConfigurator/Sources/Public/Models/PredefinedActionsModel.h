@@ -36,6 +36,7 @@ public:
 
     Q_INVOKABLE const QVector<PredefinedAction>& getList() const;
     Q_INVOKABLE QVector<QString> getActions() const;
+    Q_INVOKABLE void updateChance(const int Index, const int Chance);
 
 signals:
     void actionRemoved(QString Action);
