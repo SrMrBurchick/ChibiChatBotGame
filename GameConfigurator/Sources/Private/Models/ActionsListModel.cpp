@@ -3,7 +3,6 @@
 
 #include <QQmlEngine>
 #include <QTimer>
-#include <functional>
 
 ActionsListModel::ActionsListModel(QObject* Parent)
     :QAbstractListModel(Parent)
@@ -104,7 +103,6 @@ int ActionsListModel::getSelectedActionIndex() const
 const QString ActionsListModel::getSelectedAction() const
 {
     if (SelectedActionIndex < 0) {
-        LOG_CRITICAL("Was so close to sig 11");
         return QString();
     }
 
@@ -118,10 +116,12 @@ const QString ActionsListModel::getSelectedAction() const
 void ActionsListModel::setSelectedActionIndex(int Index)
 {
     if (Index >= ActionsList.size() || ActionsList.isEmpty() || Index < 0) {
+        LOG_WARNING("Failed to select action by index = %d, is actions empty = %d", Index, ActionsList.isEmpty());
         return;
     }
 
     if (Index == SelectedActionIndex) {
+        LOG_WARNING("Failed to select action by index = %d. Action already selected!", Index);
         return;
     }
 
@@ -135,13 +135,14 @@ void ActionsListModel::setSelectedActionIndex(int Index)
 
 void ActionsListModel::setDefaultSelected()
 {
+    LOG_INFO("Try to set default action: is action empty %d", ActionsList.isEmpty());
     if (ActionsList.isEmpty()) {
         return;
     }
 
-     if (ActionsList.size() == 1) {
-         QTimer::singleShot(1, this, std::bind(&ActionsListModel::setSelectedActionIndex, this, 0));
-     }
+    QTimer::singleShot(1, [=](){
+        setSelectedActionIndex(0);
+    });
 }
 
 QVector<QString> ActionsListModel::getActions() const

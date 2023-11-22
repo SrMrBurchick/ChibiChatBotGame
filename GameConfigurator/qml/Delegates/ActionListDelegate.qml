@@ -36,7 +36,6 @@ Rectangle {
                     onChangeAction: {
                         changeElement(index, action);
                     }
-
                 }
 
                 onClicked: {
