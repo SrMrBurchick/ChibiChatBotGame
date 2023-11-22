@@ -16,21 +16,25 @@ ScrollView {
 
         delegate: ActionListDelegate {
             anchors.horizontalCenter: parent.horizontalCenter
-            onRemoveElement: {
+            onRemoveElement: (index) => {
                 ActionsManager.actionsListModel.removeElement(index)
             }
-            onChangeElement: {
+            onChangeElement:(index, action) => {
                 ActionsManager.actionsListModel.changeElement(index, action)
             }
-            onElementSelected: {
+            onElementSelected:(index) => {
                 ActionsManager.actionsListModel.setSelectedActionIndex(index)
             }
         }
     }
 
     function addAction(action) {
-        console.log("Add new action: " + action)
+        var count = actionsList.count
+        console.log("Add new action: ", action, "Count:", count)
         ActionsManager.actionsListModel.addNewAction(action)
+
+        if (count == 0) {
+            ActionsManager.actionsListModel.setDefaultSelected()
+        }
     }
 }
-

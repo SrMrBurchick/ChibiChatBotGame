@@ -41,5 +41,5 @@ signals:
 
 protected:
     QVector<QString> ActionsList;
-    int SelectedActionIndex = 0;
+    int SelectedActionIndex = -1;
 };

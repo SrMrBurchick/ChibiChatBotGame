@@ -3,7 +3,7 @@
 
 #include <QQmlEngine>
 #include <QTimer>
-#include <iostream>
+#include <functional>
 
 ActionsListModel::ActionsListModel(QObject* Parent)
     :QAbstractListModel(Parent)
@@ -74,7 +74,8 @@ void ActionsListModel::changeElement(int Index, const QString& NewActionName)
         return;
     }
 
-    std::cout << "Index = " << Index << " NewAction = " << NewActionName.toStdString() << std::endl;
+    LOG_INFO("Change name to: %s, at: %d", NewActionName.toStdString().c_str(), Index);
+
     ActionsList[Index] = NewActionName;
 
     updateData();
@@ -90,10 +91,6 @@ void ActionsListModel::addNewAction(const QString& NewAction)
     ActionsList.push_back(NewAction);
     endInsertRows();
 
-    if (ActionsList.size() == 1) {
-        QTimer::singleShot(0, this, &ActionsListModel::setDefaultSelected);
-    }
-
     LOG_INFO("New action was added: %s", NewAction.toStdString().c_str());
 
     emit actionAdded(NewAction);
@@ -106,6 +103,11 @@ int ActionsListModel::getSelectedActionIndex() const
 
 const QString ActionsListModel::getSelectedAction() const
 {
+    if (SelectedActionIndex < 0) {
+        LOG_CRITICAL("Was so close to sig 11");
+        return QString();
+    }
+
     if (SelectedActionIndex >= ActionsList.size() || ActionsList.isEmpty()) {
         return QString();
     }
@@ -137,7 +139,9 @@ void ActionsListModel::setDefaultSelected()
         return;
     }
 
-    setSelectedActionIndex(0);
+     if (ActionsList.size() == 1) {
+         QTimer::singleShot(1, this, std::bind(&ActionsListModel::setSelectedActionIndex, this, 0));
+     }
 }
 
 QVector<QString> ActionsListModel::getActions() const

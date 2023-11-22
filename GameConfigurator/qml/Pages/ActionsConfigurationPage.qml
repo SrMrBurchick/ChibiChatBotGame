@@ -137,6 +137,10 @@ Item {
             splitImageToSprites()
         }
 
+        if (GlobalConfig.isConfigLoaded) {
+            ActionsManager.actionsListModel.setDefaultSelected()
+        }
+
         GlobalConfig.isBusy = false
     }
 

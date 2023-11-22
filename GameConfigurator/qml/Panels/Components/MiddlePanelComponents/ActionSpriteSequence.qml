@@ -73,8 +73,5 @@ Item {
         ActionsManager.actionsListModel.onActionRemoved.connect(function (action) {
             ActionsManager.sequenceModel.removeAction(action);
         })
-
-        ActionsManager.actionsListModel.setDefaultSelected()
     }
 }
-
