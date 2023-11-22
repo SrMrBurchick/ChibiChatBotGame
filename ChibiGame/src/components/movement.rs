@@ -129,11 +129,15 @@ impl PlayerMovementComponent {
             Actions::Walk => {
                 let mut rand = rand::thread_rng();
                 let direction_rand: f64 = rand.gen();
-                let walk_direction: WalkDirection;
+                let mut walk_direction: WalkDirection;
                 if direction_rand < 0.5 {
                     walk_direction = WalkDirection::Left;
                 } else {
                     walk_direction = WalkDirection::Right;
+                }
+
+                if self.can_climb {
+                    walk_direction = self.last_walk_direction
                 }
 
                 self.movement = Some(Box::new(WalkComponent {
@@ -215,7 +219,7 @@ pub fn move_player(
             continue;
         }
 
-        let mut direction = WalkDirection::Right;
+        let mut direction = component.last_walk_direction;
         let mut can_move: bool = false;
 
         match component.movement.as_deref() {
@@ -227,6 +231,8 @@ pub fn move_player(
 
                 let movement_trait: &dyn MovementComponent =
                     reflect_movement.get(&*movement).unwrap();
+
+                info!("Movement {:?}. Last direction: {:?}", movement_trait.get_movement_type(), direction);
 
                 match action.current_action {
                     Actions::Walk => {
@@ -254,9 +260,7 @@ pub fn move_player(
             _ => {}
         }
 
-        if can_move && gameplay.get_current_action() == Actions::Walk {
-            component.last_walk_direction = direction;
-        }
+        component.last_walk_direction = direction;
     }
 }
 
