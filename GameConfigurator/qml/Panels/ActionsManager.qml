@@ -7,7 +7,7 @@ QtObject {
     property string selectedAction
     property int actionSpriteOldIndex
     property int actionSpriteNewIndex
-    property string spriteSheetPath
+    property string spriteSheetPath: "qrc:qml/Images/sprite-sheet.png"
     property bool spriteSheetConfigured: false
     property bool isActionsConfigured: false
 

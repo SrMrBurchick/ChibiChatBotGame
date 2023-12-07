@@ -37,7 +37,7 @@ async def main():
                     for key in animation.keys():
                         commands.append(key)
     except:
-        pass
+        print("Invalid config")
 
     print(port)
     print(url)

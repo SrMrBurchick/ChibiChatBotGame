@@ -35,8 +35,9 @@ int main(int argc, char *argv[])
     engine.addImportPath(":/qml");
 
     // Setup config signals
-    QObject::connect(Config.get(), &ConfigObject::loggerEnabled, [=](bool Enabled) {
+    QObject::connect(Config.get(), &ConfigObject::loggerEnabled, [&](bool Enabled) {
         Logger::SetLoggerEnabled(Enabled);
+        Config->SaveLogging(Enabled);
     });
 
     ActionsListModel::registerModel("GameActions");

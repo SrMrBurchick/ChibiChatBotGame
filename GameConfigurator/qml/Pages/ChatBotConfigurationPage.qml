@@ -99,7 +99,7 @@ Item {
                     anchors.margins: 10
 
                     fieldName: "Logger:"
-                    defaultValue: false
+                    defaultValue: Config.getLogging()
                     onValueChanged:(value) => {
                         Config.setLoggerEnabled(value)
                     }

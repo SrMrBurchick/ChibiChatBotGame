@@ -37,6 +37,7 @@ struct SystemConfig {
     QString ChatBotWebSockURL;
     int ChatBotWebSockPort;
     bool ChatBotAnyUser = false;
+    bool Logging = false;
     float SpriteScale;
     int ScreenHeight;
     int ScreenWidth;
@@ -78,6 +79,7 @@ public:
     Q_INVOKABLE float getNextActionTimeout() const;
     Q_INVOKABLE int getFontSize() const;
     Q_INVOKABLE bool getChatBotUser() const;
+    Q_INVOKABLE bool getLogging() const;
 
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
@@ -102,6 +104,8 @@ public:
 
     Q_INVOKABLE void setLoggerEnabled(bool Enabled);
     Q_INVOKABLE void saveDataToClipboard(const QString& Data);
+
+    void SaveLogging(bool Logging);
 
 signals:
     void actionsConfigured();

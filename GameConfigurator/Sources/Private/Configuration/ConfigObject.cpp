@@ -13,6 +13,9 @@
 // Global settings fields
 constexpr char SOURCE_FILE[] = "source-file";
 
+// System settings
+constexpr char LOGGING[] = "logging";
+
 // Screen resolution
 constexpr char SCREEN_RESOLUTION[] = "screen-resolution";
 constexpr char SCREEN_RESOLUTION_WIDTH[] = "width";
@@ -158,6 +161,11 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
         SystemSettings.ScreenHeight = JsonScreenResolution[SCREEN_RESOLUTION_HEIGHT].toInt();
     }
 
+    // Init system settings
+    if (ConfigMap.contains(LOGGING)) {
+        SystemSettings.Logging = ConfigMap[LOGGING].toBool();
+    }
+
     // Init animation map
     if (!JsonActionsArray.isEmpty()) {
         for (QJsonValueConstRef Item : JsonActionsArray) {
@@ -262,6 +270,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     }
 
     QJsonObject Config;
+    Config[LOGGING] = SystemSettings.Logging;
     Config[SOURCE_FILE] = SystemSettings.ImagePath;
     Config[ACTION_EXECUTION_TIME] = SystemSettings.ActionExecutionTime;
     Config[MESSAGE_SETTINGS] = JsonMessageSettings;
@@ -300,6 +309,7 @@ void ConfigObject::loadConfig()
         QJsonDocument JsonConfig = QJsonDocument::fromJson(ConfigFile.readAll());
         ParseJsonDocument(JsonConfig);
         ConfigFile.close();
+        emit loggerEnabled(SystemSettings.Logging);
     }
 }
 
@@ -540,4 +550,14 @@ bool ConfigObject::getChatBotUser() const
 void ConfigObject::saveChatBotUser(const bool AnyUser)
 {
     SystemSettings.ChatBotAnyUser = AnyUser;
+}
+
+void ConfigObject::SaveLogging(bool Logging)
+{
+    SystemSettings.Logging = Logging;
+}
+
+bool ConfigObject::getLogging() const
+{
+    return SystemSettings.Logging;
 }
