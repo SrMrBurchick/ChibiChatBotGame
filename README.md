@@ -2,7 +2,7 @@
 A simple chibi like game that provides possibility to control itself by chat commands.
 You can configure custom commands which be represented as unique sprite or sequence of them.
 
-[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine)
+[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-no-action.svg)](https://stand-with-ukraine.pp.ua/)
 
 🇺🇦 [Те саме, але Українською](./Docs/Wiki/Localization/README_UA.md)
 
