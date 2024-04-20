@@ -89,7 +89,7 @@ pub fn message_system(
                 // TODO: Move message above character if player is not on the to border
                 // Disable to message go through borders
                 transform.translation = player_transform.translation;
-                transform.translation.y += text_info.size.y;
+                transform.translation.y += text_info.logical_size.y;
 
                 match config_query.get_single() {
                     Ok(config) => {
