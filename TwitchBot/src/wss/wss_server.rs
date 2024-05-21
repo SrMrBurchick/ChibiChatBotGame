@@ -1,4 +1,4 @@
-use crate::request_parser::RequestReceiver;
+use crate::parsers::request_parser::RequestReceiver;
 
 pub async fn run_wss_server(mut Receiver : RequestReceiver) {
     // This is running on a core thread.

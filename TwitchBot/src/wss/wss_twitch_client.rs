@@ -1,4 +1,4 @@
-use crate::request_parser::{RequestReceiver, RequestSender};
+use crate::parsers::request_parser::{RequestReceiver, RequestSender};
 
 pub async fn run_client() {
 
