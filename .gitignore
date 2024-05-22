@@ -4,3 +4,6 @@ credentials.json
 *.cache
 *build
 !*/Scripts/**/*
+*Makefile
+*.stash
+*.spec
