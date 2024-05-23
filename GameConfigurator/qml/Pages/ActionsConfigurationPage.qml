@@ -113,14 +113,23 @@ Item {
         // Right panel
         ColumnLayout {
             Layout.maximumWidth: 400
+            anchors.margins: 0
+
             BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                border.width: 0
 
                 RightPanel {
 
                 }
+            }
+
+            BaseButton {
+                Layout.margins: 10
+                Layout.fillWidth: true
+                Layout.minimumHeight: 20
+                text: "Save"
+                onClicked: saveActionsConfig()
             }
         }
     }
@@ -146,6 +155,20 @@ Item {
 
     function splitImageToSprites() {
         spriteSheetGrid.initModel()
+    }
+
+    function saveActionsConfig() {
+        Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
+        Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+        Config.saveSpriteScale(ActionsManager.spriteScale)
+        Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
+        Config.saveActions(ActionsManager.sequenceModel)
+
+        if (Config.isConfigLoaded() == false) {
+            Config.actionsConfigured()
+        } else {
+            Config.saveConfig()
+        }
     }
 }
 

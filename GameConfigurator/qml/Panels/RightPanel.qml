@@ -68,28 +68,6 @@ Item {
                 }
             }
         }
-
-        BaseButton {
-            Layout.fillWidth: true
-            Layout.margins: 10
-            text: "Save"
-            onClicked: saveActionsConfig()
-        }
-
-    }
-
-    function saveActionsConfig() {
-        Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
-        Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
-        Config.saveSpriteScale(ActionsManager.spriteScale)
-        Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
-        Config.saveActions(ActionsManager.sequenceModel)
-
-        if (Config.isConfigLoaded() == false) {
-            Config.actionsConfigured()
-        } else {
-            Config.saveConfig()
-        }
     }
 
     function playAnimationPreview() {
