@@ -23,6 +23,7 @@
         <file>qml/Panels/qmldir</file>
         <file>qml/Panels/LeftPanel.qml</file>
         <file>qml/Panels/RightPanel.qml</file>
+        <file>qml/Panels/ActionSettingsPanel.qml</file>
 
 
         <file>qml/Panels/Components/LeftPanelComponents/ActionsListComponent.qml</file>

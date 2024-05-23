@@ -124,6 +124,15 @@ Item {
                 }
             }
 
+            BasePanel {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                ActionSettingsPanel {
+
+                }
+            }
+
             BaseButton {
                 Layout.margins: 10
                 Layout.fillWidth: true
