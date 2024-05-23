@@ -23,7 +23,9 @@ HEADERS += Sources/Public/Configuration/ConfigLoader.h                          
            Sources/Public/Models/NotificationModel.h                            \
            Sources/Public/Managers/NotificationsManager.h                       \
            Sources/Public/Models/PredefinedActionsModel.h                       \
-           Sources/Public/System/Logger.h
+           Sources/Public/System/Logger.h                                       \
+           Sources/Public/Managers/ActionsManager.h                             \
+           Sources/Public/Core/Action.h
 
 SOURCES += Sources/GameConfigurator.cpp                                         \
            Sources/Private/Configuration/ConfigLoad.cpp                         \
@@ -39,7 +41,9 @@ SOURCES += Sources/GameConfigurator.cpp                                         
            Sources/Private/Models/NotificationModel.cpp                         \
            Sources/Private/Managers/NotificationsManager.cpp                    \
            Sources/Private/Models/PredefinedActionsList.cpp                     \
-           Sources/Private/System/Logger.cpp
+           Sources/Private/System/Logger.cpp                                    \
+           Sources/Private/Managers/ActionsManager.cpp                          \
+           Sources/Private/Core/Action.cpp
 
 RESOURCES += qml.qrc
 
