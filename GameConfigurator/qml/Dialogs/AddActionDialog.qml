@@ -77,14 +77,14 @@ Dialog {
     }
 
     function setupDialog() {
-        var loadedActions = ActionsManager.actionsListModel.getActions()
-        loadedActions.forEach(function(action) {
-            if (defaultActions.includes(action) && actionSelector.model.includes(action)) {
-                actionSelector.model = actionSelector.model.filter(function (item) {
-                    return item != action;
-                })
-            }
-        })
+        // var loadedActions = ActionsManager.actionsListModel.getActions()
+        // loadedActions.forEach(function(action) {
+        //     if (defaultActions.includes(action) && actionSelector.model.includes(action)) {
+        //         actionSelector.model = actionSelector.model.filter(function (item) {
+        //             return item != action;
+        //         })
+        //     }
+        // })
 
         isCustomSelected = actionSelector.count == 1
 

@@ -71,13 +71,13 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        if (ActionsManager.actionsListModel != null) {
-            ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
-                if (index != undefined) {
-                    root.isSelected = index == ActionsManager.actionsListModel.getSelectedActionIndex()
-                }
-            })
-        }
+        // if (ActionsManager.actionsListModel != null) {
+        //     ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
+        //         if (index != undefined) {
+        //             root.isSelected = index == ActionsManager.actionsListModel.getSelectedActionIndex()
+        //         }
+        //     })
+        // }
 
         if (defaultActions.includes(name)) {
             root.isDefaultAction = true

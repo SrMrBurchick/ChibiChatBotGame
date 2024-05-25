@@ -21,13 +21,13 @@ Rectangle {
     Image {
         id: image
         anchors.fill: parent
-        source: ActionsManager.spriteSheetPath
-        sourceClipRect: Qt.rect(
-            parseInt(sprite_column) * ActionsManager.spriteSizeWidth,
-            parseInt(sprite_row) * ActionsManager.spriteSizeHeight,
-            ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
-
-        mirror: ActionsManager.sequenceModel.isInverted(index)
+        // source: ActionsManager.spriteSheetPath
+        // sourceClipRect: Qt.rect(
+        //     parseInt(sprite_column) * ActionsManager.spriteSizeWidth,
+        //     parseInt(sprite_row) * ActionsManager.spriteSizeHeight,
+        //     ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+        //
+        // mirror: ActionsManager.sequenceModel.isInverted(index)
     }
 
     MouseArea {
@@ -38,10 +38,10 @@ Rectangle {
         drag.target: root
 
         onReleased: {
-            placeItemAtPosition(ActionsManager.actionSpriteOldIndex, ActionsManager.actionSpriteNewIndex)
-
-            ActionsManager.actionSpriteOldIndex = -1
-            ActionsManager.actionSpriteNewIndex = -1
+            // placeItemAtPosition(ActionsManager.actionSpriteOldIndex, ActionsManager.actionSpriteNewIndex)
+            //
+            // ActionsManager.actionSpriteOldIndex = -1
+            // ActionsManager.actionSpriteNewIndex = -1
         }
 
         onDoubleClicked: {
@@ -52,8 +52,8 @@ Rectangle {
     DropArea {
         anchors.fill: root
         onEntered:(drag) => {
-            ActionsManager.actionSpriteOldIndex = drag.source.DelegateModel.itemsIndex
-            ActionsManager.actionSpriteNewIndex = dragArea.DelegateModel.itemsIndex
+            // ActionsManager.actionSpriteOldIndex = drag.source.DelegateModel.itemsIndex
+            // ActionsManager.actionSpriteNewIndex = dragArea.DelegateModel.itemsIndex
         }
     }
     Image {

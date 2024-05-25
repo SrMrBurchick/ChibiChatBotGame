@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Delegates
-import GameActions
+import ActionsModels
 import Panels
 import Base
 
@@ -37,23 +37,23 @@ Item {
                     id: gridView
                     anchors.fill: parent
                     flow: GridView.LeftToRight
-                    cellWidth: (spritesGrid.width / ActionsManager.tableSettingsColumns)
-                    cellHeight:(spritesGrid.width / ActionsManager.tableSettingsColumns)
-                    model: ActionsManager.spriteSheetModel
+                    // cellWidth: (spritesGrid.width / ActionsManager.tableSettingsColumns)
+                    // cellHeight:(spritesGrid.width / ActionsManager.tableSettingsColumns)
+                    // model: ActionsManager.spriteSheetModel
 
                     delegate: SpriteItemDelegate {
                         id: sprite
                         height: gridView.cellHeight
                         width: gridView.cellWidth
                         onToggleSelected:(index, column, row) => {
-                            ActionsManager.spriteSheetModel.addAction(
-                                index,
-                                ActionsManager.actionsListModel.getSelectedAction()
-                            )
-
-                            if (ActionsManager.sequenceModel != undefined) {
-                                ActionsManager.sequenceModel.addNewAction(column, row)
-                            }
+                            // ActionsManager.spriteSheetModel.addAction(
+                            //     index,
+                            //     ActionsManager.actionsListModel.getSelectedAction()
+                            // )
+                            //
+                            // if (ActionsManager.sequenceModel != undefined) {
+                            //     ActionsManager.sequenceModel.addNewAction(column, row)
+                            // }
                         }
                         Component.onCompleted: {
                             root.onSequenceUpdated.connect(function(){
@@ -67,30 +67,30 @@ Item {
     }
 
     Component.onCompleted: {
-        ActionsManager.sequenceModel.onSpriteRemoved.connect(function (column, row) {
-            ActionsManager.spriteSheetModel.removeAction(
-                column, row,
-                ActionsManager.actionsListModel.getSelectedAction()
-            )
-            sequenceUpdated()
-        })
-
-        ActionsManager.actionsListModel.onActionRemoved.connect(function(action) {
-            ActionsManager.spriteSheetModel.removeActionFromAll(action)
-            sequenceUpdated()
-        })
+        // ActionsManager.sequenceModel.onSpriteRemoved.connect(function (column, row) {
+        //     ActionsManager.spriteSheetModel.removeAction(
+        //         column, row,
+        //         ActionsManager.actionsListModel.getSelectedAction()
+        //     )
+        //     sequenceUpdated()
+        // })
+        //
+        // ActionsManager.actionsListModel.onActionRemoved.connect(function(action) {
+        //     ActionsManager.spriteSheetModel.removeActionFromAll(action)
+        //     sequenceUpdated()
+        // })
     }
 
     function initModel() {
-        ActionsManager.spriteSheetModel.initModel(
-            ActionsManager.tableSettingsColumns,
-            ActionsManager.tableSettingsRows,
-            ActionsManager.sequenceModel
-        )
+        // ActionsManager.spriteSheetModel.initModel(
+        //     ActionsManager.tableSettingsColumns,
+        //     ActionsManager.tableSettingsRows,
+        //     ActionsManager.sequenceModel
+        // )
     }
 
     function clearModel() {
-        ActionsManager.spriteSheetModel.clearModel()
+        // ActionsManager.spriteSheetModel.clearModel()
     }
 
     signal sequenceUpdated()

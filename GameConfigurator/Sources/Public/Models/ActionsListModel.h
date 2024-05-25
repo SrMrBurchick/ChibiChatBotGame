@@ -1,14 +1,16 @@
 #pragma once
 
-#include <QAbstractListModel>
+#include "Models/BaseListModel.h"
+
 #include <QObject>
 #include <QVector>
+
 
 enum eActionsListRole {
     NameRole = Qt::UserRole
 };
 
-class ActionsListModel : public QAbstractListModel
+class ActionsListModel : public BaseListModel
 {
     Q_OBJECT
 
@@ -38,6 +40,10 @@ signals:
     void actionSelected(QString Action);
     void actionRemoved(QString Action);
     void actionAdded(QString Action);
+
+protected:
+    virtual void OnActionsUpdated() override;
+    virtual void OnTargetSubscribed() override;
 
 protected:
     QVector<QString> ActionsList;

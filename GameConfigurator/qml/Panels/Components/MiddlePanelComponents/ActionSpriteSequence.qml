@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Delegates
-import GameActions
+import ActionsModels
 import Panels
 import ConfigComponent
 import Base
@@ -27,20 +27,20 @@ Item {
 
         DelegateModel {
             id: actionsDelegateModel
-            model: ActionsManager.sequenceModel
+            // model: ActionsManager.sequenceModel
 
             delegate: ActionSpriteDelegate {
                 width: scrollView.height
                 height: scrollView.height
                 onPlaceItemAtPosition: (oldIndex, newIndex) => {
-                    ActionsManager.sequenceModel.placeItemAt(oldIndex, newIndex);
+                    // ActionsManager.sequenceModel.placeItemAt(oldIndex, newIndex);
                 }
                 onRemoveItem: (index) => {
-                    ActionsManager.sequenceModel.removeElement(index)
+                    // ActionsManager.sequenceModel.removeElement(index)
                 }
 
                 onToggleInverted: (index) => {
-                    ActionsManager.sequenceModel.toggleInverted(index)
+                    // ActionsManager.sequenceModel.toggleInverted(index)
                 }
             }
         }
@@ -63,15 +63,15 @@ Item {
     }
 
     function clearModel() {
-        ActionsManager.sequenceModel.clearModel();
+        // ActionsManager.sequenceModel.clearModel();
     }
 
     Component.onCompleted: {
-        ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
-            ActionsManager.sequenceModel.setActiveAction(action);
-        })
-        ActionsManager.actionsListModel.onActionRemoved.connect(function (action) {
-            ActionsManager.sequenceModel.removeAction(action);
-        })
+        // ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
+        //     ActionsManager.sequenceModel.setActiveAction(action);
+        // })
+        // ActionsManager.actionsListModel.onActionRemoved.connect(function (action) {
+        //     ActionsManager.sequenceModel.removeAction(action);
+        // })
     }
 }

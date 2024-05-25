@@ -1,7 +1,7 @@
 pragma Singleton
 import QtQuick
 import QtQuick.Controls
-import GameActions
+import ActionsModels
 
 QtObject {
     property string selectedAction
@@ -19,8 +19,8 @@ QtObject {
     property int spriteSizeHeight
     property int spriteSizeWidth
     property real spriteScale: 1.0
-
-    property ActionsListModel actionsListModel: ActionsListModel {}
-    property AnimationSequenceModel sequenceModel: AnimationSequenceModel {}
-    property SpriteSheetModel spriteSheetModel: SpriteSheetModel {}
+    //
+    // property ActionsListModel actionsListModel: ActionsListModel {}
+    // property AnimationSequenceModel sequenceModel: AnimationSequenceModel {}
+    // property SpriteSheetModel spriteSheetModel: SpriteSheetModel {}
 }

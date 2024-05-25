@@ -8,4 +8,3 @@ SettingsList 1.0 Components/LeftPanelComponents/SettingsList.qml
 
 SpriteSheetGrid 1.0 Components/MiddlePanelComponents/SpriteSheetGrid.qml
 ActionSpriteSequence 1.0 Components/MiddlePanelComponents/ActionSpriteSequence.qml
-singleton ActionsManager 1.0 ActionsManager.qml

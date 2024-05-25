@@ -29,7 +29,7 @@ Dialog {
             ComboBox {
                 id: actionSelector
                 Layout.fillWidth: true
-                model: ActionsManager.actionsListModel.getActions()
+                // model: ActionsManager.actionsListModel.getActions()
 
                 onActivated: {
                     actionName = currentText

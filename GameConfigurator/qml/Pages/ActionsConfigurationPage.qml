@@ -25,8 +25,8 @@ Item {
         nameFilters: ["Image files (*.png *.jpg)"]
         onAccepted: {
             console.log(selectedFile)
-            ActionsManager.spriteSheetPath = selectedFile;
-            ActionsManager.spriteSheetConfigured = false;
+            // ActionsManager.spriteSheetPath = selectedFile;
+            // ActionsManager.spriteSheetConfigured = false;
             spriteSheetGrid.clearModel();
             actionsSpriteSequence.clearModel();
 
@@ -72,23 +72,23 @@ Item {
             BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                border.width: !ActionsManager.spriteSheetConfigured ? Style.buttonBorderSize : 0
+                // border.width: !ActionsManager.spriteSheetConfigured ? Style.buttonBorderSize : 0
 
                 SpriteSheetGrid {
                     id: spriteSheetGrid
-                    visible: ActionsManager.spriteSheetConfigured
+                    // visible: ActionsManager.spriteSheetConfigured
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 Flickable {
                     anchors.fill: parent
-                    visible: !ActionsManager.spriteSheetConfigured
+                    // visible: !ActionsManager.spriteSheetConfigured
                     clip: true
                     contentWidth: image.width; contentHeight: image.height
                     Image {
                         id: image
                         visible: true
-                        source: ActionsManager.spriteSheetPath
+                        // source: ActionsManager.spriteSheetPath
 
                         BaseText {
                             text: "(" + image.sourceSize.width + "x" + image.sourceSize.height + ")"
@@ -144,19 +144,19 @@ Item {
     }
 
     Component.onCompleted: {
-        if (GlobalConfig.isConfigLoaded && !ActionsManager.spriteSheetConfigured) {
-            ActionsManager.spriteSheetPath = Config.getSpriteSheetPath();
-            ActionsManager.spriteSizeWidth = Config.getSpriteWidth()
-            ActionsManager.spriteSizeHeight = Config.getSpriteHeight()
-            ActionsManager.tableSettingsColumns = Config.getTableColumns()
-            ActionsManager.tableSettingsRows = Config.getTableRows()
-            ActionsManager.spriteScale = Config.getSpriteScale()
-            ActionsManager.spriteSheetConfigured = true
-            splitImageToSprites()
-        }
+        // if (GlobalConfig.isConfigLoaded && !ActionsManager.spriteSheetConfigured) {
+        //     ActionsManager.spriteSheetPath = Config.getSpriteSheetPath();
+        //     ActionsManager.spriteSizeWidth = Config.getSpriteWidth()
+        //     ActionsManager.spriteSizeHeight = Config.getSpriteHeight()
+        //     ActionsManager.tableSettingsColumns = Config.getTableColumns()
+        //     ActionsManager.tableSettingsRows = Config.getTableRows()
+        //     ActionsManager.spriteScale = Config.getSpriteScale()
+        //     ActionsManager.spriteSheetConfigured = true
+        //     splitImageToSprites()
+        // }
 
         if (GlobalConfig.isConfigLoaded) {
-            ActionsManager.actionsListModel.setDefaultSelected()
+            // ActionsManager.actionsListModel.setDefaultSelected()
         }
 
         GlobalConfig.isBusy = false
@@ -167,11 +167,11 @@ Item {
     }
 
     function saveActionsConfig() {
-        Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
-        Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
-        Config.saveSpriteScale(ActionsManager.spriteScale)
-        Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
-        Config.saveActions(ActionsManager.sequenceModel)
+        // Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
+        // Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+        // Config.saveSpriteScale(ActionsManager.spriteScale)
+        // Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
+        // Config.saveActions(ActionsManager.sequenceModel)
 
         if (Config.isConfigLoaded() == false) {
             Config.actionsConfigured()

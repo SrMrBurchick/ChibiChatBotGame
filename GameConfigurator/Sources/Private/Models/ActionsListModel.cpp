@@ -1,11 +1,13 @@
 #include "Models/ActionsListModel.h"
 #include "System/Logger.h"
+#include "Managers/ActionsManager.h"
+#include "Core/Action.h"
 
 #include <QQmlEngine>
 #include <QTimer>
 
 ActionsListModel::ActionsListModel(QObject* Parent)
-    :QAbstractListModel(Parent)
+    :BaseListModel(Parent)
 {
 }
 
@@ -13,22 +15,31 @@ int ActionsListModel::rowCount(const QModelIndex& Parent) const
 {
     Q_UNUSED(Parent);
 
-    return ActionsList.size();
+    if (Manager)
+    {
+        return Manager->getActionsCount();
+    }
+
+    return -1;
 }
 
 QVariant ActionsListModel::data(const QModelIndex& Index, int Role) const
 {
     QVariant Data;
-    if (!Index.isValid() || Index.row() > rowCount(Index) || ActionsList.isEmpty()) {
-        return Data;
-    }
 
-    switch (Role) {
-        case eActionsListRole::NameRole:
-            Data = QVariant::fromValue(ActionsList.at(Index.row()));
-            break;
-        default:
-            break;
+    if (Manager)
+    {
+        if (QSharedPointer<Action> TargetAction = Manager->getActionById(Index.row()))
+        {
+            switch (Role) {
+                case eActionsListRole::NameRole:
+                    LOG_INFO("Data = %s", TargetAction->getName().toStdString().c_str());
+                    Data = QVariant::fromValue(TargetAction->getName());
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     return Data;
@@ -51,7 +62,10 @@ void ActionsListModel::registerModel(const QString& ModuleName)
 
 void ActionsListModel::updateData()
 {
-    emit dataChanged(createIndex(0,0), createIndex(ActionsList.size(), 0));
+    if (Manager)
+    {
+        emit dataChanged(createIndex(0,0), createIndex(Manager->getActionsCount(), 0));
+    }
 }
 
 void ActionsListModel::removeElement(int Index)
@@ -148,4 +162,20 @@ void ActionsListModel::setDefaultSelected()
 QVector<QString> ActionsListModel::getActions() const
 {
     return ActionsList;
+}
+
+void ActionsListModel::OnActionsUpdated()
+{
+    updateData();
+}
+
+void ActionsListModel::OnTargetSubscribed()
+{
+    if (Manager)
+    {
+        beginResetModel();
+        endResetModel();
+    }
+
+    updateData();
 }

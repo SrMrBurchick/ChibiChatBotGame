@@ -47,7 +47,7 @@ Item {
                     Image {
                         id: actionPreview
                         anchors.fill: parent
-                        source: ActionsManager.spriteSheetPath
+                        // source: ActionsManager.spriteSheetPath
                     }
 
                 }
@@ -71,12 +71,12 @@ Item {
     }
 
     function playAnimationPreview() {
-        var nextSpriteData = ActionsManager.sequenceModel.getNextSprite()
-        actionPreview.sourceClipRect = Qt.rect(
-            parseInt(nextSpriteData.sprite_column) * ActionsManager.spriteSizeWidth,
-            parseInt(nextSpriteData.sprite_row) * ActionsManager.spriteSizeHeight,
-            ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight
-        )
+        // var nextSpriteData = ActionsManager.sequenceModel.getNextSprite()
+        // actionPreview.sourceClipRect = Qt.rect(
+        //     parseInt(nextSpriteData.sprite_column) * ActionsManager.spriteSizeWidth,
+        //     parseInt(nextSpriteData.sprite_row) * ActionsManager.spriteSizeHeight,
+        //     ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight
+        // )
         actionPreview.mirror = nextSpriteData.isInverted;
     }
 }

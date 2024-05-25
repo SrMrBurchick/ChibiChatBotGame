@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Panels
-import GameActions
+import ActionsModels
 import Delegates
 import Base
 import Buttons
@@ -26,10 +26,10 @@ ColumnLayout {
             fieldName: "Columns:"
             minValue: 1
             maxValue: 24
-            defaultValue: ActionsManager.tableSettingsColumns
+            // defaultValue: ActionsManager.tableSettingsColumns
             onValueChanged:(value) => {
-                ActionsManager.tableSettingsColumns = value
-                console.log(ActionsManager.tableSettingsColumns)
+                // ActionsManager.tableSettingsColumns = value
+                // console.log(ActionsManager.tableSettingsColumns)
             }
         }
 
@@ -40,10 +40,10 @@ ColumnLayout {
             maxValue: 24
 
             fieldName: "Rows:"
-            defaultValue: ActionsManager.tableSettingsRows
+            // defaultValue: ActionsManager.tableSettingsRows
             onValueChanged:(value) => {
-                ActionsManager.tableSettingsRows = value
-                console.log(ActionsManager.tableSettingsRows)
+                // ActionsManager.tableSettingsRows = value
+                // console.log(ActionsManager.tableSettingsRows)
             }
         }
     }
@@ -65,10 +65,10 @@ ColumnLayout {
             maxValue: 1000
 
             fieldName: "Width:"
-            defaultValue: ActionsManager.spriteSizeWidth
+            // defaultValue: ActionsManager.spriteSizeWidth
             onValueChanged:(value) => {
-                ActionsManager.spriteSizeWidth = value
-                console.log(ActionsManager.spriteSizeWidth)
+                // ActionsManager.spriteSizeWidth = value
+                // console.log(ActionsManager.spriteSizeWidth)
             }
         }
 
@@ -79,10 +79,10 @@ ColumnLayout {
             maxValue: 1000
 
             fieldName: "Height:"
-            defaultValue: ActionsManager.spriteSizeHeight
+            // defaultValue: ActionsManager.spriteSizeHeight
             onValueChanged:(value) => {
-                ActionsManager.spriteSizeHeight = value
-                console.log(ActionsManager.spriteSizeHeight)
+                // ActionsManager.spriteSizeHeight = value
+                // console.log(ActionsManager.spriteSizeHeight)
             }
         }
 
@@ -91,10 +91,10 @@ ColumnLayout {
             Layout.margins: 10
 
             fieldName: "Scale:"
-            defaultValue: ActionsManager.spriteScale
+            // defaultValue: ActionsManager.spriteScale
             onValueChanged:(value) => {
-                ActionsManager.spriteScale = value
-                console.log(ActionsManager.spriteScale)
+                // ActionsManager.spriteScale = value
+                // console.log(ActionsManager.spriteScale)
             }
         }
     }

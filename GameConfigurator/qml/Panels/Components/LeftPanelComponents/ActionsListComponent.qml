@@ -1,10 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import GameActions
+import ActionsModels
 import Delegates
 import Panels
 import ConfigComponent
+import ActionsManagerComponent
 
 ScrollView {
     anchors.margins: 4
@@ -12,18 +13,18 @@ ScrollView {
     ListView {
         spacing: 5
         id: actionsList
-        model: ActionsManager.actionsListModel
+        model: ActionsListModel {}
 
         delegate: ActionListDelegate {
             anchors.horizontalCenter: parent.horizontalCenter
             onRemoveElement: (index) => {
-                ActionsManager.actionsListModel.removeElement(index)
+                // ActionsManager.actionsListModel.removeElement(index)
             }
             onChangeElement:(index, action) => {
-                ActionsManager.actionsListModel.changeElement(index, action)
+                // ActionsManager.actionsListModel.changeElement(index, action)
             }
             onElementSelected:(index) => {
-                ActionsManager.actionsListModel.setSelectedActionIndex(index)
+                // ActionsManager.actionsListModel.setSelectedActionIndex(index)
             }
         }
     }
@@ -31,10 +32,15 @@ ScrollView {
     function addAction(action) {
         var count = actionsList.count
         console.log("Add new action: ", action, "Count:", count)
-        ActionsManager.actionsListModel.addNewAction(action)
+        ActionsManager.addNewAction(action)
+        // ActionsManager.actionsListModel.addNewAction(action)
 
         if (count == 0) {
-            ActionsManager.actionsListModel.setDefaultSelected()
+            // ActionsManager.actionsListModel.setDefaultSelected()
         }
+    }
+
+    Component.onCompleted: {
+        actionsList.model.subscribeOnTarget(ActionsManager)
     }
 }

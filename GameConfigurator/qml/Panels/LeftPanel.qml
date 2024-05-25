@@ -4,7 +4,7 @@ import QtQuick.Controls
 import Buttons
 import Panels
 import Dialogs
-import GameActions
+import ActionsModels
 import Base
 import ConfigComponent
 
@@ -53,12 +53,12 @@ Item {
                         }
 
                         Component.onCompleted: {
-                            ActionsManager.actionsListModel.onActionAdded.connect(function(action) {
-                                addActionDialog.onActionAdded(action)
-                            })
-                            ActionsManager.actionsListModel.onActionRemoved.connect(function(action) {
-                                addActionDialog.onActionRemoved(action)
-                            })
+                            // ActionsManager.actionsListModel.onActionAdded.connect(function(action) {
+                            //     addActionDialog.onActionAdded(action)
+                            // })
+                            // ActionsManager.actionsListModel.onActionRemoved.connect(function(action) {
+                            //     addActionDialog.onActionRemoved(action)
+                            // })
                         }
                     }
 
@@ -93,7 +93,7 @@ Item {
                     Layout.margins: 10
                     text: "Split to sprites"
                     onClicked: {
-                        ActionsManager.spriteSheetConfigured = true
+                        // ActionsManager.spriteSheetConfigured = true
                         rootPage.splitImageToSprites()
                     }
                 }

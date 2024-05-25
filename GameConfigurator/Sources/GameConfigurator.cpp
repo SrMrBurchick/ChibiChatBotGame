@@ -13,6 +13,8 @@
 #include "Models/NotificationModel.h"
 #include "Models/PredefinedActionsModel.h"
 #include "Models/SpriteSheet.h"
+#include "Managers/ActionsManager.h"
+#include "Core/Action.h"
 #include "System/Logger.h"
 
 int main(int argc, char *argv[])
@@ -26,6 +28,7 @@ int main(int argc, char *argv[])
 
     QScopedPointer<ConfigObject> Config(new ConfigObject);
     QScopedPointer<ProcessManager> Manager(new ProcessManager);
+    QScopedPointer<ActionsManager> ActionsManagerComp(new ActionsManager);
     QPointer<IProcess> Game(new GameProcess);
     QPointer<IProcess> ChatBot(new ChatBotProcess);
 
@@ -40,14 +43,15 @@ int main(int argc, char *argv[])
         Config->SaveLogging(Enabled);
     });
 
-    ActionsListModel::registerModel("GameActions");
-    AnimationSequenceModel::registerModel("GameActions");
-    SpriteSheetModel::registerModel("GameActions");
+    ActionsListModel::registerModel("ActionsModels");
+    AnimationSequenceModel::registerModel("ActionsModels");
+    SpriteSheetModel::registerModel("ActionsModels");
     NotificationListModel::registerModel("SystemTools");
     PredefinedActionsListModel::registerModel("ConfigTools");
 
     qmlRegisterSingletonInstance("ConfigComponent", 1, 0, "Config", Config.get());
     qmlRegisterSingletonInstance("ProcessesComponent", 1, 0, "ProcessManager", Manager.get());
+    qmlRegisterSingletonInstance("ActionsManagerComponent", 1, 0, "ActionsManager", ActionsManagerComp.get());
     qmlRegisterSingletonInstance("SystemTools", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));

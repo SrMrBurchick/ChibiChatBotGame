@@ -18,7 +18,7 @@ void Action::MarkConfigUpdated()
     emit configUpdated(VariantConfig);
 }
 
-void Action::SetName(QString& NewName)
+void Action::SetName(const QString& NewName)
 {
     Name = NewName;
     emit nameChanged(Name);

@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
 import Panels
-import GameActions
+import ActionsModels
 import ConfigComponent
 import Base
 
@@ -41,11 +41,11 @@ Item {
             Config.loadConfig()
             GlobalConfig.isConfigLoaded = Config.isConfigLoaded()
 
-            if (!ActionsManager.isActionsConfigured) {
-                Config.initActionsListModel(ActionsManager.actionsListModel)
-                Config.initAnimationsSequenceModel(ActionsManager.sequenceModel)
-                ActionsManager.isActionsConfigured = true
-            }
+            // if (!ActionsManager.isActionsConfigured) {
+            //     Config.initActionsListModel(ActionsManager.actionsListModel)
+            //     Config.initAnimationsSequenceModel(ActionsManager.sequenceModel)
+            //     ActionsManager.isActionsConfigured = true
+            // }
         }
 
         Config.onActionsConfigured.connect(function(){
@@ -66,10 +66,10 @@ Item {
         Config.saveMessageTextColor(GlobalConfig.messageTextColor)
         Config.saveMovementSpeed(GlobalConfig.movementSpeed)
         Config.saveNextActionTimeout(GlobalConfig.nextActionTimeout)
-        Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
-        Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
-        Config.saveSpriteScale(ActionsManager.spriteScale)
-        Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
+        // Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
+        // Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+        // Config.saveSpriteScale(ActionsManager.spriteScale)
+        // Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
 
         Config.saveConfig()
     }
