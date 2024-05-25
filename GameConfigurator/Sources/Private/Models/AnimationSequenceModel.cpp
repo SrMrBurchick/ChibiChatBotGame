@@ -223,11 +223,11 @@ bool AnimationSequenceModel::isInverted(int Index) const
 
 void AnimationSequenceModel::initSpriteActions(ActionGridSprite& ActionSprite)
 {
-    for (auto Iter = Map.begin(); Iter != Map.end(); ++Iter) {
-        if (Iter.value().contains(ActionSprite)) {
-            ActionSprite.Actions.push_back(Iter.key());
-        }
-    }
+    // for (auto Iter = Map.begin(); Iter != Map.end(); ++Iter) {
+    //     if (Iter.value().contains(ActionSprite)) {
+    //         ActionSprite.Actions.push_back(Iter.key());
+    //     }
+    // }
 }
 
 void AnimationSequenceModel::removeAction(const QString& Action)

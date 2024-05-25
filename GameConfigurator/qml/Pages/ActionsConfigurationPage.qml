@@ -79,22 +79,22 @@ Item {
                     // visible: ActionsManager.spriteSheetConfigured
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
-
-                Flickable {
-                    anchors.fill: parent
-                    // visible: !ActionsManager.spriteSheetConfigured
-                    clip: true
-                    contentWidth: image.width; contentHeight: image.height
-                    Image {
-                        id: image
-                        visible: true
-                        // source: ActionsManager.spriteSheetPath
-
-                        BaseText {
-                            text: "(" + image.sourceSize.width + "x" + image.sourceSize.height + ")"
-                        }
-                    }
-                }
+                //
+                // Flickable {
+                //     anchors.fill: parent
+                //     // visible: !ActionsManager.spriteSheetConfigured
+                //     clip: true
+                //     contentWidth: image.width; contentHeight: image.height
+                //     Image {
+                //         id: image
+                //         visible: true
+                //         // source: ActionsManager.spriteSheetPath
+                //
+                //         BaseText {
+                //             text: "(" + image.sourceSize.width + "x" + image.sourceSize.height + ")"
+                //         }
+                //     }
+                // }
             }
 
             BasePanel {

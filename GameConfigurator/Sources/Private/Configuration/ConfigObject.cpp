@@ -319,15 +319,23 @@ void ConfigObject::saveChatBotConfig(const QString& URL, const int Port)
     SystemSettings.ChatBotWebSockPort = Port;
 }
 
-void ConfigObject::saveSpriteSettings(const int Width, const int Height)
+void ConfigObject::saveSpriteWidth(const int Width)
 {
     SpriteSettings.Width = Width;
+}
+
+void ConfigObject::saveSpriteHeight(const int Height)
+{
     SpriteSettings.Height = Height;
 }
 
-void ConfigObject::saveTableSettings(const int Columns, const int Rows)
+void ConfigObject::saveTableColumns(const int Columns)
 {
     TableSettings.Columns = Columns;
+}
+
+void ConfigObject::saveTableRows(const int Rows)
+{
     TableSettings.Rows = Rows;
 }
 

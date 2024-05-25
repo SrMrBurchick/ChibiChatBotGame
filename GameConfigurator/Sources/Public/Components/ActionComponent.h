@@ -14,7 +14,6 @@ struct ActionSequenceSprite {
 struct ActionGridSprite {
     int Column;
     int Row;
-    QVector<QString> Actions;
     ActionGridSprite(int Column, int Row);
 
     bool operator==(const ActionGridSprite& GridSprite) const;

@@ -86,8 +86,10 @@ public:
 
     Q_INVOKABLE void saveSpriteSheetPath(const QString& ImagePath);
     Q_INVOKABLE void saveChatBotConfig(const QString& URL, const int Port);
-    Q_INVOKABLE void saveSpriteSettings(const int Width, const int Height);
-    Q_INVOKABLE void saveTableSettings(const int Columns, const int Rows);
+    Q_INVOKABLE void saveSpriteWidth(const int Width);
+    Q_INVOKABLE void saveSpriteHeight(const int Height);
+    Q_INVOKABLE void saveTableColumns(const int Columns);
+    Q_INVOKABLE void saveTableRows(const int Rows);
     Q_INVOKABLE void saveActions(const AnimationSequenceModel* Model);
     Q_INVOKABLE void saveSpriteScale(const float SpriteScale);
     Q_INVOKABLE void saveScreenResolution(const int Height, const int Width);

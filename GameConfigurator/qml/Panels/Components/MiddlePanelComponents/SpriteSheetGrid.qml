@@ -5,6 +5,7 @@ import Delegates
 import ActionsModels
 import Panels
 import Base
+import ConfigComponent
 
 Item {
     id: root
@@ -37,9 +38,9 @@ Item {
                     id: gridView
                     anchors.fill: parent
                     flow: GridView.LeftToRight
-                    // cellWidth: (spritesGrid.width / ActionsManager.tableSettingsColumns)
-                    // cellHeight:(spritesGrid.width / ActionsManager.tableSettingsColumns)
-                    // model: ActionsManager.spriteSheetModel
+                    cellWidth: (spritesGrid.width / Config.getTableColumns())
+                    cellHeight:(spritesGrid.width / Config.getTableColumns())
+                    model: SpriteSheetModel {}
 
                     delegate: SpriteItemDelegate {
                         id: sprite
@@ -82,15 +83,14 @@ Item {
     }
 
     function initModel() {
-        // ActionsManager.spriteSheetModel.initModel(
-        //     ActionsManager.tableSettingsColumns,
-        //     ActionsManager.tableSettingsRows,
-        //     ActionsManager.sequenceModel
-        // )
+        gridView.model.initModel(
+            Config.getTableColumns(),
+            Config.getTableRows()
+        )
     }
 
     function clearModel() {
-        // ActionsManager.spriteSheetModel.clearModel()
+        gridView.model.clearModel()
     }
 
     signal sequenceUpdated()
