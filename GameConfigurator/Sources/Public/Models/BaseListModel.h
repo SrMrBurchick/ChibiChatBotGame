@@ -10,13 +10,16 @@ class BaseListModel : public QAbstractListModel
 
 public:
     explicit BaseListModel(QObject* Parent = nullptr);
-    virtual ~BaseListModel() = default;
+    virtual ~BaseListModel();
 
     Q_INVOKABLE void subscribeOnTarget(ActionsManager* Manager);
 
+public slots:
+    void onActionsUpdated();
+
 protected:
-    virtual void OnActionsUpdated() = 0;
-    virtual void OnTargetSubscribed() = 0;
+    virtual void OnActionsUpdated();
+    virtual void OnTargetSubscribed();
 
     ActionsManager* Manager = nullptr;
 };

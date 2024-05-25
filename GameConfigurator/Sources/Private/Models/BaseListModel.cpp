@@ -1,9 +1,18 @@
 #include "Models/BaseListModel.h"
 #include "Managers/ActionsManager.h"
+#include "System/Logger.h"
 
 BaseListModel::BaseListModel(QObject* Parent)
     : QAbstractListModel(Parent)
 {
+}
+
+BaseListModel::~BaseListModel()
+{
+    if (Manager)
+    {
+        QObject::disconnect(Manager, &ActionsManager::actionsUpdated, this, &BaseListModel::onActionsUpdated);
+    }
 }
 
 void BaseListModel::subscribeOnTarget(ActionsManager* NewManager)
@@ -12,14 +21,34 @@ void BaseListModel::subscribeOnTarget(ActionsManager* NewManager)
     {
         if (Manager)
         {
-            Manager->disconnect();
+            QObject::disconnect(Manager, &ActionsManager::actionsUpdated, this, &BaseListModel::onActionsUpdated);
         }
 
         Manager = NewManager;
-        QObject::connect(Manager, &ActionsManager::actionsUpdated, [=](){
-            OnActionsUpdated();
-        });
 
-        OnTargetSubscribed();
+        if (Manager)
+        {
+            QObject::connect(Manager, &ActionsManager::actionsUpdated, this, &BaseListModel::onActionsUpdated);
+
+            OnTargetSubscribed();
+            LOG_INFO("Subscribed on target");
+        }
     }
+}
+
+void BaseListModel::OnActionsUpdated()
+{
+    beginResetModel();
+    endResetModel();
+}
+
+void BaseListModel::OnTargetSubscribed()
+{
+    beginResetModel();
+    endResetModel();
+}
+
+void BaseListModel::onActionsUpdated()
+{
+    OnActionsUpdated();
 }

@@ -23,7 +23,7 @@ class Action : public QObject {
 
 public:
     explicit Action(QObject* Parent = nullptr);
-    virtual ~Action() = default;
+    virtual ~Action();
 
     void SetName(const QString& NewName);
     void PlaceSpriteAt(int OriginLocation, int NewLocation);

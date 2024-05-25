@@ -1,9 +1,14 @@
 #include "Core/Action.h"
+#include "System/Logger.h"
 
 Action::Action(QObject* Parent)
     : QObject(Parent)
 {
+}
 
+Action::~Action()
+{
+    LOG_INFO("Action %s Deleted", getName().toStdString().c_str());
 }
 
 void Action::MarkConfigUpdated()

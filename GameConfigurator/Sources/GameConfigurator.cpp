@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("ProcessesComponent", 1, 0, "ProcessManager", Manager.get());
     qmlRegisterSingletonInstance("ActionsManagerComponent", 1, 0, "ActionsManager", ActionsManagerComp.get());
     qmlRegisterSingletonInstance("SystemTools", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
+    qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

@@ -13,20 +13,47 @@ public:
     explicit ActionsManager(QObject* Parent = nullptr);
     virtual ~ActionsManager() = default;
 
+    // ============================== QML ======================================
+    // Modifiers
     Q_INVOKABLE void addNewAction(const QString& ActionName);
-    Q_INVOKABLE void removeAction(QSharedPointer<Action> ActionToRemove);
     Q_INVOKABLE void removeActionById(int Index);
+    Q_INVOKABLE void changeActionName(int Index, const QString& NewName);
 
-    Q_INVOKABLE QSharedPointer<Action> getActionByName(const QString& ActionName) const;
-    Q_INVOKABLE QSharedPointer<Action> getActionById(int Index) const;
-
-    Q_INVOKABLE const QVector<QSharedPointer<Action>>& getActions() const;
+    // Getters
     Q_INVOKABLE int getActionsCount() const;
+    Q_INVOKABLE Action* getActionByName(const QString& ActionName) const;
+    Q_INVOKABLE Action* getActionById(int Index) const;
+
+    Q_INVOKABLE bool isDefaultAction(Action* ActionToCheck) const;
+    Q_INVOKABLE bool isDefaultAction(int Index) const;
+
+    Q_INVOKABLE bool isGameDefaultAction(Action* ActionToCheck) const;
+    Q_INVOKABLE bool isTwitchDefaultAction(Action* ActionToCheck) const;
+
+    Q_INVOKABLE const QVector<QString>& getGameDefaultActions() const;
+    Q_INVOKABLE const QVector<QString>& getTwitchDefaultAction() const;
+    Q_INVOKABLE const QVector<QString> getPossibleActionsToAdd() const;
+
+    // Events
+    Q_INVOKABLE void markSelectedAction(int Index);
+
+    // ============================== C++ ======================================
+    // Modifiers
+    void removeAction(QSharedPointer<Action> ActionToRemove);
+
+    // Getters
+    QSharedPointer<Action> GetActionByName(const QString& ActionName) const;
+    QSharedPointer<Action> GetActionById(int Index) const;
+    const QVector<QSharedPointer<Action>>& getActions() const;
 
 signals:
-    void actionSelected(QSharedPointer<Action>);
+    void actionSelected(Action* selectedAction);
     void actionsUpdated();
 
 private:
     QVector<QSharedPointer<Action>> Actions;
+    QVector<QString> GameDefaultActions = {"walk", "fall", "climb", "standby"};
+    QVector<QString> TwitchDefaultActions = {
+        "subscription", "subscriptionsGift", "raid", "ban", "follow", "moderatorAdded", "moderatorRemoved"
+    };
 };

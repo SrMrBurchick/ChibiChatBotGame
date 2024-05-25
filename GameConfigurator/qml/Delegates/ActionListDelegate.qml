@@ -3,13 +3,12 @@ import QtQuick.Layouts
 import Base
 import Dialogs
 import Panels
+import ActionsManagerComponent
 
 Rectangle {
     id: root
     color: Style.actionListItemBGColor
     property bool isSelected: false
-    property bool isDefaultAction: false
-    readonly property var defaultActions: ["walk", "fall", "climb", "standby"]
     border.color: isSelected ? Style.actionListItemBorderSelectedColor : Style.actionListItemBorderColor
     border.width: 2
     width: parent.width - 5
@@ -32,7 +31,7 @@ Rectangle {
 
                 ChangeActionDialog {
                     id: changeActionDialog
-                    actionName: actionName.text
+                    actionName: name
                     onChangeAction: {
                         changeElement(index, action);
                     }
@@ -43,10 +42,9 @@ Rectangle {
                 }
 
                 onDoubleClicked: {
-                    if (!root.isDefaultAction) {
+                    if (!ActionsManager.isDefaultAction(index)) {
                         changeActionDialog.open()
                     }
-
                 }
             }
         }
@@ -71,16 +69,13 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        // if (ActionsManager.actionsListModel != null) {
-        //     ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
-        //         if (index != undefined) {
-        //             root.isSelected = index == ActionsManager.actionsListModel.getSelectedActionIndex()
-        //         }
-        //     })
-        // }
-
-        if (defaultActions.includes(name)) {
-            root.isDefaultAction = true
+        if (ActionsManager != undefined)
+        {
+            ActionsManager.onActionSelected.connect(function (selectedAction) {
+                if (selectedAction != undefined) {
+                    root.isSelected = name == selectedAction.getName()
+                }
+            })
         }
     }
 

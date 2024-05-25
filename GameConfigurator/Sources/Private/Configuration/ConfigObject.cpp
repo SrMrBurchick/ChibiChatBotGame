@@ -351,7 +351,7 @@ void ConfigObject::initActionsListModel(ActionsListModel* Model)
     }
 
     for (const QString& Key : Map.keys()) {
-        Model->addNewAction(Key);
+        // Model->addNewAction(Key);
     }
 }
 

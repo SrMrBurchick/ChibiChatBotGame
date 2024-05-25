@@ -16,24 +16,21 @@ ScrollView {
         model: ActionsListModel {}
 
         delegate: ActionListDelegate {
-            anchors.horizontalCenter: parent.horizontalCenter
+            // anchors.horizontalCenter: parent.horizontalCenter
             onRemoveElement: (index) => {
-                // ActionsManager.actionsListModel.removeElement(index)
+                ActionsManager.removeActionById(index);
             }
             onChangeElement:(index, action) => {
-                // ActionsManager.actionsListModel.changeElement(index, action)
+                ActionsManager.changeActionName(index, action);
             }
             onElementSelected:(index) => {
-                // ActionsManager.actionsListModel.setSelectedActionIndex(index)
+                ActionsManager.markSelectedAction(index)
             }
         }
     }
 
     function addAction(action) {
-        var count = actionsList.count
-        console.log("Add new action: ", action, "Count:", count)
         ActionsManager.addNewAction(action)
-        // ActionsManager.actionsListModel.addNewAction(action)
 
         if (count == 0) {
             // ActionsManager.actionsListModel.setDefaultSelected()

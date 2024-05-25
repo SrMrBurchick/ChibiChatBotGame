@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Panels
+import ActionsManagerComponent
 
 Dialog {
     id: root
@@ -10,7 +11,7 @@ Dialog {
 
     title: "Add action"
     standardButtons: Dialog.Cancel | Dialog.Save
-    readonly property var defaultActions: ["walk", "fall", "climb", "standby", "custom"]
+    readonly property var defaultActions: ["custom"]
 
     RowLayout {
         anchors.fill: root
@@ -59,34 +60,10 @@ Dialog {
 
     signal addNewAction(string newAction)
 
-    function onActionAdded(action) {
-        if (actionSelector.model.includes(action)) {
-            actionSelector.model = actionSelector.model.filter(function (item) {
-                return item != action;
-            })
-        }
-    }
-
-    function onActionRemoved(action) {
-        if (!actionSelector.model.includes(action) && defaultActions.includes(action)) {
-            var tempList = actionSelector.model
-            tempList = [action].concat(tempList)
-
-            actionSelector.model = tempList;
-        }
-    }
-
     function setupDialog() {
-        // var loadedActions = ActionsManager.actionsListModel.getActions()
-        // loadedActions.forEach(function(action) {
-        //     if (defaultActions.includes(action) && actionSelector.model.includes(action)) {
-        //         actionSelector.model = actionSelector.model.filter(function (item) {
-        //             return item != action;
-        //         })
-        //     }
-        // })
+        actionSelector.model = ActionsManager.getPossibleActionsToAdd().concat(defaultActions)
 
-        isCustomSelected = actionSelector.count == 1
+        root.isCustomSelected = actionSelector.count == 1
 
         if (!isCustomSelected) {
             actionName = actionSelector.currentText
