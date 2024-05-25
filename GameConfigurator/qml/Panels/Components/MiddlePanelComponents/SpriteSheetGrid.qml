@@ -6,6 +6,7 @@ import ActionsModels
 import Panels
 import Base
 import ConfigComponent
+import ActionsManagerComponent
 
 Item {
     id: root
@@ -38,8 +39,6 @@ Item {
                     id: gridView
                     anchors.fill: parent
                     flow: GridView.LeftToRight
-                    cellWidth: (spritesGrid.width / Config.getTableColumns())
-                    cellHeight:(spritesGrid.width / Config.getTableColumns())
                     model: SpriteSheetModel {}
 
                     delegate: SpriteItemDelegate {
@@ -47,14 +46,11 @@ Item {
                         height: gridView.cellHeight
                         width: gridView.cellWidth
                         onToggleSelected:(index, column, row) => {
-                            // ActionsManager.spriteSheetModel.addAction(
-                            //     index,
-                            //     ActionsManager.actionsListModel.getSelectedAction()
-                            // )
-                            //
-                            // if (ActionsManager.sequenceModel != undefined) {
-                            //     ActionsManager.sequenceModel.addNewAction(column, row)
-                            // }
+                            var action = ActionsManager.getSelectedAction()
+                            if (action != undefined)
+                            {
+                                action.addNewSprite(column, row)
+                            }
                         }
                         Component.onCompleted: {
                             root.onSequenceUpdated.connect(function(){
@@ -83,6 +79,9 @@ Item {
     }
 
     function initModel() {
+        gridView.cellWidth = (panel.width / Config.getTableColumns())
+        gridView.cellHeight = (panel.width / Config.getTableColumns())
+
         gridView.model.initModel(
             Config.getTableColumns(),
             Config.getTableRows()

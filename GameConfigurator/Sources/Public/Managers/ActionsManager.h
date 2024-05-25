@@ -34,6 +34,8 @@ public:
     Q_INVOKABLE const QVector<QString>& getTwitchDefaultAction() const;
     Q_INVOKABLE const QVector<QString> getPossibleActionsToAdd() const;
 
+    Q_INVOKABLE Action* getSelectedAction() const;
+
     // Events
     Q_INVOKABLE void markSelectedAction(int Index);
 
@@ -52,6 +54,9 @@ signals:
 
 private:
     QVector<QSharedPointer<Action>> Actions;
+    QSharedPointer<Action> SelectedAction;
+
+    // Default actions
     QVector<QString> GameDefaultActions = {"walk", "fall", "climb", "standby"};
     QVector<QString> TwitchDefaultActions = {
         "subscription", "subscriptionsGift", "raid", "ban", "follow", "moderatorAdded", "moderatorRemoved"

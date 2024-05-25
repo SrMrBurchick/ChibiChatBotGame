@@ -37,9 +37,8 @@ Item {
     }
 
     Component.onCompleted: {
-        if (!GlobalConfig.isConfigLoaded) {
+        if (!Config.isConfigLoaded()) {
             Config.loadConfig()
-            GlobalConfig.isConfigLoaded = Config.isConfigLoaded()
 
             // if (!ActionsManager.isActionsConfigured) {
             //     Config.initActionsListModel(ActionsManager.actionsListModel)

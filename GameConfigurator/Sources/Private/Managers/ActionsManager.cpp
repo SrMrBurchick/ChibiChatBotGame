@@ -43,13 +43,13 @@ void ActionsManager::removeAction(QSharedPointer<Action> ActionToRemove)
 
 QSharedPointer<Action> ActionsManager::GetActionByName(const QString& ActionName) const
 {
-    for (const QSharedPointer<Action>& Action : Actions)
+    for (const QSharedPointer<Action>& TargetAction : Actions)
     {
-        if (!Action.isNull())
+        if (!TargetAction.isNull())
         {
-            if (Action->getName().toLower() == ActionName.toLower())
+            if (TargetAction->getName().toLower() == ActionName.toLower())
             {
-                return Action;
+                return TargetAction;
             }
         }
     }
@@ -89,18 +89,19 @@ int ActionsManager::getActionsCount() const
 
 void ActionsManager::changeActionName(int Index, const QString& NewName)
 {
-    if (QSharedPointer<Action> Action = GetActionById(Index))
+    if (QSharedPointer<Action> TargetAction = GetActionById(Index))
     {
-        Action->SetName(NewName);
+        TargetAction->SetName(NewName);
         emit actionsUpdated();
     }
 }
 
 void ActionsManager::markSelectedAction(int Index)
 {
-    if (QSharedPointer<Action> Action = GetActionById(Index))
+    if (QSharedPointer<Action> TargetAction = GetActionById(Index))
     {
-        emit actionSelected(Action.get());
+        SelectedAction = TargetAction;
+        emit actionSelected(TargetAction.get());
     }
 }
 
@@ -139,7 +140,6 @@ bool ActionsManager::isDefaultAction(int Index) const
     return isDefaultAction(GetActionById(Index).get());
 }
 
-
 const QVector<QString>& ActionsManager::getGameDefaultActions() const
 {
     return GameDefaultActions;
@@ -161,4 +161,9 @@ const QVector<QString> ActionsManager::getPossibleActionsToAdd() const
     });
 
     return PossibleActions;
+}
+
+Action* ActionsManager::getSelectedAction() const
+{
+    return SelectedAction.get();
 }

@@ -6,6 +6,7 @@ import Buttons
 import Panels
 import Dialogs
 import ConfigComponent
+import ActionsManagerComponent
 import Base
 
 Item {
@@ -14,10 +15,10 @@ Item {
 
     property StackView rootStack: StackView.view
     property string spriteSheetPath
+    property bool isImageSplited: false;
 
     signal goBack()
     signal save()
-    signal loadSpriteSheet()
 
     FileDialog {
         id: fileDialog
@@ -25,12 +26,8 @@ Item {
         nameFilters: ["Image files (*.png *.jpg)"]
         onAccepted: {
             console.log(selectedFile)
-            // ActionsManager.spriteSheetPath = selectedFile;
-            // ActionsManager.spriteSheetConfigured = false;
-            spriteSheetGrid.clearModel();
-            actionsSpriteSequence.clearModel();
-
-            loadSpriteSheet();
+            image.source = selectedFile
+            Config.saveSpriteSheetPath(selectedFile)
         }
     }
 
@@ -56,6 +53,7 @@ Item {
                         rootStack.pop()
                     }
                     onLoadSpriteSheet: {
+                        root.isImageSplited = false
                         fileDialog.open();
                     }
                     onAddAction: {
@@ -76,25 +74,26 @@ Item {
 
                 SpriteSheetGrid {
                     id: spriteSheetGrid
-                    // visible: ActionsManager.spriteSheetConfigured
+                    visible: root.isImageSplited
+
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
-                //
-                // Flickable {
-                //     anchors.fill: parent
-                //     // visible: !ActionsManager.spriteSheetConfigured
-                //     clip: true
-                //     contentWidth: image.width; contentHeight: image.height
-                //     Image {
-                //         id: image
-                //         visible: true
-                //         // source: ActionsManager.spriteSheetPath
-                //
-                //         BaseText {
-                //             text: "(" + image.sourceSize.width + "x" + image.sourceSize.height + ")"
-                //         }
-                //     }
-                // }
+
+                Flickable {
+                    anchors.fill: parent
+                    visible: !root.isImageSplited
+                    clip: true
+                    contentWidth: image.width; contentHeight: image.height
+                    Image {
+                        id: image
+                        visible: true
+                        source: Config.getSpriteSheetPath()
+
+                        BaseText {
+                            text: "(" + image.sourceSize.width + "x" + image.sourceSize.height + ")"
+                        }
+                    }
+                }
             }
 
             BasePanel {
@@ -144,35 +143,15 @@ Item {
     }
 
     Component.onCompleted: {
-        // if (GlobalConfig.isConfigLoaded && !ActionsManager.spriteSheetConfigured) {
-        //     ActionsManager.spriteSheetPath = Config.getSpriteSheetPath();
-        //     ActionsManager.spriteSizeWidth = Config.getSpriteWidth()
-        //     ActionsManager.spriteSizeHeight = Config.getSpriteHeight()
-        //     ActionsManager.tableSettingsColumns = Config.getTableColumns()
-        //     ActionsManager.tableSettingsRows = Config.getTableRows()
-        //     ActionsManager.spriteScale = Config.getSpriteScale()
-        //     ActionsManager.spriteSheetConfigured = true
-        //     splitImageToSprites()
-        // }
-
-        if (GlobalConfig.isConfigLoaded) {
-            // ActionsManager.actionsListModel.setDefaultSelected()
-        }
-
         GlobalConfig.isBusy = false
     }
 
     function splitImageToSprites() {
+        root.isImageSplited = true
         spriteSheetGrid.initModel()
     }
 
     function saveActionsConfig() {
-        // Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
-        // Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
-        // Config.saveSpriteScale(ActionsManager.spriteScale)
-        // Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
-        // Config.saveActions(ActionsManager.sequenceModel)
-
         if (Config.isConfigLoaded() == false) {
             Config.actionsConfigured()
         } else {

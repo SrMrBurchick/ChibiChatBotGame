@@ -1,6 +1,8 @@
 import QtQuick
 import Panels
 import Base
+import ConfigComponent
+import ActionsManagerComponent
 
 Rectangle {
     id: root
@@ -14,11 +16,11 @@ Rectangle {
     Image {
         id: image
         anchors.fill: parent
-        // source: ActionsManager.spriteSheetPath
-        // sourceClipRect: Qt.rect(
-        //     parseInt(sprite_column) * ActionsManager.spriteSizeWidth,
-        //     parseInt(sprite_row) * ActionsManager.spriteSizeHeight,
-        //     ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
+        source: Config.getSpriteSheetPath()
+        sourceClipRect: Qt.rect(
+            parseInt(sprite_column) * Config.getSpriteWidth(),
+            parseInt(sprite_row) * Config.getSpriteHeight(),
+            Config.getSpriteWidth(), Config.getSpriteHeight())
     }
 
     Rectangle {
@@ -30,7 +32,7 @@ Rectangle {
             id: actionsCount
             anchors.bottom: parent.bottom
             anchors.left: parent.left
-            visible: isSelected
+            visible: root.isSelected
         }
 
         MouseArea {
@@ -38,19 +40,27 @@ Rectangle {
             onDoubleClicked: {
                 root.isSelected = true
                 toggleSelected(index, sprite_column, sprite_row)
-                // actionsCount.text = ActionsManager.spriteSheetModel.getActionsCount(index, ActionsManager.actionsListModel.getSelectedAction())
+
+                var selectedAction = ActionsManager.getSelectedAction()
+                if (selectedAction != undefined)
+                {
+                    root.isSelected = selectedAction.hasSprite(sprite_column, sprite_row)
+                    actionsCount.text = selectedAction.getSpriteCounts(sprite_column, sprite_row)
+                }
             }
         }
     }
 
     Component.onCompleted: {
-        // root.isSelected = ActionsManager.spriteSheetModel.containsAction(index, ActionsManager.actionsListModel.getSelectedAction())
-        // ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
-        //     root.isSelected = ActionsManager.spriteSheetModel.containsAction(index, action)
-        //     actionsCount.text = ActionsManager.spriteSheetModel.getActionsCount(index, action)
-        // })
-        //
-        // actionsCount.text = ActionsManager.spriteSheetModel.getActionsCount(index, ActionsManager.actionsListModel.getSelectedAction())
+        if (ActionsManager != undefined)
+        {
+            ActionsManager.onActionSelected.connect(function (selectedAction) {
+                if (selectedAction != undefined) {
+                    root.isSelected = selectedAction.hasSprite(sprite_column, sprite_row)
+                    actionsCount.text = selectedAction.getSpriteCounts(sprite_column, sprite_row)
+                }
+            })
+        }
     }
 
     signal toggleSelected(int index, int sprite_column, int sprite_row)

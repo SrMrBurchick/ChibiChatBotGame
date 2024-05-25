@@ -33,14 +33,14 @@ struct MessageSettings {
 };
 
 struct SystemConfig {
-    QString ImagePath;
-    QString ChatBotWebSockURL;
-    int ChatBotWebSockPort;
+    QString ImagePath = "qrc:/qml/Images/sprite-sheet.png";
+    QString ChatBotWebSockURL = "localhost";
+    int ChatBotWebSockPort = 656565;
     bool ChatBotAnyUser = false;
     bool Logging = false;
-    float SpriteScale;
-    int ScreenHeight;
-    int ScreenWidth;
+    float SpriteScale = 1.0f;
+    int ScreenHeight = 1080;
+    int ScreenWidth = 1920;
     QString TwitchTargetChannel;
     float ActionExecutionTime = 10.0f;
     float MovementSpeed = 3500.0f;
@@ -118,9 +118,8 @@ protected:
     void CopyImageToAssets();
 
     bool bConfigLoaded = false;
-    QString SpriteSheetPath;
-    SpriteSize SpriteSettings;
-    TableSize TableSettings;
+    SpriteSize SpriteSettings = {256, 256};
+    TableSize TableSettings = {14, 4};
     SystemConfig SystemSettings;
 
     // List of the animations
