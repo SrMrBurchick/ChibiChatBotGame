@@ -2,7 +2,7 @@ import QtQuick
 import Panels
 import Base
 import ConfigComponent
-import ActionsManagerComponent
+import Managers
 
 Rectangle {
     id: root

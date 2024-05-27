@@ -5,7 +5,7 @@ import ActionsModels
 import Delegates
 import Panels
 import ConfigComponent
-import ActionsManagerComponent
+import Managers
 
 ScrollView {
     anchors.margins: 4

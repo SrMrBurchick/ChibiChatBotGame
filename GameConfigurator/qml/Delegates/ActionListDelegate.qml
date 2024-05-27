@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import Base
 import Dialogs
 import Panels
-import ActionsManagerComponent
+import Managers
 
 Rectangle {
     id: root

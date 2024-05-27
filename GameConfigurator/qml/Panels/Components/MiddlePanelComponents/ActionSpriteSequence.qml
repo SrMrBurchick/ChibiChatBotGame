@@ -6,7 +6,7 @@ import ActionsModels
 import Panels
 import ConfigComponent
 import Base
-import ActionsManagerComponent
+import Managers
 
 Item {
     id: root

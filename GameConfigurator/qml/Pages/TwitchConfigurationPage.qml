@@ -6,7 +6,7 @@ import Buttons
 import Panels
 import Dialogs
 import ConfigComponent
-import ActionsManagerComponent
+import Managers
 import Base
 
 Item {

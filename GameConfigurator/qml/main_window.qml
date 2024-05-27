@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Qt.labs.platform
 import Pages
 import SystemTools
+import Managers
 import Base
 
 ApplicationWindow {

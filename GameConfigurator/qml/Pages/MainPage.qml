@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Buttons
-import ProcessesComponent
+import Managers
 import Delegates
 import Base
 

@@ -50,9 +50,9 @@ int main(int argc, char *argv[])
     PredefinedActionsListModel::registerModel("ConfigTools");
 
     qmlRegisterSingletonInstance("ConfigComponent", 1, 0, "Config", Config.get());
-    qmlRegisterSingletonInstance("ProcessesComponent", 1, 0, "ProcessManager", Manager.get());
-    qmlRegisterSingletonInstance("ActionsManagerComponent", 1, 0, "ActionsManager", ActionsManagerComp.get());
-    qmlRegisterSingletonInstance("SystemTools", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
+    qmlRegisterSingletonInstance("Managers", 1, 0, "ProcessManager", Manager.get());
+    qmlRegisterSingletonInstance("Managers", 1, 0, "ActionsManager", ActionsManagerComp.get());
+    qmlRegisterSingletonInstance("Managers", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
     qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
