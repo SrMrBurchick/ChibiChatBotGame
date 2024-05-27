@@ -19,6 +19,7 @@
         <file>qml/Pages/ConfigurationPage.qml</file>
         <file>qml/Pages/ActionsConfigurationPage.qml</file>
         <file>qml/Pages/ChatBotConfigurationPage.qml</file>
+        <file>qml/Pages/TwitchConfigurationPage.qml</file>
 
         <file>qml/Panels/qmldir</file>
         <file>qml/Panels/LeftPanel.qml</file>

@@ -99,7 +99,10 @@ ApplicationWindow {
                 stack.push(actions_config)
             } else if (messageObject.reply == "CommonConfig") {
                 stack.push(chatBotConfig)
+            } else if (messageObject.reply == "TwitchConfig") {
+                stack.push(twitchConfig)
             }
+
         }
     }
 
@@ -119,12 +122,13 @@ ApplicationWindow {
                 stack.pop()
             }
             onGoActionsConfiguration: {
-                GlobalConfig.isBusy = true
                 worker.sendMessage({'page': "ActionsConfig"})
             }
             onGoChatBotConfiguration: {
-                GlobalConfig.isBusy = true
                 worker.sendMessage({'page': "CommonConfig"})
+            }
+            onGoTwitchConfiguration: {
+                worker.sendMessage({'page': "TwitchConfig"})
             }
         }
     }
@@ -139,6 +143,13 @@ ApplicationWindow {
     Component {
         id: chatBotConfig
         ChatBotConfigurationPage {
+            rootStack: stack
+        }
+    }
+
+    Component {
+        id: twitchConfig
+        TwitchConfigurationPage {
             rootStack: stack
         }
     }

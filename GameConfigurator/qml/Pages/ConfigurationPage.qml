@@ -31,6 +31,12 @@ Item {
 
         BaseButton {
             scaler: 1.5
+            text: "Twitch settings"
+            onClicked: goTwitchConfiguration()
+        }
+
+        BaseButton {
+            scaler: 1.5
             text: "Back"
             onClicked: goBack()
         }
@@ -76,4 +82,5 @@ Item {
     signal goBack()
     signal goActionsConfiguration()
     signal goChatBotConfiguration()
+    signal goTwitchConfiguration()
 }
