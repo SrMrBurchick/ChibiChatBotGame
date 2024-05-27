@@ -339,39 +339,10 @@ void ConfigObject::saveTableRows(const int Rows)
     TableSettings.Rows = Rows;
 }
 
-void ConfigObject::saveActions(const AnimationSequenceModel* Model)
-{
-    if (Model != nullptr) {
-        Map = Model->getMap();
-    }
-}
-
 void ConfigObject::saveSpriteSheetPath(const QString& ImagePath)
 {
     SystemSettings.ImagePath = ImagePath;
     CopyImageToAssets();
-}
-
-void ConfigObject::initActionsListModel(ActionsListModel* Model)
-{
-    if (!isConfigLoaded() && Model == nullptr) {
-        return;
-    }
-
-    for (const QString& Key : Map.keys()) {
-        // Model->addNewAction(Key);
-    }
-}
-
-void ConfigObject::initAnimationsSequenceModel(AnimationSequenceModel* Model)
-{
-    if (!isConfigLoaded()) {
-        return;
-    }
-
-    if (Model != nullptr) {
-        Model->initModel(Map);
-    }
 }
 
 QString ConfigObject::getSpriteSheetPath() const
@@ -467,17 +438,6 @@ void ConfigObject::savePredefinedActions(const PredefinedActionsListModel* Model
 {
     if (Model != nullptr) {
         PredefinedActionsList = Model->getList();
-    }
-}
-
-void ConfigObject::initPredefinedActionsListModel(PredefinedActionsListModel* Model)
-{
-    if (!isConfigLoaded()) {
-        return;
-    }
-
-    if (Model != nullptr) {
-        Model->initModel(PredefinedActionsList);
     }
 }
 

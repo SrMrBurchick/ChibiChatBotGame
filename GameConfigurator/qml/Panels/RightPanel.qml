@@ -5,6 +5,7 @@ import Buttons
 import Panels
 import ConfigComponent
 import Base
+import ActionsManagerComponent
 
 Item {
     id: root
@@ -47,7 +48,7 @@ Item {
                     Image {
                         id: actionPreview
                         anchors.fill: parent
-                        // source: ActionsManager.spriteSheetPath
+                        source: Config.getSpriteSheetPath()
                     }
 
                 }
@@ -71,13 +72,16 @@ Item {
     }
 
     function playAnimationPreview() {
-        // var nextSpriteData = ActionsManager.sequenceModel.getNextSprite()
-        // actionPreview.sourceClipRect = Qt.rect(
-        //     parseInt(nextSpriteData.sprite_column) * ActionsManager.spriteSizeWidth,
-        //     parseInt(nextSpriteData.sprite_row) * ActionsManager.spriteSizeHeight,
-        //     ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight
-        // )
-        actionPreview.mirror = nextSpriteData.isInverted;
+        var selectedAction = ActionsManager.getSelectedAction()
+        if (selectedAction != undefined)
+        {
+            var nextSpriteData = selectedAction.getNextSprite()
+            actionPreview.sourceClipRect = Qt.rect(
+                parseInt(nextSpriteData.sprite_column) * Config.getSpriteWidth(),
+                parseInt(nextSpriteData.sprite_row) * Config.getSpriteHeight(),
+                Config.getSpriteWidth(), Config.getSpriteHeight()
+            )
+            actionPreview.mirror = nextSpriteData.isInverted;
+        }
     }
 }
-

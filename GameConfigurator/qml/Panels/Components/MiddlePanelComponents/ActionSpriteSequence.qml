@@ -6,6 +6,7 @@ import ActionsModels
 import Panels
 import ConfigComponent
 import Base
+import ActionsManagerComponent
 
 Item {
     id: root
@@ -27,21 +28,13 @@ Item {
 
         DelegateModel {
             id: actionsDelegateModel
-            // model: ActionsManager.sequenceModel
+            model: AnimationSequenceModel {
+
+            }
 
             delegate: ActionSpriteDelegate {
                 width: scrollView.height
                 height: scrollView.height
-                onPlaceItemAtPosition: (oldIndex, newIndex) => {
-                    // ActionsManager.sequenceModel.placeItemAt(oldIndex, newIndex);
-                }
-                onRemoveItem: (index) => {
-                    // ActionsManager.sequenceModel.removeElement(index)
-                }
-
-                onToggleInverted: (index) => {
-                    // ActionsManager.sequenceModel.toggleInverted(index)
-                }
             }
         }
 
@@ -67,11 +60,6 @@ Item {
     }
 
     Component.onCompleted: {
-        // ActionsManager.actionsListModel.onActionSelected.connect(function (action) {
-        //     ActionsManager.sequenceModel.setActiveAction(action);
-        // })
-        // ActionsManager.actionsListModel.onActionRemoved.connect(function (action) {
-        //     ActionsManager.sequenceModel.removeAction(action);
-        // })
+        actionsDelegateModel.model.subscribeOnTarget(ActionsManager)
     }
 }

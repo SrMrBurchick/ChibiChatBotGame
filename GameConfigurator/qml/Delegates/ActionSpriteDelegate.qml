@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Panels
 import Base
+import ConfigComponent
+import ActionsManagerComponent
 
 Rectangle {
     id: root
@@ -21,13 +23,14 @@ Rectangle {
     Image {
         id: image
         anchors.fill: parent
-        // source: ActionsManager.spriteSheetPath
-        // sourceClipRect: Qt.rect(
-        //     parseInt(sprite_column) * ActionsManager.spriteSizeWidth,
-        //     parseInt(sprite_row) * ActionsManager.spriteSizeHeight,
-        //     ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
-        //
-        // mirror: ActionsManager.sequenceModel.isInverted(index)
+        source: Config.getSpriteSheetPath()
+        sourceClipRect: Qt.rect(
+            parseInt(sprite_column) * Config.getSpriteWidth(),
+            parseInt(sprite_row) * Config.getSpriteHeight(),
+            Config.getSpriteWidth(), Config.getSpriteHeight()
+        )
+
+        mirror: inverted
     }
 
     MouseArea {
@@ -38,22 +41,31 @@ Rectangle {
         drag.target: root
 
         onReleased: {
-            // placeItemAtPosition(ActionsManager.actionSpriteOldIndex, ActionsManager.actionSpriteNewIndex)
-            //
-            // ActionsManager.actionSpriteOldIndex = -1
-            // ActionsManager.actionSpriteNewIndex = -1
+            var selectedAction = ActionsManager.getSelectedAction()
+            if (selectedAction != undefined)
+            {
+                selectedAction.placeSpriteAt(index, selectedAction.newIndex)
+                selectedAction.newIndex = -1
+            }
         }
 
         onDoubleClicked: {
-            toggleInverted(index)
+            var selectedAction = ActionsManager.getSelectedAction()
+            if (selectedAction != undefined)
+            {
+                selectedAction.toggleInverted(index)
+            }
         }
     }
 
     DropArea {
         anchors.fill: root
         onEntered:(drag) => {
-            // ActionsManager.actionSpriteOldIndex = drag.source.DelegateModel.itemsIndex
-            // ActionsManager.actionSpriteNewIndex = dragArea.DelegateModel.itemsIndex
+            var selectedAction = ActionsManager.getSelectedAction()
+            if (selectedAction != undefined)
+            {
+                selectedAction.newIndex = dragArea.DelegateModel.itemsIndex
+            }
         }
     }
     Image {
@@ -69,12 +81,12 @@ Rectangle {
             anchors.fill: parent
 
             onDoubleClicked: {
-                removeItem(index)
+                var selectedAction = ActionsManager.getSelectedAction()
+                if (selectedAction != undefined)
+                {
+                    selectedAction.removeSprite(index)
+                }
             }
         }
     }
-
-    signal toggleInverted(int index)
-    signal placeItemAtPosition(int oldIndex, int newIndex)
-    signal removeItem(int index)
 }

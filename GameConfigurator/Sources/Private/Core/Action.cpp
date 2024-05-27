@@ -29,14 +29,16 @@ void Action::SetName(const QString& NewName)
     emit nameChanged(Name);
 }
 
-void Action::PlaceSpriteAt(int OriginLocation, int NewLocation)
+void Action::placeSpriteAt(int OriginLocation, int NewLocation)
 {
     if (OriginLocation < 0 || OriginLocation >= SpriteSequence.count() || NewLocation < 0 || NewLocation >= SpriteSequence.count())
     {
+        emit spriteSequenceUpdated();
         return;
     }
 
     SpriteSequence.swapItemsAt(OriginLocation, NewLocation);
+    emit spriteSequenceUpdated();
 }
 
 void Action::addNewSprite(int Column, int Row)
@@ -95,4 +97,51 @@ int Action::getSpriteCounts(int Column, int Row) const
 QString Action::getName() const
 {
     return Name;
+}
+
+int Action::getTotalSpritesCounts() const
+{
+    return SpriteSequence.count();
+}
+
+const ActionSequenceSprite Action::GetSpriteById(int Index) const
+{
+    ActionSequenceSprite Sprite(0, 0);
+
+    if (Index >= 0 && Index < SpriteSequence.count())
+    {
+        return SpriteSequence[Index];
+    }
+
+    return Sprite;
+}
+
+void Action::toggleInverted(int Index)
+{
+    if (Index >= 0 && Index < SpriteSequence.count())
+    {
+        SpriteSequence[Index].toggleInverted();
+        emit spriteSequenceUpdated();
+    }
+}
+
+QVariantMap Action::getNextSprite()
+{
+    QVariantMap NextSprite;
+    if (SpriteToPlayIndex >= SpriteSequence.count())
+    {
+        SpriteToPlayIndex = 0;
+    }
+
+    ActionSequenceSprite Sprite = SpriteSequence[SpriteToPlayIndex++];
+    NextSprite["sprite_column"] = Sprite.Column;
+    NextSprite["sprite_row"] = Sprite.Row;
+    NextSprite["isInverted"] = Sprite.bInverted;
+
+    return NextSprite;
+}
+
+void Action::MarkSelected()
+{
+    emit spriteSequenceUpdated();
 }

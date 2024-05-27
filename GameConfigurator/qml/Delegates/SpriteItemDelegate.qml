@@ -58,15 +58,14 @@ Rectangle {
                 if (selectedAction != undefined) {
                     root.isSelected = selectedAction.hasSprite(sprite_column, sprite_row)
                     actionsCount.text = selectedAction.getSpriteCounts(sprite_column, sprite_row)
+                    selectedAction.onSpriteSequenceUpdated.connect(function () {
+                        root.isSelected = selectedAction.hasSprite(sprite_column, sprite_row)
+                        actionsCount.text = selectedAction.getSpriteCounts(sprite_column, sprite_row)
+                    })
                 }
             })
         }
     }
 
     signal toggleSelected(int index, int sprite_column, int sprite_row)
-
-    function sequenceUpdated() {
-        // root.isSelected = ActionsManager.spriteSheetModel.containsAction(index, ActionsManager.actionsListModel.getSelectedAction())
-        // actionsCount.text = ActionsManager.spriteSheetModel.getActionsCount(index, ActionsManager.actionsListModel.getSelectedAction())
-    }
 }

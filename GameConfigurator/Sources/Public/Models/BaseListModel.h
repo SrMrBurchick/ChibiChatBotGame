@@ -21,5 +21,7 @@ protected:
     virtual void OnActionsUpdated();
     virtual void OnTargetSubscribed();
 
+    virtual void UnsubscribeFromTarget();
+
     ActionsManager* Manager = nullptr;
 };

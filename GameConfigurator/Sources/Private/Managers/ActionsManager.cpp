@@ -5,6 +5,7 @@
 ActionsManager::ActionsManager(QObject* Parent)
     : QObject(Parent)
 {
+    SelectedAction = nullptr;
 }
 
 void ActionsManager::addNewAction(const QString& ActionName)
@@ -100,8 +101,12 @@ void ActionsManager::markSelectedAction(int Index)
 {
     if (QSharedPointer<Action> TargetAction = GetActionById(Index))
     {
-        SelectedAction = TargetAction;
         emit actionSelected(TargetAction.get());
+        SelectedAction = TargetAction;
+        if (SelectedAction)
+        {
+            SelectedAction->MarkSelected();
+        }
     }
 }
 

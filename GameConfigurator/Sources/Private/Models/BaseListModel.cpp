@@ -9,21 +9,14 @@ BaseListModel::BaseListModel(QObject* Parent)
 
 BaseListModel::~BaseListModel()
 {
-    if (Manager)
-    {
-        QObject::disconnect(Manager, &ActionsManager::actionsUpdated, this, &BaseListModel::onActionsUpdated);
-    }
+    UnsubscribeFromTarget();
 }
 
 void BaseListModel::subscribeOnTarget(ActionsManager* NewManager)
 {
     if (NewManager)
     {
-        if (Manager)
-        {
-            QObject::disconnect(Manager, &ActionsManager::actionsUpdated, this, &BaseListModel::onActionsUpdated);
-        }
-
+        UnsubscribeFromTarget();
         Manager = NewManager;
 
         if (Manager)
@@ -51,4 +44,12 @@ void BaseListModel::OnTargetSubscribed()
 void BaseListModel::onActionsUpdated()
 {
     OnActionsUpdated();
+}
+
+void BaseListModel::UnsubscribeFromTarget()
+{
+    if (Manager)
+    {
+        QObject::disconnect(Manager, &ActionsManager::actionsUpdated, this, &BaseListModel::onActionsUpdated);
+    }
 }

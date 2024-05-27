@@ -71,6 +71,12 @@ Rectangle {
     Component.onCompleted: {
         if (ActionsManager != undefined)
         {
+            var selectedAction = ActionsManager.getSelectedAction()
+            if (selectedAction != undefined)
+            {
+                    root.isSelected = name == selectedAction.name
+            }
+
             ActionsManager.onActionSelected.connect(function (selectedAction) {
                 if (selectedAction != undefined) {
                     root.isSelected = name == selectedAction.getName()

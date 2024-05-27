@@ -58,10 +58,6 @@ public:
     void ParseJsonDocument(const QJsonDocument& JsonDocument);
     void SaveConfigToFile(const QString& ConfigFile);
 
-    Q_INVOKABLE void initActionsListModel(ActionsListModel* Model);
-    Q_INVOKABLE void initAnimationsSequenceModel(AnimationSequenceModel* Model);
-    Q_INVOKABLE void initPredefinedActionsListModel(PredefinedActionsListModel* Model);
-
     Q_INVOKABLE QString getSpriteSheetPath() const;
     Q_INVOKABLE QString getChatBotURL() const;
     Q_INVOKABLE int getChatBotPort() const;
@@ -90,7 +86,6 @@ public:
     Q_INVOKABLE void saveSpriteHeight(const int Height);
     Q_INVOKABLE void saveTableColumns(const int Columns);
     Q_INVOKABLE void saveTableRows(const int Rows);
-    Q_INVOKABLE void saveActions(const AnimationSequenceModel* Model);
     Q_INVOKABLE void saveSpriteScale(const float SpriteScale);
     Q_INVOKABLE void saveScreenResolution(const int Height, const int Width);
     Q_INVOKABLE void saveTargetTwitchChannel(const QString& TargetChannel);

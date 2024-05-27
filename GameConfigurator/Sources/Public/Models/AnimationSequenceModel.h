@@ -1,9 +1,8 @@
 #pragma once
 
-#include <QAbstractListModel>
-#include <QMutex>
+#include "Models/BaseListModel.h"
 
-#include "Components/ActionComponent.h"
+class Action;
 
 enum eActionsSequenceListRole {
     Column = Qt::UserRole,
@@ -11,7 +10,7 @@ enum eActionsSequenceListRole {
     Inverted
 };
 
-class AnimationSequenceModel : public QAbstractListModel
+class AnimationSequenceModel : public BaseListModel
 {
     Q_OBJECT
 
@@ -26,30 +25,11 @@ public:
 
     static void registerModel(const QString& ModuleName);
 
-    void updateData();
-
-    void initModel(const ActionsMap& InitMap);
-
-    Q_INVOKABLE void removeElement(int Index);
-    Q_INVOKABLE void addNewAction(int Column, int Row);
-    Q_INVOKABLE void toggleInverted(int Index);
-    Q_INVOKABLE void placeItemAt(int SourceIndex, int TargetIndex);
-    Q_INVOKABLE void setActiveAction(const QString& Action);
-    Q_INVOKABLE void removeAction(const QString& Action);
-    Q_INVOKABLE void clearModel();
-
-    Q_INVOKABLE QVariantMap getNextSprite();
-    Q_INVOKABLE const ActionsMap& getMap() const;
-    Q_INVOKABLE bool isInverted(int Index) const;
-    void initSpriteActions(ActionGridSprite& ActionSprite);
-
-signals:
-    void spriteRemoved(int Column, int Row);
-
 protected:
-    QList<ActionSequenceSprite>* SpriteList = nullptr;
-    QString CurrentAction = "";
-    int currentSpriteIndex = 0;
-    ActionsMap Map;
-    QMutex SpriteListMutex;
+    virtual void OnTargetSubscribed() override;
+    virtual void UnsubscribeFromTarget() override;
+
+public slots:
+    void actionSelected(Action* selectedAction);
+    void sequenceUpdated();
 };
