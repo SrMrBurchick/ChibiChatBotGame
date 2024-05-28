@@ -21,6 +21,8 @@
         <file>qml/Pages/ChatBotConfigurationPage.qml</file>
         <file>qml/Pages/TwitchConfigurationPage.qml</file>
 
+        <file>qml/Pages/TwitchComponents/ChannelPointsConfigurationPage.qml</file>
+
         <file>qml/Panels/qmldir</file>
         <file>qml/Panels/LeftPanel.qml</file>
         <file>qml/Panels/RightPanel.qml</file>
