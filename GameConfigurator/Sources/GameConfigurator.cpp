@@ -14,8 +14,10 @@
 #include "Models/PredefinedActionsModel.h"
 #include "Models/SpriteSheet.h"
 #include "Managers/ActionsManager.h"
+#include "Managers/TwitchManager.h"
 #include "Core/Action.h"
 #include "System/Logger.h"
+#include "System/TwitchNetworkAccessManager.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,12 +28,17 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
+    Logger::SetLoggerEnabled(true);
+
     QScopedPointer<ConfigObject> Config(new ConfigObject);
     QScopedPointer<ProcessManager> Manager(new ProcessManager);
     QScopedPointer<ActionsManager> ActionsManagerComp(new ActionsManager);
+    QScopedPointer<TwitchManager> Twitch(new TwitchManager);
+    QPointer<TwitchNetworkAccessManager> TwitchNtwrk (new TwitchNetworkAccessManager);
     QPointer<IProcess> Game(new GameProcess);
     QPointer<IProcess> ChatBot(new ChatBotProcess);
 
+    Twitch->SetNetworkManager(TwitchNtwrk);
     Manager->AddProcess(Game);
     Manager->AddProcess(ChatBot);
 
@@ -54,6 +61,7 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("Managers", 1, 0, "ActionsManager", ActionsManagerComp.get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
     qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
+    qmlRegisterSingletonInstance("Managers", 1, 0, "TwitchManager", Twitch.get());
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

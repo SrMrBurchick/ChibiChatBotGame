@@ -28,7 +28,8 @@ HEADERS += Sources/Public/Configuration/ConfigLoader.h                          
            Sources/Public/Core/Action.h                                         \
            Sources/Public/Models/BaseListModel.h                                \
            Sources/Public/Managers/TwitchManager.h                              \
-           Sources/Public/System/TwitchNetworkAccessManager.h
+           Sources/Public/System/TwitchNetworkAccessManager.h                   \
+           Sources/Public/Core/Twitch/ChannelPointsReward.h
 
 SOURCES += Sources/GameConfigurator.cpp                                         \
            Sources/Private/Configuration/ConfigLoad.cpp                         \
@@ -49,7 +50,8 @@ SOURCES += Sources/GameConfigurator.cpp                                         
            Sources/Private/Core/Action.cpp                                      \
            Sources/Private/Models/BaseListModel.cpp                             \
            Sources/Private/Managers/TwitchManager.cpp                           \
-           Sources/Private/System/TwitchNetworkAccessManager.cpp
+           Sources/Private/System/TwitchNetworkAccessManager.cpp                \
+           Sources/Private/Core/Twitch/ChannelPointsReward.cpp
 
 RESOURCES += qml.qrc
 
