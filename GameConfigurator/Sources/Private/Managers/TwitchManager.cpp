@@ -30,7 +30,7 @@ void TwitchManager::requestChannelPointsRewards()
 
 void TwitchManager::addNewChannelPointsReward(ChannelPointsReward* NewReward)
 {
-    // TODO:
+    // TODO: move shared pointer to network manager
 }
 
 void TwitchManager::removeChannelPointsRewardById(int Index)

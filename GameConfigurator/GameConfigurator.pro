@@ -88,3 +88,15 @@ OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc
 RCC_DIR = $$DESTDIR/.qrc
 UI_DIR = $$DESTDIR/.ui
+
+# Config
+CREDENTIALS_READER = ./Scripts/add_credentials.py
+JSON_FILE = $$PWD/../credentials.json
+
+DEFINES += $$system(python3 $$CREDENTIALS_READER $$JSON_FILE)
+
+# Add the script to the build process
+QMAKE_EXTRA_COMPILERS += define_compiler
+define_compiler.commands = python3 $$CREDENTIALS_READER $$JSON_FILE
+define_compiler.output = define_compiler.out
+define_compiler.variable_out = DEFINES
