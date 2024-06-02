@@ -11,6 +11,8 @@
 
 constexpr char TWITCH_DATA_FIELD[] = "data";
 constexpr char TWITCH_ID_FIELD[] = "id";
+constexpr char TWITCH_ERROR_FIELD[] = "error";
+constexpr char TWITCH_MESSAGE_FIELD[] = "message";
 constexpr char TWITCH_BROADCASTER_ID_FIELD[] = "broadcasterId";
 
 TwitchNetworkAccessManager::TwitchNetworkAccessManager(QObject* Parent)
@@ -21,8 +23,7 @@ TwitchNetworkAccessManager::TwitchNetworkAccessManager(QObject* Parent)
 
 void TwitchNetworkAccessManager::InitBroadcasterInfo(const QString& BroadcasterName)
 {
-    if (BroadcasterName.isEmpty())
-    {
+    if (BroadcasterName.isEmpty()) {
         NotificationsManager::SendNotification("Twitch Network Manager", "Invalid broadcaster name!\n User info cannot be initialized");
         return;
     }
@@ -30,8 +31,7 @@ void TwitchNetworkAccessManager::InitBroadcasterInfo(const QString& BroadcasterN
     QNetworkRequest Request = CreateDefaultRequest("https://api.twitch.tv/helix/users?login=" + BroadcasterName.toLower());
     QNetworkReply* Reply = get(Request);
     QObject::connect(Reply, &QNetworkReply::finished, this, [=](){
-        QByteArray Data = Reply->readAll();
-        OnBroadcasterInfoReceived(Data);
+        OnBroadcasterInfoReceived(Reply->readAll());
     });
 }
 
@@ -39,23 +39,29 @@ void TwitchNetworkAccessManager::OnBroadcasterInfoReceived(const QByteArray& Dat
 {
     QJsonDocument InfoDocument = QJsonDocument::fromJson(Data);
     QVariantMap InfoMap = InfoDocument.toVariant().toMap();
-    if (InfoMap.contains(TWITCH_DATA_FIELD))
-    {
+    if (InfoMap.contains(TWITCH_DATA_FIELD)) {
         QJsonArray DataArray = InfoMap[TWITCH_DATA_FIELD].toJsonArray();
-        for (QJsonValueConstRef Item : DataArray)
-        {
+        for (QJsonValueConstRef Item : DataArray) {
             QJsonObject ItemObj = Item.toObject();
-            if (ItemObj.contains(TWITCH_ID_FIELD))
-            {
+            if (ItemObj.contains(TWITCH_ID_FIELD)) {
                 BroadcasterID = ItemObj[TWITCH_ID_FIELD].toString().toInt();
                 LOG_INFO("BroadcasterID = %d", BroadcasterID);
+                if (BroadcasterID > 0) {
+                    NotificationsManager::SendNotification("Twitch Network Manager", "Successfully connected to chanel!");
+                    emit successfullyConnected();
+                }
+
                 break;
             }
         }
+    } else if (InfoMap.contains(TWITCH_ERROR_FIELD)) {
+        NotificationsManager::SendNotification("Twitch Network Manager", QString("Failed to connect! %1").arg(InfoMap[TWITCH_MESSAGE_FIELD].toByteArray().data()));
+        LOG_CRITICAL("TwitchNetworkManager: [ConnectionError]: %s", Data.data());
+        emit failedToConnect();
     }
 }
 
-QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequest(const QString&& URL)
+QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequest(const QString& URL)
 {
     QNetworkRequest Request(URL);
     QString AuthorizationKey("Bearer ");
@@ -66,13 +72,33 @@ QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequest(const QString&&
     return Request;
 }
 
-QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequestWithBroadcasterID(const QString&& URL)
+QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequestWithBroadcasterID(const QString& URL)
 {
-    QNetworkRequest Request(URL + QString("?broadcaster_id=%d").arg(BroadcasterID));
+    QNetworkRequest Request(URL + QString("?broadcaster_id=%1").arg(BroadcasterID));
     QString AuthorizationKey("Bearer ");
     AuthorizationKey += QT_STRINGIFY(OAUTH_TOKEN);
     Request.setRawHeader("Authorization", AuthorizationKey.toUtf8());
     Request.setRawHeader("Client-Id", QT_STRINGIFY(CLIENT_ID));
 
     return Request;
+}
+
+void TwitchNetworkAccessManager::Get(const QString& URL, std::function<void(const QByteArray& Data)> Handler)
+{
+    QNetworkRequest Request = CreateDefaultRequestWithBroadcasterID(URL);
+    if (QNetworkReply* Reply = get(Request)) {
+        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply](){
+            QByteArray Data = Reply->readAll();
+            QJsonDocument InfoDocument = QJsonDocument::fromJson(Data);
+            QVariantMap InfoMap = InfoDocument.toVariant().toMap();
+            if (InfoMap.contains(TWITCH_ERROR_FIELD)) {
+                LOG_CRITICAL("TwitchNetworkAccessManager", "Failed to get data. Reason = %s", Data.data());
+            } else {
+                Handler(Data);
+            }
+        });
+    } else {
+        LOG_CRITICAL("Failed to create reply for request: %s", URL.toStdString().c_str());
+        NotificationsManager::SendNotification("TwitchNetworkAccessManager", "Failed to get reply");
+    }
 }

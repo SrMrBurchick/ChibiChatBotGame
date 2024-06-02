@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QNetworkAccessManager>
+#include <functional>
 
 class QNetworkRequest;
 
@@ -18,10 +19,19 @@ public:
     // Modifiers
     void InitBroadcasterInfo(const QString& BroadcasterName);
 
+    // Events
+    void Get(const QString& URL, std::function<void(const QByteArray& Data)> Handler);
+
+
+signals:
+    void successfullyConnected();
+    void failedToConnect();
+    void dataReceived(const QByteArray& Data);
+
 protected:
     void OnBroadcasterInfoReceived(const QByteArray& Data);
-    QNetworkRequest CreateDefaultRequest(const QString&& URL);
-    QNetworkRequest CreateDefaultRequestWithBroadcasterID(const QString&& URL);
+    QNetworkRequest CreateDefaultRequest(const QString& URL);
+    QNetworkRequest CreateDefaultRequestWithBroadcasterID(const QString& URL);
 
 private:
     int BroadcasterID = 0;
