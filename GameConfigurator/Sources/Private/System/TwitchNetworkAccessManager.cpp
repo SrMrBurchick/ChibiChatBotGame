@@ -15,6 +15,9 @@ constexpr char TWITCH_ERROR_FIELD[] = "error";
 constexpr char TWITCH_MESSAGE_FIELD[] = "message";
 constexpr char TWITCH_BROADCASTER_ID_FIELD[] = "broadcasterId";
 
+// Data
+constexpr char TWITCH_ACCESS_SCOPES[] = "channel:read:redemptions channel:manage:redemptions";
+
 TwitchNetworkAccessManager::TwitchNetworkAccessManager(QObject* Parent)
     : QNetworkAccessManager(Parent)
 {
@@ -100,5 +103,25 @@ void TwitchNetworkAccessManager::Get(const QString& URL, std::function<void(cons
     } else {
         LOG_CRITICAL("Failed to create reply for request: %s", URL.toStdString().c_str());
         NotificationsManager::SendNotification("TwitchNetworkAccessManager", "Failed to get reply");
+    }
+}
+
+const QString TwitchNetworkAccessManager::GetAuthorizationURL() const
+{
+    return QString(
+        "https://id.twitch.tv/oauth2/authorize"
+        "?client_id=%1"
+        "&redirect_uri=https://localhost:1337"
+        "&response_type=token"
+        "&force_verify=true"
+        "&scope=channel:read:redemptions channel:manage:redemptions"
+        "&state=unique_state")
+        .arg(QT_STRINGIFY(CLIENT_ID));
+}
+
+void TwitchNetworkAccessManager::SetupRedirectURI(const QString& URI)
+{
+    if (!URI.isEmpty()) {
+        RedirectURI = URI;
     }
 }

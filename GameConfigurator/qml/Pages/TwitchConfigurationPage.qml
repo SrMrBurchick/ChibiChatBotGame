@@ -14,19 +14,23 @@ Item {
     anchors.fill: parent
     anchors.centerIn: parent
 
-    property StackView rootStack: StackView.view
-    //
-    // WorkerScript {
-    //     id: worker
-    //     source: "qrc:qml/pageLoader.mjs"
-    //     onMessage: (messageObject)=> {
-    //     }
-    // }
+    AuthorizationDialog {
+        id: webView
+    }
 
+    property StackView rootStack: StackView.view
 
     ColumnLayout {
         anchors.centerIn: parent
         spacing: 24
+
+        BaseButton {
+            scaler: 1.5
+            text: "Authorize"
+            onClicked: {
+                TwitchManager.authorize()
+            }
+        }
 
         BaseButton {
             scaler: 1.5
@@ -49,6 +53,10 @@ Item {
     }
 
     Component.onCompleted: {
+        TwitchManager.authorizationURLReady.connect(function (url){
+            webView.setup(url)
+            webView.open()
+        })
     }
 
     signal goBack()

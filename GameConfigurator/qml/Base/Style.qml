@@ -101,5 +101,6 @@ QtObject {
     readonly property string lightCopyImage: "qrc:qml/Images/copy.png"
     readonly property string trashCanImage: bIsDarkTheme ? darkTrashCanImage : lightTrashCanImage
     readonly property string copyImage: bIsDarkTheme ? darkCopyImage : lightCopyImage
+    readonly property string twitchIcon: "qrc:qml/Images/twitch-logo.png"
 
 }

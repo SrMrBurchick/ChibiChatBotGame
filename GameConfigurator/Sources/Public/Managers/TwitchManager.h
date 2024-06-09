@@ -4,7 +4,6 @@
 #include <QSharedPointer>
 
 class TwitchNetworkAccessManager;
-
 class ChannelPointsReward;
 
 class TwitchManager : public QObject
@@ -32,10 +31,14 @@ public:
 
     // Event
     Q_INVOKABLE void requestChannelPointsRewards();
+    Q_INVOKABLE void authorize();
+    Q_INVOKABLE void userAuthorized(const QString& Token);
+
 
 signals:
     void channelPointsRewardsUpdated();
     void connectionUpdated(bool isConnected);
+    void authorizationURLReady(const QString& URL);
 
 public slots:
     void onConnectionSuccess();
@@ -46,4 +49,5 @@ private:
     QVector<QSharedPointer<ChannelPointsReward>> ChannelPointsRewards;
     bool bIsConnected = false;
     QString ChannelName = "";
+    QString UserOAuthToken = "";
 };

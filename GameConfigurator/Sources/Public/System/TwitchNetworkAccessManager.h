@@ -15,9 +15,11 @@ public:
 
     // ============================== C++ ======================================
     // Getters
+    const QString GetAuthorizationURL() const;
 
     // Modifiers
     void InitBroadcasterInfo(const QString& BroadcasterName);
+    void SetupRedirectURI(const QString& URI);
 
     // Events
     void Get(const QString& URL, std::function<void(const QByteArray& Data)> Handler);
@@ -35,4 +37,5 @@ protected:
 
 private:
     int BroadcasterID = 0;
+    QString RedirectURI;
 };

@@ -53,6 +53,7 @@
         <file>qml/Dialogs/AddActionDialog.qml</file>
         <file>qml/Dialogs/ChangeActionDialog.qml</file>
         <file>qml/Dialogs/AddPredefinedActionDialog.qml</file>
+        <file>qml/Dialogs/AuthorizationDialog.qml</file>
 
         <!-- Images -->
         <file>qml/Images/trash_can.png</file>

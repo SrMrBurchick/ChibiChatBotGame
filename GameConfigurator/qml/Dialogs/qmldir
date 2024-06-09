@@ -2,3 +2,4 @@ module Dialogs
 AddActionDialog 1.0 AddActionDialog.qml
 ChangeActionDialog 1.0 ChangeActionDialog.qml
 AddPredefinedActionDialog 1.0 AddPredefinedActionDialog.qml
+AuthorizationDialog 1.0 AuthorizationDialog.qml

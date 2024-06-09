@@ -1,9 +1,11 @@
 #include "Managers/TwitchManager.h"
 #include "System/TwitchNetworkAccessManager.h"
 #include "System/Logger.h"
+#include "Managers/NotificationsManager.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QDesktopServices>
 
 TwitchManager::TwitchManager(QObject* Parent)
     :QObject(Parent)
@@ -81,4 +83,24 @@ void TwitchManager::onConnectionFailed()
 {
     bIsConnected = false;
     emit connectionUpdated(bIsConnected);
+}
+
+void TwitchManager::authorize()
+{
+    if (NetworkManager == nullptr) {
+        LOG_WARNING("TwitchManager: Network Manager not initialized");
+        return;
+    }
+
+    emit authorizationURLReady(NetworkManager->GetAuthorizationURL());
+}
+
+void TwitchManager::userAuthorized(const QString& Token)
+{
+    if (!Token.isEmpty() && Token.length() == 30) {
+        UserOAuthToken = Token;
+        NotificationsManager::SendNotification("Twitch Manager", "Successfully authorized");
+    } else {
+        NotificationsManager::SendNotification("Twitch Manager", "Authorization failed");
+    }
 }
