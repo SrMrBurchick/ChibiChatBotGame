@@ -23,6 +23,7 @@ public:
 
     // Events
     void Get(const QString& URL, std::function<void(const QByteArray& Data)> Handler);
+    void Post(const QString& URL, std::function<void(const QByteArray& Data)> Handler);
 
 
 signals:

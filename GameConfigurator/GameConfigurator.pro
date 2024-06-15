@@ -10,48 +10,9 @@ TEMPLATE = app
 TARGET = GameConfigurator
 INCLUDEPATH += ./Sources/Public
 
-HEADERS += Sources/Public/Configuration/ConfigLoader.h                          \
-           Sources/Public/Configuration/ConfigObject.h                          \
-           Sources/Public/Models/ActionsListModel.h                             \
-           Sources/Public/Components/ActionComponent.h                          \
-           Sources/Public/Models/AnimationSequenceModel.h                       \
-           Sources/Public/Models/SpriteSheet.h                                  \
-           Sources/Public/Managers/ProcessManager.h                             \
-           Sources/Public/Managers/ProcessInterface.h                           \
-           Sources/Public/Managers/Processes/ChatBotProcess.h                   \
-           Sources/Public/Managers/Processes/GameProcess.h                      \
-           Sources/Public/Models/NotificationModel.h                            \
-           Sources/Public/Managers/NotificationsManager.h                       \
-           Sources/Public/Models/PredefinedActionsModel.h                       \
-           Sources/Public/System/Logger.h                                       \
-           Sources/Public/Managers/ActionsManager.h                             \
-           Sources/Public/Core/Action.h                                         \
-           Sources/Public/Models/BaseListModel.h                                \
-           Sources/Public/Managers/TwitchManager.h                              \
-           Sources/Public/System/TwitchNetworkAccessManager.h                   \
-           Sources/Public/Core/Twitch/ChannelPointsReward.h
-
-SOURCES += Sources/GameConfigurator.cpp                                         \
-           Sources/Private/Configuration/ConfigLoad.cpp                         \
-           Sources/Private/Configuration/ConfigObject.cpp                       \
-           Sources/Private/Models/ActionsListModel.cpp                          \
-           Sources/Private/Models/AnimationSequenceModel.cpp                    \
-           Sources/Private/Components/ActionComponent.cpp                       \
-           Sources/Private/Models/SpriteSheet.cpp                               \
-           Sources/Private/Managers/ProcessManager.cpp                          \
-           Sources/Private/Managers/ProcessInterface.cpp                        \
-           Sources/Private/Managers/Processes/ChatBotProcess.cpp                \
-           Sources/Private/Managers/Processes/GameProcess.cpp                   \
-           Sources/Private/Models/NotificationModel.cpp                         \
-           Sources/Private/Managers/NotificationsManager.cpp                    \
-           Sources/Private/Models/PredefinedActionsList.cpp                     \
-           Sources/Private/System/Logger.cpp                                    \
-           Sources/Private/Managers/ActionsManager.cpp                          \
-           Sources/Private/Core/Action.cpp                                      \
-           Sources/Private/Models/BaseListModel.cpp                             \
-           Sources/Private/Managers/TwitchManager.cpp                           \
-           Sources/Private/System/TwitchNetworkAccessManager.cpp                \
-           Sources/Private/Core/Twitch/ChannelPointsReward.cpp
+# Automatically include all .h and .cpp files
+HEADERS += $$files(Sources/Public/*.h, true)
+SOURCES += $$files(Sources/*.cpp, true)
 
 RESOURCES += qml.qrc
 

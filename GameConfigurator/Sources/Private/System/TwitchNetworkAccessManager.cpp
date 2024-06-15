@@ -106,6 +106,27 @@ void TwitchNetworkAccessManager::Get(const QString& URL, std::function<void(cons
     }
 }
 
+void TwitchNetworkAccessManager::Post(const QString& URL, std::function<void(const QByteArray& Data)> Handler)
+{
+    QNetworkRequest Request = CreateDefaultRequestWithBroadcasterID(URL);
+    QUrl PostData;
+    // if (QNetworkReply* Reply = post(Request)) {
+    //     QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply](){
+    //         QByteArray Data = Reply->readAll();
+    //         QJsonDocument InfoDocument = QJsonDocument::fromJson(Data);
+    //         QVariantMap InfoMap = InfoDocument.toVariant().toMap();
+    //         if (InfoMap.contains(TWITCH_ERROR_FIELD)) {
+    //             LOG_CRITICAL("TwitchNetworkAccessManager", "Failed to get data. Reason = %s", Data.data());
+    //         } else {
+    //             Handler(Data);
+    //         }
+    //     });
+    // } else {
+    //     LOG_CRITICAL("Failed to create reply for request: %s", URL.toStdString().c_str());
+    //     NotificationsManager::SendNotification("TwitchNetworkAccessManager", "Failed to get reply");
+    // }
+}
+
 const QString TwitchNetworkAccessManager::GetAuthorizationURL() const
 {
     return QString(
