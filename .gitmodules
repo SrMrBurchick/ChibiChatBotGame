@@ -1,3 +1,7 @@
 [submodule "tools/wasm-server-runner"]
 	path = tools/wasm-server-runner
 	url = git@github.com:jakobhellermann/wasm-server-runner.git
+	branch = main
+[submodule "GameConfigurator/Utils/GoogleTest"]
+	path = GameConfigurator/Utils/GoogleTest
+	url = git@github.com:google/googletest.git
