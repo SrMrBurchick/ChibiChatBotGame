@@ -14,6 +14,9 @@ INCLUDEPATH += ./Sources/Public
 HEADERS += $$files(Sources/Public/*.h, true)
 SOURCES += $$files(Sources/*.cpp, true)
 
+# GTest
+
+
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model

@@ -1,11 +1,16 @@
 #include "Managers/TwitchManager.h"
-#include "System/TwitchNetworkAccessManager.h"
+#include "Managers/TwitchNetworkAccessManager.h"
 #include "System/Logger.h"
 #include "Managers/NotificationsManager.h"
+#include "Core/Twitch/ChannelPointsReward.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QDesktopServices>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 
 TwitchManager::TwitchManager(QObject* Parent)
     :QObject(Parent)
@@ -48,9 +53,9 @@ void TwitchManager::requestChannelPointsRewards()
         return;
     }
 
-    LOG_INFO("Request ChannelPoints Rewards");
-    NetworkManager->Get("https://api.twitch.tv/helix/channel_points/custom_rewards", [](const QByteArray& Data) {
-        LOG_INFO("Received = %s", Data.data());
+    NetworkManager->Get("https://api.twitch.tv/helix/channel_points/custom_rewards", [this](const QByteArray& Data) {
+        QJsonDocument DataInfo = QJsonDocument::fromJson(Data);
+        ParseChannelPointsRewards(DataInfo.toVariant().toJsonArray());
     });
 }
 
@@ -103,4 +108,22 @@ void TwitchManager::userAuthorized(const QString& Token)
     } else {
         NotificationsManager::SendNotification("Twitch Manager", "Authorization failed");
     }
+}
+
+void TwitchManager::ParseChannelPointsRewards(const QJsonArray& Rewards)
+{
+    if (Rewards.isEmpty()) {
+        return;
+    }
+
+    ChannelPointsRewards.clear();
+
+    for (const QJsonValue& Reward : Rewards) {
+        if (QSharedPointer<ChannelPointsReward> NewReward = QSharedPointer<ChannelPointsReward>::create()) {
+            NewReward->ParseJson(Reward);
+            ChannelPointsRewards.push_back(NewReward);
+        }
+    }
+
+    emit channelPointsRewardsUpdated();
 }

@@ -44,6 +44,9 @@ public slots:
     void onConnectionSuccess();
     void onConnectionFailed();
 
+protected:
+    void ParseChannelPointsRewards(const QJsonArray& Rewards);
+
 private:
     TwitchNetworkAccessManager* NetworkManager;
     QVector<QSharedPointer<ChannelPointsReward>> ChannelPointsRewards;

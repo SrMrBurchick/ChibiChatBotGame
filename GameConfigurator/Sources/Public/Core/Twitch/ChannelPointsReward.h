@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QColor>
 
-#include "System/TwitchNetworkInterface.h"
+#include "Managers/TwitchNetworkInterface.h"
 
 class ChannelPointsReward : public QObject, public ITwitchNetwork
 {

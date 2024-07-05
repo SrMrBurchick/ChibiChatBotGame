@@ -1,6 +1,6 @@
 #!/bin/bash
 ## Init submodules
-git submodule update --init --recursive
+# git submodule update --init --recursive
 
 ## Environment variables
 PROJECT_LOCATION="$PWD"

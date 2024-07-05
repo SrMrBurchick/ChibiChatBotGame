@@ -1,4 +1,4 @@
-#include "System/TwitchNetworkAccessManager.h"
+#include "Managers/TwitchNetworkAccessManager.h"
 
 #include "Managers/NotificationsManager.h"
 #include "System/Logger.h"
@@ -97,7 +97,9 @@ void TwitchNetworkAccessManager::Get(const QString& URL, std::function<void(cons
             if (InfoMap.contains(TWITCH_ERROR_FIELD)) {
                 LOG_CRITICAL("TwitchNetworkAccessManager", "Failed to get data. Reason = %s", Data.data());
             } else {
-                Handler(Data);
+                if (InfoMap.contains(TWITCH_DATA_FIELD)) {
+                    Handler(InfoMap[TWITCH_DATA_FIELD].toByteArray());
+                }
             }
         });
     } else {

@@ -7,3 +7,7 @@ credentials.json
 *Makefile
 *.stash
 *.spec
+*Debug
+*Release
+*debug
+*release
