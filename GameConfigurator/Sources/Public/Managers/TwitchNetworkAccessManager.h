@@ -1,5 +1,6 @@
 #pragma once
 
+#include "qcontainerfwd.h"
 #include <QNetworkAccessManager>
 #include <functional>
 
@@ -20,6 +21,7 @@ public:
     // Modifiers
     void InitBroadcasterInfo(const QString& BroadcasterName);
     void SetupRedirectURI(const QString& URI);
+    void RequestChannelInfo(const QString& OAuthToken);
 
     // Events
     void Get(const QString& URL, std::function<void(const QByteArray& Data)> Handler);
@@ -30,6 +32,7 @@ signals:
     void successfullyConnected();
     void failedToConnect();
     void dataReceived(const QByteArray& Data);
+    void onChannelNameReceived(const QString& ChannelName);
 
 protected:
     void OnBroadcasterInfoReceived(const QByteArray& Data);

@@ -35,7 +35,14 @@ Item {
         BaseButton {
             scaler: 1.5
             text: "Channel Points Configuration"
-            onClicked: rootStack.push(channel_points_config)
+            onClicked: {
+                if (TwitchManager.isAuthorized()) {
+                    rootStack.push(channel_points_config)
+                } else {
+                    NotificationsManager.notify("Twitch Authorization", "Youre not authorized")
+                }
+
+            }
         }
 
         BaseButton {

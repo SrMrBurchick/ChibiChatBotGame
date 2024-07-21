@@ -31,6 +31,23 @@ if not exist %PACKAGE_TOOLS_DIRECTORY% (
     mkdir "%PACKAGE_TOOLS_DIRECTORY%"
 )
 
+rem Setup requirements
+echo "Setup scoop"
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+
+echo "Install QT"
+scoop install extras/qt-creator
+
+echo "Install RUST"
+scoop install main/rust
+
+echo "Install python"
+scoop install main/python
+
+echo "Install pyinstaller"
+python -m pip install pyinstaller
+
 rem Build chat bot
 echo Build chat bot
 call "%~dp0tools/Scripts/Build/Win64/BuildChatBot.bat" %CHAT_BOT% %PACKAGE_DIRECTORY%

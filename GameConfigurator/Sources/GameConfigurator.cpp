@@ -31,37 +31,37 @@ int main(int argc, char *argv[])
     Logger::SetLoggerEnabled(true);
 
     QScopedPointer<ConfigObject> Config(new ConfigObject);
-    // QScopedPointer<ProcessManager> Manager(new ProcessManager);
-    // QScopedPointer<ActionsManager> ActionsManagerComp(new ActionsManager);
-    // QScopedPointer<TwitchManager> Twitch(new TwitchManager);
-    // QPointer<TwitchNetworkAccessManager> TwitchNtwrk (new TwitchNetworkAccessManager);
-    // QPointer<IProcess> Game(new GameProcess);
-    // QPointer<IProcess> ChatBot(new ChatBotProcess);
-    //
-    // Twitch->SetNetworkManager(TwitchNtwrk);
-    // Manager->AddProcess(Game);
-    // Manager->AddProcess(ChatBot);
+    QScopedPointer<ProcessManager> Manager(new ProcessManager);
+    QScopedPointer<ActionsManager> ActionsManagerComp(new ActionsManager);
+    QScopedPointer<TwitchManager> Twitch(new TwitchManager);
+    QPointer<TwitchNetworkAccessManager> TwitchNtwrk (new TwitchNetworkAccessManager);
+    QPointer<IProcess> Game(new GameProcess);
+    QPointer<IProcess> ChatBot(new ChatBotProcess);
+
+    Twitch->SetNetworkManager(TwitchNtwrk);
+    Manager->AddProcess(Game);
+    Manager->AddProcess(ChatBot);
 
     engine.addImportPath(":/qml");
 
     // Setup config signals
-    // QObject::connect(Config.get(), &ConfigObject::loggerEnabled, [&](bool Enabled) {
-    //     Logger::SetLoggerEnabled(Enabled);
-    //     Config->SaveLogging(Enabled);
-    // });
+    QObject::connect(Config.get(), &ConfigObject::loggerEnabled, [&](bool Enabled) {
+        Logger::SetLoggerEnabled(Enabled);
+        Config->SaveLogging(Enabled);
+    });
 
-    // ActionsListModel::registerModel("ActionsModels");
-    // AnimationSequenceModel::registerModel("ActionsModels");
-    // SpriteSheetModel::registerModel("ActionsModels");
-    // NotificationListModel::registerModel("SystemTools");
-    // PredefinedActionsListModel::registerModel("ConfigTools");
-    //
-    // qmlRegisterSingletonInstance("ConfigComponent", 1, 0, "Config", Config.get());
-    // qmlRegisterSingletonInstance("Managers", 1, 0, "ProcessManager", Manager.get());
-    // qmlRegisterSingletonInstance("Managers", 1, 0, "ActionsManager", ActionsManagerComp.get());
-    // qmlRegisterSingletonInstance("Managers", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
-    // qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
-    // qmlRegisterSingletonInstance("Managers", 1, 0, "TwitchManager", Twitch.get());
+    ActionsListModel::registerModel("ActionsModels");
+    AnimationSequenceModel::registerModel("ActionsModels");
+    SpriteSheetModel::registerModel("ActionsModels");
+    NotificationListModel::registerModel("SystemTools");
+    PredefinedActionsListModel::registerModel("ConfigTools");
+
+    qmlRegisterSingletonInstance("ConfigComponent", 1, 0, "Config", Config.get());
+    qmlRegisterSingletonInstance("Managers", 1, 0, "ProcessManager", Manager.get());
+    qmlRegisterSingletonInstance("Managers", 1, 0, "ActionsManager", ActionsManagerComp.get());
+    qmlRegisterSingletonInstance("Managers", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
+    qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
+    qmlRegisterSingletonInstance("Managers", 1, 0, "TwitchManager", Twitch.get());
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

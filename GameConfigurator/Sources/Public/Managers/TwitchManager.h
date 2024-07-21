@@ -20,6 +20,7 @@ public:
     // Modifiers
     void SetNetworkManager(TwitchNetworkAccessManager* Manager);
 
+
     // ================================ QML ====================================
     // Modifiers
     Q_INVOKABLE void addNewChannelPointsReward(ChannelPointsReward* NewReward);
@@ -27,7 +28,7 @@ public:
     Q_INVOKABLE void connectToTheChannel(const QString& Channel);
 
     // Getter
-    Q_INVOKABLE bool isConnectedToChannel() const;
+    Q_INVOKABLE bool isAuthorized() const;
 
     // Event
     Q_INVOKABLE void requestChannelPointsRewards();
@@ -43,6 +44,7 @@ signals:
 public slots:
     void onConnectionSuccess();
     void onConnectionFailed();
+    void onChannelNameReceived(const QString& NewChannelName);
 
 protected:
     void ParseChannelPointsRewards(const QJsonArray& Rewards);

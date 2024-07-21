@@ -14,6 +14,8 @@ constexpr char TWITCH_ID_FIELD[] = "id";
 constexpr char TWITCH_ERROR_FIELD[] = "error";
 constexpr char TWITCH_MESSAGE_FIELD[] = "message";
 constexpr char TWITCH_BROADCASTER_ID_FIELD[] = "broadcasterId";
+constexpr char TWITCH_LOGIN_FIELD[] = "login";
+
 
 // Data
 constexpr char TWITCH_ACCESS_SCOPES[] = "channel:read:redemptions channel:manage:redemptions";
@@ -146,5 +148,36 @@ void TwitchNetworkAccessManager::SetupRedirectURI(const QString& URI)
 {
     if (!URI.isEmpty()) {
         RedirectURI = URI;
+    }
+}
+
+void TwitchNetworkAccessManager::RequestChannelInfo(const QString& OAuthToken)
+{
+    QNetworkRequest Request(QUrl("https://api.twitch.tv/helix/users"));
+    QString Token = "Bearer ";
+    Token += OAuthToken;
+    Request.setRawHeader("Authorization", Token.toUtf8());
+    Request.setRawHeader("Client-Id", QT_STRINGIFY(CLIENT_ID));
+
+    if (QNetworkReply* Reply = get(Request)) {
+        QObject::connect(Reply, &QNetworkReply::finished, [Reply, this]() {
+            if (Reply->error() == QNetworkReply::NoError) {
+                QByteArray response = Reply->readAll();
+                LOG_INFO("Channel info = %s", response.data());
+                QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+                QJsonObject jsonObj = jsonDoc.object();
+                QJsonArray DataArray = jsonObj[TWITCH_DATA_FIELD].toArray();
+                for (QJsonValueConstRef Item : DataArray) {
+                    QJsonObject ItemObj = Item.toObject();
+                    if (ItemObj.contains(TWITCH_LOGIN_FIELD)) {
+                        emit onChannelNameReceived(ItemObj[TWITCH_LOGIN_FIELD].toString());
+                        return;
+                    }
+                }
+
+            } else {
+                LOG_CRITICAL("Request channel info error! %s", Reply->errorString().toStdString().c_str());
+            }
+        });
     }
 }

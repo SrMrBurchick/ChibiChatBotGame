@@ -31,17 +31,19 @@ void TwitchManager::SetNetworkManager(TwitchNetworkAccessManager* Manager)
     if (NetworkManager) {
         QObject::disconnect(NetworkManager, &TwitchNetworkAccessManager::successfullyConnected, this, &TwitchManager::onConnectionSuccess);
         QObject::disconnect(NetworkManager, &TwitchNetworkAccessManager::failedToConnect, this, &TwitchManager::onConnectionFailed);
+        QObject::disconnect(NetworkManager, &TwitchNetworkAccessManager::onChannelNameReceived, this, &TwitchManager::onChannelNameReceived);
     }
 
     NetworkManager = Manager;
     if (NetworkManager) {
         QObject::connect(NetworkManager, &TwitchNetworkAccessManager::successfullyConnected, this, &TwitchManager::onConnectionSuccess);
         QObject::connect(NetworkManager, &TwitchNetworkAccessManager::failedToConnect, this, &TwitchManager::onConnectionFailed);
+        QObject::connect(NetworkManager, &TwitchNetworkAccessManager::onChannelNameReceived, this, &TwitchManager::onChannelNameReceived);
     }
 
 }
 
-bool TwitchManager::isConnectedToChannel() const
+bool TwitchManager::isAuthorized() const
 {
     return bIsConnected;
 }
@@ -81,7 +83,6 @@ void TwitchManager::onConnectionSuccess()
 {
     bIsConnected = true;
     emit connectionUpdated(bIsConnected);
-    requestChannelPointsRewards();
 }
 
 void TwitchManager::onConnectionFailed()
@@ -105,6 +106,11 @@ void TwitchManager::userAuthorized(const QString& Token)
     if (!Token.isEmpty() && Token.length() == 30) {
         UserOAuthToken = Token;
         NotificationsManager::SendNotification("Twitch Manager", "Successfully authorized");
+
+        if (NetworkManager) {
+            NetworkManager->RequestChannelInfo(UserOAuthToken);
+        }
+
     } else {
         NotificationsManager::SendNotification("Twitch Manager", "Authorization failed");
     }
@@ -126,4 +132,11 @@ void TwitchManager::ParseChannelPointsRewards(const QJsonArray& Rewards)
     }
 
     emit channelPointsRewardsUpdated();
+}
+
+void TwitchManager::onChannelNameReceived(const QString& NewChannelName)
+{
+    if (!NewChannelName.isEmpty()) {
+        connectToTheChannel(NewChannelName);
+    }
 }

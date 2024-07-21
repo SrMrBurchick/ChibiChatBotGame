@@ -55,7 +55,7 @@ UI_DIR = $$DESTDIR/.ui
 
 # Config
 CREDENTIALS_READER = ./Scripts/add_credentials.py
-JSON_FILE = $$PWD/../credentials.json
+JSON_FILE = $$PWD/credentials.json
 
 DEFINES += $$system(python3 $$CREDENTIALS_READER $$JSON_FILE)
 
