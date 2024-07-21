@@ -1,0 +1,6 @@
+name: Windows Release
+jobs:
+  build:
+      steps:
+      - name: Run Test
+      - run: echo Tobi pizda
