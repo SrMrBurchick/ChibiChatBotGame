@@ -32,20 +32,33 @@ struct MessageSettings {
     QColor MessageTextColor = "red";
 };
 
-struct SystemConfig {
-    QString ImagePath = "qrc:/qml/Images/sprite-sheet.png";
-    QString ChatBotWebSockURL = "localhost";
-    int ChatBotWebSockPort = 656565;
-    bool ChatBotAnyUser = false;
-    bool Logging = false;
+struct TwitchBotSettings {
+    QString WebSockURL = "localhost";
+    int WebSockPort = 656565;
+    bool ChatAnyUser = false;
+};
+
+struct TwitchSettings {
+    TwitchBotSettings Bot;
+    QString OAuthToken = "";
+    QString ChannelName = "";
+};
+
+struct GameSettings {
     float SpriteScale = 1.0f;
     int ScreenHeight = 1080;
     int ScreenWidth = 1920;
-    QString TwitchTargetChannel;
     float ActionExecutionTime = 10.0f;
     float MovementSpeed = 3500.0f;
     float NextActionTimeout = 20.0f;
+};
+
+struct SystemConfig {
+    QString ImagePath = "qrc:/qml/Images/sprite-sheet.png";
+    bool Logging = false;
+    TwitchSettings Twitch;
     MessageSettings Message;
+    GameSettings Game;
 };
 
 class ConfigObject : public QObject {
@@ -96,6 +109,7 @@ public:
     Q_INVOKABLE void saveNextActionTimeout(const float NextActionTimeout);
     Q_INVOKABLE void saveFontSize(const int FontSize);
     Q_INVOKABLE void saveChatBotUser(const bool AnyUser);
+    Q_INVOKABLE void saveTwitchInfo(const QString& ChannelName, const QString& OAuthToken);
 
     Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
@@ -103,6 +117,8 @@ public:
     Q_INVOKABLE void saveDataToClipboard(const QString& Data);
 
     void SaveLogging(bool Logging);
+
+    const TwitchSettings GetTwitchSettings() const { return SystemSettings.Twitch; };
 
 signals:
     void actionsConfigured();

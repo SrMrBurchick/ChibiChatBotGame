@@ -22,7 +22,10 @@ constexpr char SCREEN_RESOLUTION_WIDTH[] = "width";
 constexpr char SCREEN_RESOLUTION_HEIGHT[] = "height";
 
 // Twitch target channel
+constexpr char TWITCH_SETTINGS[] = "twitch-settings";
+constexpr char TWITCH_BOT_SETTINGS[] = "twitch-bot-settings";
 constexpr char TWITCH_CHANNEL[] = "twitch-channel";
+constexpr char TWITCH_OAUTH[] = "oauth-token";
 
 // Action execution time
 constexpr char ACTION_EXECUTION_TIME[] = "action-execution-time";
@@ -41,7 +44,6 @@ constexpr char MOVEMENT_SPEED[] = "movement-speed";
 constexpr char NEXT_ACTION_TIMEOUT[] = "next-action-timeout";
 
 // Chat bot settings fields
-constexpr char CHAT_BOT_SETTINGS[] = "chat-bot";
 constexpr char CHAT_BOT_SETTINGS_URL[] = "url";
 constexpr char CHAT_BOT_SETTINGS_PORT[] = "port";
 constexpr char CHAT_BOT_USER[] = "any-user";
@@ -76,7 +78,7 @@ ConfigObject::ConfigObject(QObject* Parent)
 
 ConfigObject::~ConfigObject()
 {
-
+    saveConfig();
 }
 
 float round(float Value) {
@@ -88,7 +90,7 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     QVariantMap ConfigMap = ConfigDocument.toVariant().toMap();
     QVariantMap JsonTableSettings = ConfigMap[TABLE_SETTINGS].toMap();
     QVariantMap JsonSpriteSettings = ConfigMap[SPRITE_SETTINGS].toMap();
-    QVariantMap JsonChatBotSettings = ConfigMap[CHAT_BOT_SETTINGS].toMap();
+    QVariantMap JsonTwitchSettings = ConfigMap[TWITCH_SETTINGS].toMap();
     QVariantMap JsonScreenResolution = ConfigMap[SCREEN_RESOLUTION].toMap();
     QVariantMap JsonMessageSettings = ConfigMap[MESSAGE_SETTINGS].toMap();
     QJsonArray JsonActionsArray = ConfigMap[ANIMATIONS_SETTINGS].toJsonArray();
@@ -101,27 +103,35 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
 
     // Init sprite scale
     if (ConfigMap.contains(SPRITE_SCALE)) {
-        SystemSettings.SpriteScale = round(ConfigMap[SPRITE_SCALE].toFloat());
+        SystemSettings.Game.SpriteScale = round(ConfigMap[SPRITE_SCALE].toFloat());
     }
 
-    // Init twitch channel
-    if (ConfigMap.contains(TWITCH_CHANNEL)) {
-        SystemSettings.TwitchTargetChannel = ConfigMap[TWITCH_CHANNEL].toString();
+    // Init twitch settings
+    if (JsonTwitchSettings.contains(TWITCH_CHANNEL) && JsonTwitchSettings.contains(TWITCH_OAUTH)) {
+        SystemSettings.Twitch.ChannelName = JsonTwitchSettings[TWITCH_CHANNEL].toString();
+        SystemSettings.Twitch.OAuthToken = JsonTwitchSettings[TWITCH_OAUTH].toString();
+        if (JsonTwitchSettings.contains(TWITCH_BOT_SETTINGS)) {
+            QVariantMap JsonTwitchBotSettings = JsonTwitchSettings[TWITCH_BOT_SETTINGS].toMap();
+            SystemSettings.Twitch.Bot.WebSockURL = JsonTwitchBotSettings[CHAT_BOT_SETTINGS_URL].toString();
+            SystemSettings.Twitch.Bot.WebSockPort = JsonTwitchBotSettings[CHAT_BOT_SETTINGS_PORT].toInt();
+            SystemSettings.Twitch.Bot.ChatAnyUser = JsonTwitchBotSettings[CHAT_BOT_USER].toInt();
+        }
+
     }
 
     // Init action execution time
     if (ConfigMap.contains(ACTION_EXECUTION_TIME)) {
-        SystemSettings.ActionExecutionTime = round(ConfigMap[ACTION_EXECUTION_TIME].toFloat());
+        SystemSettings.Game.ActionExecutionTime = round(ConfigMap[ACTION_EXECUTION_TIME].toFloat());
     }
 
     // Init movement speed
     if (ConfigMap.contains(MOVEMENT_SPEED)) {
-        SystemSettings.MovementSpeed =  round(ConfigMap[MOVEMENT_SPEED].toFloat());
+        SystemSettings.Game.MovementSpeed =  round(ConfigMap[MOVEMENT_SPEED].toFloat());
     }
 
     // Init next action timeout
     if (ConfigMap.contains(NEXT_ACTION_TIMEOUT)) {
-        SystemSettings.NextActionTimeout = round(ConfigMap[NEXT_ACTION_TIMEOUT].toFloat());
+        SystemSettings.Game.NextActionTimeout = round(ConfigMap[NEXT_ACTION_TIMEOUT].toFloat());
     }
 
     // Init message settings
@@ -131,16 +141,6 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
         if (JsonFontSettings.contains(MESSAGE_FONT_SIZE)) {
             SystemSettings.Message.FontSize = JsonFontSettings[MESSAGE_FONT_SIZE].toInt();
         }
-    }
-
-    // Init chat bot settings
-    if (JsonChatBotSettings.contains(CHAT_BOT_SETTINGS_URL)
-        && JsonChatBotSettings.contains(CHAT_BOT_SETTINGS_PORT)
-        && JsonChatBotSettings.contains(CHAT_BOT_USER))
-    {
-        SystemSettings.ChatBotWebSockURL = JsonChatBotSettings[CHAT_BOT_SETTINGS_URL].toString();
-        SystemSettings.ChatBotWebSockPort = JsonChatBotSettings[CHAT_BOT_SETTINGS_PORT].toInt();
-        SystemSettings.ChatBotAnyUser = JsonChatBotSettings[CHAT_BOT_USER].toBool();
     }
 
     // Init sprite settings
@@ -157,8 +157,8 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
 
     // Init screen settings
     if (JsonScreenResolution.contains(SCREEN_RESOLUTION_WIDTH) && JsonScreenResolution.contains(SCREEN_RESOLUTION_HEIGHT)) {
-        SystemSettings.ScreenWidth = JsonScreenResolution[SCREEN_RESOLUTION_WIDTH].toInt();
-        SystemSettings.ScreenHeight = JsonScreenResolution[SCREEN_RESOLUTION_HEIGHT].toInt();
+        SystemSettings.Game.ScreenWidth = JsonScreenResolution[SCREEN_RESOLUTION_WIDTH].toInt();
+        SystemSettings.Game.ScreenHeight = JsonScreenResolution[SCREEN_RESOLUTION_HEIGHT].toInt();
     }
 
     // Init system settings
@@ -217,17 +217,20 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 {
     QJsonObject JsonTableSettings;
     QJsonObject JsonSpriteSettings;
-    QJsonObject JsonChatBotSettings;
+    QJsonObject JsonTwitchSettings;
+    QJsonObject JsonTwitchBotSettings;
     QJsonObject JsonMessageSettings;
     QJsonObject JsonMessageFontSettings;
     QJsonArray JsonActionsArray;
     QJsonObject JsonScreenResolution;
     QJsonArray JsonPredefinedActions;
 
-    // Chat bot
-    JsonChatBotSettings[CHAT_BOT_SETTINGS_URL] = SystemSettings.ChatBotWebSockURL;
-    JsonChatBotSettings[CHAT_BOT_SETTINGS_PORT] = SystemSettings.ChatBotWebSockPort;
-    JsonChatBotSettings[CHAT_BOT_USER] = SystemSettings.ChatBotAnyUser;
+    // Twitch settings
+    JsonTwitchSettings[TWITCH_CHANNEL] = SystemSettings.Twitch.ChannelName;
+    JsonTwitchSettings[TWITCH_OAUTH] = SystemSettings.Twitch.OAuthToken;
+    JsonTwitchBotSettings[CHAT_BOT_SETTINGS_URL] = SystemSettings.Twitch.Bot.WebSockURL;
+    JsonTwitchBotSettings[CHAT_BOT_SETTINGS_PORT] = SystemSettings.Twitch.Bot.WebSockPort;
+    JsonTwitchBotSettings[CHAT_BOT_USER] = SystemSettings.Twitch.Bot.ChatAnyUser;
 
     // Table settings
     JsonTableSettings[TABLE_SETTINGS_ROWS] = TableSettings.Rows;
@@ -238,8 +241,8 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     JsonSpriteSettings[SPRITE_SETTINGS_HEIGHT] = SpriteSettings.Height;
 
     // Screen resolution
-    JsonScreenResolution[SCREEN_RESOLUTION_HEIGHT] = SystemSettings.ScreenHeight;
-    JsonScreenResolution[SCREEN_RESOLUTION_WIDTH] = SystemSettings.ScreenWidth;
+    JsonScreenResolution[SCREEN_RESOLUTION_HEIGHT] = SystemSettings.Game.ScreenHeight;
+    JsonScreenResolution[SCREEN_RESOLUTION_WIDTH] = SystemSettings.Game.ScreenWidth;
 
     // Message settings
     JsonMessageSettings[MESSAGE_TEXT_COLOR] = SystemSettings.Message.MessageTextColor.name();
@@ -272,16 +275,15 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     QJsonObject Config;
     Config[LOGGING] = SystemSettings.Logging;
     Config[SOURCE_FILE] = SystemSettings.ImagePath;
-    Config[ACTION_EXECUTION_TIME] = SystemSettings.ActionExecutionTime;
+    Config[ACTION_EXECUTION_TIME] = SystemSettings.Game.ActionExecutionTime;
     Config[MESSAGE_SETTINGS] = JsonMessageSettings;
-    Config[SPRITE_SCALE] = SystemSettings.SpriteScale;
-    Config[MOVEMENT_SPEED] = SystemSettings.MovementSpeed;
-    Config[NEXT_ACTION_TIMEOUT] = SystemSettings.NextActionTimeout;
-    Config[CHAT_BOT_SETTINGS] = JsonChatBotSettings;
+    Config[SPRITE_SCALE] = SystemSettings.Game.SpriteScale;
+    Config[MOVEMENT_SPEED] = SystemSettings.Game.MovementSpeed;
+    Config[NEXT_ACTION_TIMEOUT] = SystemSettings.Game.NextActionTimeout;
+    Config[TWITCH_SETTINGS] = JsonTwitchSettings;
     Config[TABLE_SETTINGS] = JsonTableSettings;
     Config[SPRITE_SETTINGS] = JsonSpriteSettings;
     Config[SCREEN_RESOLUTION] = JsonScreenResolution;
-    Config[TWITCH_CHANNEL] = SystemSettings.TwitchTargetChannel;
     Config[PREDEFINED_ACTIONS_SETTINGS] = JsonPredefinedActions;
     Config[ANIMATIONS_SETTINGS] = JsonActionsArray;
 
@@ -315,8 +317,8 @@ void ConfigObject::loadConfig()
 
 void ConfigObject::saveChatBotConfig(const QString& URL, const int Port)
 {
-    SystemSettings.ChatBotWebSockURL = URL;
-    SystemSettings.ChatBotWebSockPort = Port;
+    SystemSettings.Twitch.Bot.WebSockURL = URL;
+    SystemSettings.Twitch.Bot.WebSockPort = Port;
 }
 
 void ConfigObject::saveSpriteWidth(const int Width)
@@ -352,12 +354,12 @@ QString ConfigObject::getSpriteSheetPath() const
 
 QString ConfigObject::getChatBotURL() const
 {
-    return SystemSettings.ChatBotWebSockURL;
+    return SystemSettings.Twitch.Bot.WebSockURL;
 }
 
 int ConfigObject::getChatBotPort() const
 {
-    return SystemSettings.ChatBotWebSockPort;
+    return SystemSettings.Twitch.Bot.WebSockPort;
 }
 
 int ConfigObject::getSpriteHeight() const
@@ -400,38 +402,38 @@ void ConfigObject::CopyImageToAssets()
 
 void ConfigObject::saveSpriteScale(const float SpriteScale)
 {
-    SystemSettings.SpriteScale = SpriteScale;
+    SystemSettings.Game.SpriteScale = SpriteScale;
 }
 
 float ConfigObject::getSpriteScale() const
 {
-    return SystemSettings.SpriteScale;
+    return SystemSettings.Game.SpriteScale;
 }
 
 void ConfigObject::saveScreenResolution(const int Height, const int Width)
 {
-    SystemSettings.ScreenHeight = Height;
-    SystemSettings.ScreenWidth = Width;
+    SystemSettings.Game.ScreenHeight = Height;
+    SystemSettings.Game.ScreenWidth = Width;
 }
 
 void ConfigObject::saveTargetTwitchChannel(const QString& TargetChannel)
 {
-    SystemSettings.TwitchTargetChannel = TargetChannel;
+    SystemSettings.Twitch.ChannelName = TargetChannel;
 }
 
 int ConfigObject::getScreenHeight() const
 {
-    return SystemSettings.ScreenHeight;
+    return SystemSettings.Game.ScreenHeight;
 }
 
 int ConfigObject::getScreenWidth() const
 {
-    return SystemSettings.ScreenWidth;
+    return SystemSettings.Game.ScreenWidth;
 }
 
 QString ConfigObject::getTwitchTargeChannel() const
 {
-    return SystemSettings.TwitchTargetChannel;
+    return SystemSettings.Twitch.ChannelName;
 }
 
 void ConfigObject::savePredefinedActions(const PredefinedActionsListModel* Model)
@@ -443,7 +445,7 @@ void ConfigObject::savePredefinedActions(const PredefinedActionsListModel* Model
 
 float ConfigObject::getActionExecutionTime() const
 {
-    return SystemSettings.ActionExecutionTime;
+    return SystemSettings.Game.ActionExecutionTime;
 }
 
 QColor ConfigObject::getMessageTextColor() const
@@ -453,7 +455,7 @@ QColor ConfigObject::getMessageTextColor() const
 
 void ConfigObject::saveActionExecutionTime(const float ActionExecutionTime)
 {
-    SystemSettings.ActionExecutionTime = ActionExecutionTime;
+    SystemSettings.Game.ActionExecutionTime = ActionExecutionTime;
 }
 
 void ConfigObject::saveMessageTextColor(const QColor& MessageTextColor)
@@ -463,22 +465,22 @@ void ConfigObject::saveMessageTextColor(const QColor& MessageTextColor)
 
 float ConfigObject::getMovementSpeed() const
 {
-    return SystemSettings.MovementSpeed;
+    return SystemSettings.Game.MovementSpeed;
 }
 
 void ConfigObject::saveMovementSpeed(const float MovementSpeed)
 {
-    SystemSettings.MovementSpeed = MovementSpeed;
+    SystemSettings.Game.MovementSpeed = MovementSpeed;
 }
 
 float ConfigObject::getNextActionTimeout() const
 {
-    return SystemSettings.NextActionTimeout;
+    return SystemSettings.Game.NextActionTimeout;
 }
 
 void ConfigObject::saveNextActionTimeout(const float NextActionTimeout)
 {
-    SystemSettings.NextActionTimeout = NextActionTimeout;
+    SystemSettings.Game.NextActionTimeout = NextActionTimeout;
 }
 
 int ConfigObject::getFontSize() const
@@ -512,12 +514,12 @@ void ConfigObject::saveDataToClipboard(const QString& Data)
 
 bool ConfigObject::getChatBotUser() const
 {
-    return SystemSettings.ChatBotAnyUser;
+    return SystemSettings.Twitch.Bot.ChatAnyUser;
 }
 
 void ConfigObject::saveChatBotUser(const bool AnyUser)
 {
-    SystemSettings.ChatBotAnyUser = AnyUser;
+    SystemSettings.Twitch.Bot.ChatAnyUser = AnyUser;
 }
 
 void ConfigObject::SaveLogging(bool Logging)
@@ -528,4 +530,10 @@ void ConfigObject::SaveLogging(bool Logging)
 bool ConfigObject::getLogging() const
 {
     return SystemSettings.Logging;
+}
+
+void ConfigObject::saveTwitchInfo(const QString& ChannelName, const QString& OAuthToken)
+{
+    SystemSettings.Twitch.ChannelName = ChannelName;
+    SystemSettings.Twitch.OAuthToken = OAuthToken;
 }

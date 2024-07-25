@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QSharedPointer>
 
+#include "Configuration/ConfigObject.h"
+
 class TwitchNetworkAccessManager;
 class ChannelPointsReward;
 
@@ -26,6 +28,8 @@ public:
     Q_INVOKABLE void addNewChannelPointsReward(ChannelPointsReward* NewReward);
     Q_INVOKABLE void removeChannelPointsRewardById(int Index);
     Q_INVOKABLE void connectToTheChannel(const QString& Channel);
+    Q_INVOKABLE void initByConfig(const ConfigObject* Config);
+    Q_INVOKABLE void saveConfig(ConfigObject* Config);
 
     // Getter
     Q_INVOKABLE bool isAuthorized() const;

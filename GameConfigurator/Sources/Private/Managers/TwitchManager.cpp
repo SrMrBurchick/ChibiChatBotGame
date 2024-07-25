@@ -140,3 +140,24 @@ void TwitchManager::onChannelNameReceived(const QString& NewChannelName)
         connectToTheChannel(NewChannelName);
     }
 }
+
+void TwitchManager::initByConfig(const ConfigObject* Config)
+{
+    if (!Config) {
+        return;
+    }
+
+    const TwitchSettings Settings = Config->GetTwitchSettings();
+    if (!isAuthorized() && !Settings.OAuthToken.isEmpty() && !Settings.ChannelName.isEmpty()) {
+        LOG_INFO("================Trying to authorize from config====================");
+        UserOAuthToken = Settings.OAuthToken;
+        connectToTheChannel(Settings.ChannelName);
+    }
+}
+
+void TwitchManager::saveConfig(ConfigObject* Config)
+{
+    if (Config) {
+        Config->saveTwitchInfo(ChannelName, UserOAuthToken);
+    }
+}

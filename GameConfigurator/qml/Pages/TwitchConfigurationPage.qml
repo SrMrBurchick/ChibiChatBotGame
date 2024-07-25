@@ -48,7 +48,9 @@ Item {
         BaseButton {
             scaler: 1.5
             text: "Back"
-            onClicked: rootStack.pop()
+            onClicked: {
+                rootStack.pop()
+            }
         }
     }
 
@@ -60,9 +62,19 @@ Item {
     }
 
     Component.onCompleted: {
+        if (!TwitchManager.isAuthorized()) {
+            TwitchManager.initByConfig(Config)
+        }
+
         TwitchManager.authorizationURLReady.connect(function (url){
             webView.setup(url)
             webView.open()
+        })
+
+        TwitchManager.connectionUpdated.connect(function (isConnected){
+            if (isConnected) {
+                TwitchManager.saveConfig(Config)
+            }
         })
     }
 
