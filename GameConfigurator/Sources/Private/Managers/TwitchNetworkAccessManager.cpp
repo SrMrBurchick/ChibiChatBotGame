@@ -69,9 +69,7 @@ void TwitchNetworkAccessManager::OnBroadcasterInfoReceived(const QByteArray& Dat
 QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequest(const QString& URL)
 {
     QNetworkRequest Request(URL);
-    QString AuthorizationKey("Bearer ");
-    AuthorizationKey += QT_STRINGIFY(OAUTH_TOKEN);
-    Request.setRawHeader("Authorization", AuthorizationKey.toUtf8());
+    Request.setRawHeader("Authorization", GetOAuthToken().toUtf8());
     Request.setRawHeader("Client-Id", QT_STRINGIFY(CLIENT_ID));
 
     return Request;
@@ -80,9 +78,7 @@ QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequest(const QString& 
 QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequestWithBroadcasterID(const QString& URL)
 {
     QNetworkRequest Request(URL + QString("?broadcaster_id=%1").arg(BroadcasterID));
-    QString AuthorizationKey("Bearer ");
-    AuthorizationKey += QT_STRINGIFY(OAUTH_TOKEN);
-    Request.setRawHeader("Authorization", AuthorizationKey.toUtf8());
+    Request.setRawHeader("Authorization", GetOAuthToken().toUtf8());
     Request.setRawHeader("Client-Id", QT_STRINGIFY(CLIENT_ID));
 
     return Request;
@@ -154,9 +150,8 @@ void TwitchNetworkAccessManager::SetupRedirectURI(const QString& URI)
 void TwitchNetworkAccessManager::RequestChannelInfo(const QString& OAuthToken)
 {
     QNetworkRequest Request(QUrl("https://api.twitch.tv/helix/users"));
-    QString Token = "Bearer ";
-    Token += OAuthToken;
-    Request.setRawHeader("Authorization", Token.toUtf8());
+    UserToken = OAuthToken;
+    Request.setRawHeader("Authorization", GetOAuthToken().toUtf8());
     Request.setRawHeader("Client-Id", QT_STRINGIFY(CLIENT_ID));
 
     if (QNetworkReply* Reply = get(Request)) {
@@ -180,4 +175,9 @@ void TwitchNetworkAccessManager::RequestChannelInfo(const QString& OAuthToken)
             }
         });
     }
+}
+
+QString TwitchNetworkAccessManager::GetOAuthToken() const
+{
+    return QString("Bearer %1").arg(UserToken.isEmpty() ? QT_STRINGIFY(OAUTH_TOKEN) : UserToken);
 }

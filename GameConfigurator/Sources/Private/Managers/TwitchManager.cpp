@@ -150,8 +150,7 @@ void TwitchManager::initByConfig(const ConfigObject* Config)
     const TwitchSettings Settings = Config->GetTwitchSettings();
     if (!isAuthorized() && !Settings.OAuthToken.isEmpty() && !Settings.ChannelName.isEmpty()) {
         LOG_INFO("================Trying to authorize from config====================");
-        UserOAuthToken = Settings.OAuthToken;
-        connectToTheChannel(Settings.ChannelName);
+        userAuthorized(Settings.OAuthToken);
     }
 }
 

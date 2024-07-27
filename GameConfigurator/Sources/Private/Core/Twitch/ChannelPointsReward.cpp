@@ -70,7 +70,7 @@ void ChannelPointsReward::ParseJson(const QJsonValue& Value)
         return;
     }
 
-    m_ID = Object[CHANNEL_POINT_ID].toString();
+    RewardID = Object[CHANNEL_POINT_ID].toString();
     Cost = Object[CHANNEL_POINT_COST].toInt();
     Title = Object[CHANNEL_POINT_TITLE].toString();
     UserPrompt = Object[CHANNEL_POINT_PROMPT].toString();

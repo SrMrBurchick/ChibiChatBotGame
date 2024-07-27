@@ -9,7 +9,7 @@ class ChannelPointsReward : public QObject, public ITwitchNetwork
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString id MEMBER m_ID)
+    Q_PROPERTY(QString id MEMBER RewardID)
     Q_PROPERTY(QString title MEMBER Title)
     Q_PROPERTY(int cost MEMBER Cost)
     Q_PROPERTY(bool enabled MEMBER bIsEnabled)
@@ -20,7 +20,7 @@ public:
     explicit ChannelPointsReward(QObject* Parent = nullptr);
     virtual ~ChannelPointsReward() = default;
 
-    QString m_ID = "";
+    QString RewardID = "";
     QString Title = "";
     QString UserPrompt = "";
     int Cost = 0;

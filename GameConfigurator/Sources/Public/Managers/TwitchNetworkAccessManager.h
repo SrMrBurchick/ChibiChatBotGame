@@ -38,8 +38,10 @@ protected:
     void OnBroadcasterInfoReceived(const QByteArray& Data);
     QNetworkRequest CreateDefaultRequest(const QString& URL);
     QNetworkRequest CreateDefaultRequestWithBroadcasterID(const QString& URL);
+    QString GetOAuthToken() const;
 
 private:
     int BroadcasterID = 0;
     QString RedirectURI;
+    QString UserToken;
 };
