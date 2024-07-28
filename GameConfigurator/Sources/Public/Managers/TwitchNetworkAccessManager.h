@@ -24,8 +24,9 @@ public:
     void RequestChannelInfo(const QString& OAuthToken);
 
     // Events
-    void Get(const QString& URL, std::function<void(const QByteArray& Data)> Handler);
-    void Post(const QString& URL, std::function<void(const QByteArray& Data)> Handler);
+    void Get(const QString URL, std::function<void(const QJsonArray& Data)> Handler);
+    void Post(const QString URL, std::function<void(const QJsonArray& Data)> Handler);
+    void Delete(const QString URL, std::function<void(const QJsonArray& Data)> Handler);
 
 
 signals:
@@ -41,7 +42,7 @@ protected:
     QString GetOAuthToken() const;
 
 private:
-    int BroadcasterID = 0;
+    QString BroadcasterID;
     QString RedirectURI;
     QString UserToken;
 };

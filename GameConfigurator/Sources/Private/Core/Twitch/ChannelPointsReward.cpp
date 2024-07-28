@@ -76,4 +76,6 @@ void ChannelPointsReward::ParseJson(const QJsonValue& Value)
     UserPrompt = Object[CHANNEL_POINT_PROMPT].toString();
     bIsUserInputRequired = Object[CHANNEL_POINT_USER_INPUT_REQUIRED].toBool();
     bIsEnabled = Object[CHANNEL_POINT_ENABLED].toBool();
+
+    LOG_INFO("ConfiguredNew ChannelPoints reward. {ID = %s, COST = %d, TITLE = %s, IsEnabled = %d}", RewardID.toUtf8().data(), Cost, Title.toUtf8().data(), bIsEnabled);
 }

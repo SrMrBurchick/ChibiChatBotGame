@@ -4,7 +4,7 @@
 
 QT += core quick quickcontrols2 gui network webenginequick
 CONFIG += c++21
-# CONFIG += debug_and_release
+CONFIG += debug_and_release
 
 TEMPLATE = app
 TARGET = GameConfigurator

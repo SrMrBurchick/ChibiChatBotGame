@@ -8,6 +8,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QVariantMap>
+#include <QUrlQuery>
 
 constexpr char TWITCH_DATA_FIELD[] = "data";
 constexpr char TWITCH_ID_FIELD[] = "id";
@@ -49,9 +50,9 @@ void TwitchNetworkAccessManager::OnBroadcasterInfoReceived(const QByteArray& Dat
         for (QJsonValueConstRef Item : DataArray) {
             QJsonObject ItemObj = Item.toObject();
             if (ItemObj.contains(TWITCH_ID_FIELD)) {
-                BroadcasterID = ItemObj[TWITCH_ID_FIELD].toString().toInt();
-                LOG_INFO("BroadcasterID = %d", BroadcasterID);
-                if (BroadcasterID > 0) {
+                BroadcasterID = ItemObj[TWITCH_ID_FIELD].toString();
+                LOG_INFO("BroadcasterID = %s", BroadcasterID.toUtf8().data());
+                if (!BroadcasterID.isEmpty()) {
                     NotificationsManager::SendNotification("Twitch Network Manager", "Successfully connected to chanel!");
                     emit successfullyConnected();
                 }
@@ -68,7 +69,8 @@ void TwitchNetworkAccessManager::OnBroadcasterInfoReceived(const QByteArray& Dat
 
 QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequest(const QString& URL)
 {
-    QNetworkRequest Request(URL);
+    QUrl RequestURL(URL);
+    QNetworkRequest Request(RequestURL);
     Request.setRawHeader("Authorization", GetOAuthToken().toUtf8());
     Request.setRawHeader("Client-Id", QT_STRINGIFY(CLIENT_ID));
 
@@ -77,26 +79,30 @@ QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequest(const QString& 
 
 QNetworkRequest TwitchNetworkAccessManager::CreateDefaultRequestWithBroadcasterID(const QString& URL)
 {
-    QNetworkRequest Request(URL + QString("?broadcaster_id=%1").arg(BroadcasterID));
+    QUrl RequestURL(URL);
+    QUrlQuery Query;
+    Query.addQueryItem("broadcaster_id", BroadcasterID);
+    RequestURL.setQuery(Query);
+    QNetworkRequest Request(RequestURL);
     Request.setRawHeader("Authorization", GetOAuthToken().toUtf8());
     Request.setRawHeader("Client-Id", QT_STRINGIFY(CLIENT_ID));
 
     return Request;
 }
 
-void TwitchNetworkAccessManager::Get(const QString& URL, std::function<void(const QByteArray& Data)> Handler)
+void TwitchNetworkAccessManager::Get(const QString URL, std::function<void(const QJsonArray& Data)> Handler)
 {
     QNetworkRequest Request = CreateDefaultRequestWithBroadcasterID(URL);
     if (QNetworkReply* Reply = get(Request)) {
         QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply](){
             QByteArray Data = Reply->readAll();
             QJsonDocument InfoDocument = QJsonDocument::fromJson(Data);
-            QVariantMap InfoMap = InfoDocument.toVariant().toMap();
+            QJsonObject InfoMap = InfoDocument.object();
             if (InfoMap.contains(TWITCH_ERROR_FIELD)) {
                 LOG_CRITICAL("TwitchNetworkAccessManager", "Failed to get data. Reason = %s", Data.data());
             } else {
                 if (InfoMap.contains(TWITCH_DATA_FIELD)) {
-                    Handler(InfoMap[TWITCH_DATA_FIELD].toByteArray());
+                    Handler(InfoMap[TWITCH_DATA_FIELD].toArray());
                 }
             }
         });
@@ -106,7 +112,7 @@ void TwitchNetworkAccessManager::Get(const QString& URL, std::function<void(cons
     }
 }
 
-void TwitchNetworkAccessManager::Post(const QString& URL, std::function<void(const QByteArray& Data)> Handler)
+void TwitchNetworkAccessManager::Post(const QString URL, std::function<void(const QJsonArray& Data)> Handler)
 {
     QNetworkRequest Request = CreateDefaultRequestWithBroadcasterID(URL);
     QUrl PostData;
@@ -125,6 +131,11 @@ void TwitchNetworkAccessManager::Post(const QString& URL, std::function<void(con
     //     LOG_CRITICAL("Failed to create reply for request: %s", URL.toStdString().c_str());
     //     NotificationsManager::SendNotification("TwitchNetworkAccessManager", "Failed to get reply");
     // }
+}
+
+void TwitchNetworkAccessManager::Delete(const QString URL, std::function<void(const QJsonArray& Data)> Handler)
+{
+    // deleteResource(const QNetworkRequest &request)
 }
 
 const QString TwitchNetworkAccessManager::GetAuthorizationURL() const
@@ -179,5 +190,5 @@ void TwitchNetworkAccessManager::RequestChannelInfo(const QString& OAuthToken)
 
 QString TwitchNetworkAccessManager::GetOAuthToken() const
 {
-    return QString("Bearer %1").arg(UserToken.isEmpty() ? QT_STRINGIFY(OAUTH_TOKEN) : UserToken);
+    return QString("Bearer ") + (UserToken.isEmpty() ? QT_STRINGIFY(OAUTH_TOKEN) : UserToken);
 }

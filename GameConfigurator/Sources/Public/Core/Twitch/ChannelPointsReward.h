@@ -20,9 +20,9 @@ public:
     explicit ChannelPointsReward(QObject* Parent = nullptr);
     virtual ~ChannelPointsReward() = default;
 
-    QString RewardID = "";
-    QString Title = "";
-    QString UserPrompt = "";
+    QString RewardID;
+    QString Title;
+    QString UserPrompt;
     int Cost = 0;
     bool bIsEnabled = false;
     bool bIsUserInputRequired = false;

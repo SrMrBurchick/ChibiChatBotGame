@@ -18,6 +18,8 @@
 #include "Core/Action.h"
 #include "System/Logger.h"
 #include "Managers/TwitchNetworkAccessManager.h"
+#include "Core/Twitch/ChannelPointsReward.h"
+#include "Models/Twitch/ChannelPointsRewardsModel.h"
 
 int main(int argc, char *argv[])
 {
@@ -50,18 +52,24 @@ int main(int argc, char *argv[])
         Config->SaveLogging(Enabled);
     });
 
+    // Models
     ActionsListModel::registerModel("ActionsModels");
     AnimationSequenceModel::registerModel("ActionsModels");
     SpriteSheetModel::registerModel("ActionsModels");
     NotificationListModel::registerModel("SystemTools");
     PredefinedActionsListModel::registerModel("ConfigTools");
+    ChannelPointsRewardsModel::registerModel("TwitchModels");
 
+    // Instances
     qmlRegisterSingletonInstance("ConfigComponent", 1, 0, "Config", Config.get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "ProcessManager", Manager.get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "ActionsManager", ActionsManagerComp.get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
-    qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
     qmlRegisterSingletonInstance("Managers", 1, 0, "TwitchManager", Twitch.get());
+
+    // Types
+    qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
+    qmlRegisterType<ChannelPointsReward>("TwitchManagerComponent", 1, 0, "ChannelPointsReward");
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

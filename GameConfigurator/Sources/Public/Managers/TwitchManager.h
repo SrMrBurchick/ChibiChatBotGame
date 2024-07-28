@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
+#include <QMap>
 
 #include "Configuration/ConfigObject.h"
 
@@ -22,17 +23,24 @@ public:
     // Modifiers
     void SetNetworkManager(TwitchNetworkAccessManager* Manager);
 
+    // Getters
+    QSharedPointer<ChannelPointsReward> GetReward(int Index) const;
+
 
     // ================================ QML ====================================
     // Modifiers
-    Q_INVOKABLE void addNewChannelPointsReward(ChannelPointsReward* NewReward);
-    Q_INVOKABLE void removeChannelPointsRewardById(int Index);
     Q_INVOKABLE void connectToTheChannel(const QString& Channel);
     Q_INVOKABLE void initByConfig(const ConfigObject* Config);
     Q_INVOKABLE void saveConfig(ConfigObject* Config);
 
+    // Rewards
+    Q_INVOKABLE void addNewChannelPointsReward(ChannelPointsReward* NewReward);
+    Q_INVOKABLE void removeChannelPointsRewardById(const QString& ID);
+    Q_INVOKABLE ChannelPointsReward* getChannelPointRewardByID(const QString& ID) const;
+
     // Getter
     Q_INVOKABLE bool isAuthorized() const;
+    Q_INVOKABLE int getChannelPointsRewardsCount() const;
 
     // Event
     Q_INVOKABLE void requestChannelPointsRewards();
@@ -56,7 +64,7 @@ protected:
 private:
     TwitchNetworkAccessManager* NetworkManager;
     QVector<QSharedPointer<ChannelPointsReward>> ChannelPointsRewards;
-    bool bIsConnected = false;
-    QString ChannelName = "";
-    QString UserOAuthToken = "";
+    bool bIsConnected = true;
+    QString ChannelName;
+    QString UserOAuthToken;
 };

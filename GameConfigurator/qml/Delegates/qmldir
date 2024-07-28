@@ -11,3 +11,4 @@ PropertyStringDelegate 1.0 PropertyStringDelegate.qml
 PropertyColorDelegate 1.0 PropertyColorDelegate.qml
 PropertyBoolDelegate 1.0 PropertyBoolDelegate.qml
 GameRunningDelegate 1.0 GameRunningDelegate.qml
+ChannelPointsRewardDelegate 1.0 Twitch/ChannelPointsRewardDelegate.qml

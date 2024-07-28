@@ -55,9 +55,8 @@ void TwitchManager::requestChannelPointsRewards()
         return;
     }
 
-    NetworkManager->Get("https://api.twitch.tv/helix/channel_points/custom_rewards", [this](const QByteArray& Data) {
-        QJsonDocument DataInfo = QJsonDocument::fromJson(Data);
-        ParseChannelPointsRewards(DataInfo.toVariant().toJsonArray());
+    NetworkManager->Get("https://api.twitch.tv/helix/channel_points/custom_rewards", [this](const QJsonArray& Data) {
+        ParseChannelPointsRewards(Data);
     });
 }
 
@@ -66,7 +65,7 @@ void TwitchManager::addNewChannelPointsReward(ChannelPointsReward* NewReward)
     // TODO: move shared pointer to network manager
 }
 
-void TwitchManager::removeChannelPointsRewardById(int Index)
+void TwitchManager::removeChannelPointsRewardById(const QString& ID)
 {
     // TODO:
 }
@@ -149,7 +148,6 @@ void TwitchManager::initByConfig(const ConfigObject* Config)
 
     const TwitchSettings Settings = Config->GetTwitchSettings();
     if (!isAuthorized() && !Settings.OAuthToken.isEmpty() && !Settings.ChannelName.isEmpty()) {
-        LOG_INFO("================Trying to authorize from config====================");
         userAuthorized(Settings.OAuthToken);
     }
 }
@@ -159,4 +157,29 @@ void TwitchManager::saveConfig(ConfigObject* Config)
     if (Config) {
         Config->saveTwitchInfo(ChannelName, UserOAuthToken);
     }
+}
+
+int TwitchManager::getChannelPointsRewardsCount() const
+{
+    return ChannelPointsRewards.count();
+}
+
+QSharedPointer<ChannelPointsReward> TwitchManager::GetReward(int Index) const
+{
+    if (Index >= 0 && Index < ChannelPointsRewards.count()) {
+        return ChannelPointsRewards[Index];
+    }
+
+    return nullptr;
+}
+
+ChannelPointsReward* TwitchManager::getChannelPointRewardByID(const QString& ID) const
+{
+    for (const QSharedPointer<ChannelPointsReward>& Reward : ChannelPointsRewards) {
+        if (!Reward.isNull() && Reward->RewardID == ID) {
+            return Reward.get();
+        }
+    }
+
+    return nullptr;
 }

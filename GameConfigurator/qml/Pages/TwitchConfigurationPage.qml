@@ -39,7 +39,7 @@ Item {
                 if (TwitchManager.isAuthorized()) {
                     rootStack.push(channel_points_config)
                 } else {
-                    NotificationsManager.notify("Twitch Authorization", "Youre not authorized")
+                    NotificationsManager.notify("Twitch Authorization", "You're not authorized")
                 }
 
             }

@@ -8,6 +8,8 @@ import ConfigComponent
 import Dialogs
 import Base
 import ConfigTools
+import Managers
+import TwitchModels
 
 Item {
     id: root
@@ -27,6 +29,19 @@ Item {
             text: "Configuration"
             font.pointSize: 32
             font.bold: true
+        }
+
+        // Data
+        ListView {
+            id:rewardsList
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            model: ChannelPointsRewardsModel {}
+
+            delegate: ChannelPointsRewardDelegate {
+                width: parent.width / 2
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
         }
 
         // Controls
@@ -58,6 +73,8 @@ Item {
     }
 
     Component.onCompleted: {
+        TwitchManager.requestChannelPointsRewards()
+        rewardsList.model.subscribeOnTarget(TwitchManager)
     }
 
 }

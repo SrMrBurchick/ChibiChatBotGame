@@ -47,6 +47,7 @@
         <file>qml/Delegates/PropertyColorDelegate.qml</file>
         <file>qml/Delegates/PropertyBoolDelegate.qml</file>
         <file>qml/Delegates/GameRunningDelegate.qml</file>
+        <file>qml/Delegates/Twitch/ChannelPointsRewardDelegate.qml</file>
 
         <!-- Dialogs -->
         <file>qml/Dialogs/qmldir</file>
