@@ -32,8 +32,11 @@ BasePanel {
 
                 fieldName: "Title:"
                 fieldDescription: "Custom reward title"
-                defaultText: target.title
+                defaultText: target ? target.title : ""
                 onValueChanged:(text) => {
+                    if (target) {
+                        target.title = text
+                    }
                 }
             }
 
@@ -41,12 +44,16 @@ BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
+                minValue:1
                 maxValue:9999
 
                 fieldName: "Cost:"
                 fieldDescription: "Custom reward cost"
-                defaultValue: target.cost
+                defaultValue: target ? target.cost : 1
                 onValueChanged:(cost) => {
+                    if (target) {
+                        target.cost = cost
+                    }
                 }
             }
 
@@ -55,8 +62,11 @@ BasePanel {
                 Layout.fillHeight: true
 
                 fieldName: "Enabled:"
-                defaultValue: target.enabled
+                defaultValue: target ? target.enabled : false
                 onValueChanged:(value) => {
+                    if (target) {
+                        target.enabled = value
+                    }
                 }
             }
         }
@@ -69,6 +79,9 @@ BasePanel {
                 scaler: 1.0
                 text: "Update"
                 onClicked: {
+                    if (TwitchManager) {
+                        TwitchManager.updateChannelPointsReward(target)
+                    }
                 }
             }
 
@@ -76,6 +89,9 @@ BasePanel {
                 scaler: 1.0
                 text: "Remove"
                 onClicked: {
+                    if (TwitchManager) {
+                        TwitchManager.removeChannelPointsRewardById(reward_id)
+                    }
                 }
             }
         }

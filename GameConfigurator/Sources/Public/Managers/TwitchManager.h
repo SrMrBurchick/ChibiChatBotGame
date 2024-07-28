@@ -34,13 +34,15 @@ public:
     Q_INVOKABLE void saveConfig(ConfigObject* Config);
 
     // Rewards
-    Q_INVOKABLE void addNewChannelPointsReward(ChannelPointsReward* NewReward);
+    Q_INVOKABLE void createNewChannelPointsReward();
+    Q_INVOKABLE void updateChannelPointsReward(ChannelPointsReward* RewardToUpdate);
     Q_INVOKABLE void removeChannelPointsRewardById(const QString& ID);
     Q_INVOKABLE ChannelPointsReward* getChannelPointRewardByID(const QString& ID) const;
 
     // Getter
     Q_INVOKABLE bool isAuthorized() const;
     Q_INVOKABLE int getChannelPointsRewardsCount() const;
+    Q_INVOKABLE bool isCanCreateNewEmptyReward() const;
 
     // Event
     Q_INVOKABLE void requestChannelPointsRewards();
@@ -60,11 +62,12 @@ public slots:
 
 protected:
     void ParseChannelPointsRewards(const QJsonArray& Rewards);
+    void CreateChannelPointsReward(QSharedPointer<ChannelPointsReward> Reward);
 
 private:
     TwitchNetworkAccessManager* NetworkManager;
     QVector<QSharedPointer<ChannelPointsReward>> ChannelPointsRewards;
-    bool bIsConnected = true;
+    bool bIsConnected = false;
     QString ChannelName;
     QString UserOAuthToken;
 };

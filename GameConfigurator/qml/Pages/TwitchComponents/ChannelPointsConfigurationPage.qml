@@ -36,11 +36,23 @@ Item {
             id:rewardsList
             Layout.fillWidth: true
             Layout.fillHeight: true
+            spacing: 10
             model: ChannelPointsRewardsModel {}
 
             delegate: ChannelPointsRewardDelegate {
                 width: parent.width / 2
                 anchors.horizontalCenter: parent.horizontalCenter
+            }
+        }
+
+        BaseButton {
+            text: "+"
+            Layout.fillWidth: true
+            Layout.maximumWidth: 400
+            onClicked: {
+                if (TwitchManager && TwitchManager.isCanCreateNewEmptyReward()) {
+                    TwitchManager.createNewChannelPointsReward()
+                }
             }
         }
 

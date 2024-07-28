@@ -25,8 +25,9 @@ public:
 
     // Events
     void Get(const QString URL, std::function<void(const QJsonArray& Data)> Handler);
-    void Post(const QString URL, std::function<void(const QJsonArray& Data)> Handler);
-    void Delete(const QString URL, std::function<void(const QJsonArray& Data)> Handler);
+    void Post(const QString URL, const QJsonObject& Data, std::function<void(const QJsonArray& Data)> Handler);
+    void Delete(const QString URL, const QString& ID, std::function<void(const QJsonArray& Data)> Handler);
+    void Patch(const QString URL, const QJsonObject& Data, const QString& ID, std::function<void(const QJsonArray& Data)> Handler);
 
 
 signals:

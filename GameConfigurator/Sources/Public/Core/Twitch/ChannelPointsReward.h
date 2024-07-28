@@ -27,7 +27,7 @@ public:
     bool bIsEnabled = false;
     bool bIsUserInputRequired = false;
 
-    virtual QUrl const GetNetworkData() const override;
+    virtual QJsonObject const GetNetworkData() const override;
     virtual void ParseReply(QNetworkReply* Reply) override;
     virtual void ParseJson(const QJsonValue& Value) override;
 

@@ -3,6 +3,7 @@
 #include "System/Logger.h"
 #include "Managers/NotificationsManager.h"
 #include "Core/Twitch/ChannelPointsReward.h"
+#include "Managers/NotificationsManager.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -60,14 +61,70 @@ void TwitchManager::requestChannelPointsRewards()
     });
 }
 
-void TwitchManager::addNewChannelPointsReward(ChannelPointsReward* NewReward)
+void TwitchManager::createNewChannelPointsReward()
 {
-    // TODO: move shared pointer to network manager
+    if (QSharedPointer<ChannelPointsReward> NewReward = QSharedPointer<ChannelPointsReward>::create()) {
+        NewReward->bIsEnabled = true;
+        ChannelPointsRewards.push_back(NewReward);
+        emit channelPointsRewardsUpdated();
+    }
+
+}
+
+void TwitchManager::updateChannelPointsReward(ChannelPointsReward* RewardToUpdate)
+{
+    if (!RewardToUpdate) {
+        LOG_WARNING("Invalid channel points reward to update");
+        return;
+    }
+
+    if (RewardToUpdate->RewardID.isEmpty()) {
+        CreateChannelPointsReward(QSharedPointer<ChannelPointsReward>(RewardToUpdate));
+    } else {
+        if (NetworkManager == nullptr || !bIsConnected) {
+            LOG_WARNING("Invalid Network manager, to request channel points rewards, or not connected to channel");
+            return;
+        }
+
+        NetworkManager->Patch("https://api.twitch.tv/helix/channel_points/custom_rewards", RewardToUpdate->GetNetworkData(), RewardToUpdate->RewardID, [this, RewardToUpdate](const QJsonArray &Data) {
+            if (Data.count() == 1 && RewardToUpdate != nullptr) {
+                RewardToUpdate->ParseJson(Data[0]);
+                NotificationsManager::SendNotification("Twitch Manager", QString("Reward %1 was updated").arg(RewardToUpdate->Title));
+                emit channelPointsRewardsUpdated();
+            }
+        });
+
+    }
 }
 
 void TwitchManager::removeChannelPointsRewardById(const QString& ID)
 {
-    // TODO:
+    if (NetworkManager == nullptr || !bIsConnected) {
+        LOG_WARNING("Invalid Network manager, to request channel points rewards, or not connected to channel");
+        return;
+    }
+
+    NetworkManager->Delete("https://api.twitch.tv/helix/channel_points/custom_rewards", ID, [this](const QJsonArray &Data) {
+        NotificationsManager::SendNotification("Twitch Manager", "Reward was removed");
+        emit channelPointsRewardsUpdated();
+    });
+}
+
+
+void TwitchManager::CreateChannelPointsReward(QSharedPointer<ChannelPointsReward> Reward)
+{
+    if (NetworkManager == nullptr || !bIsConnected) {
+        LOG_WARNING("Invalid Network manager, to request channel points rewards, or not connected to channel");
+        return;
+    }
+
+    NetworkManager->Post("https://api.twitch.tv/helix/channel_points/custom_rewards", Reward->GetNetworkData(), [this, Reward](const QJsonArray &Data) {
+        if (Data.count() == 1 && Reward != nullptr) {
+            Reward->ParseJson(Data[0]);
+            emit channelPointsRewardsUpdated();
+            NotificationsManager::SendNotification("Twitch Manager", QString("Custom reward %1, was successfully created!").arg(Reward->Title));
+        }
+    });
 }
 
 void TwitchManager::connectToTheChannel(const QString& Channel)
@@ -182,4 +239,18 @@ ChannelPointsReward* TwitchManager::getChannelPointRewardByID(const QString& ID)
     }
 
     return nullptr;
+}
+
+bool TwitchManager::isCanCreateNewEmptyReward() const
+{
+    bool bCan = true;
+
+    for (const QSharedPointer<ChannelPointsReward>& Reward : ChannelPointsRewards) {
+        if (!Reward.isNull() && Reward->RewardID.isEmpty()) {
+            bCan = false;
+            break;
+        }
+    }
+
+    return bCan;
 }

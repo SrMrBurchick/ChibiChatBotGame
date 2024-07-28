@@ -35,9 +35,15 @@ ChannelPointsReward::ChannelPointsReward(QObject* Parent)
 
 }
 
-QUrl const ChannelPointsReward::GetNetworkData() const
+QJsonObject const ChannelPointsReward::GetNetworkData() const
 {
-    return QUrl();
+    QJsonObject Data;
+
+    Data[CHANNEL_POINT_TITLE] = Title;
+    Data[CHANNEL_POINT_COST] = Cost;
+    Data[CHANNEL_POINT_ENABLED] = bIsEnabled;
+
+    return Data;
 }
 
 void ChannelPointsReward::ParseReply(QNetworkReply* Reply)
