@@ -35,6 +35,11 @@ ChannelPointsReward::ChannelPointsReward(QObject* Parent)
 
 }
 
+ChannelPointsReward::~ChannelPointsReward()
+{
+    LOG_INFO("Remove channel point reward %s", Title.toUtf8().data());
+}
+
 QJsonObject const ChannelPointsReward::GetNetworkData() const
 {
     QJsonObject Data;

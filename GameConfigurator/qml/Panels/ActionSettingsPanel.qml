@@ -6,6 +6,8 @@ import Panels
 import ConfigComponent
 import Delegates
 import Base
+import Managers
+import TwitchModels
 
 Item {
     id: root
@@ -61,7 +63,7 @@ Item {
                 minValue: 1
                 maxValue: 20
 
-                fieldName: "Execution time:"
+                fieldName: "Text display time:"
                 // defaultValue: GlobalConfig.screenHeight
                 // onValueChanged:(value) => {
                 //     GlobalConfig.screenHeight = value
@@ -104,6 +106,31 @@ Item {
         }
     }
 
+
+    Component {
+        id: twitchSettings
+        ColumnLayout {
+            width: parent.width
+
+            PropertyComboBoxDelegate {
+                id: comboBox
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 10
+
+                fieldName: "Listen:"
+                targetModel: ChannelPointsRewardsModel {}
+
+                targetDelegate: Component {
+                    ChannelPointsRewardNameDelegate {}
+                }
+
+                onValueChanged:(value) => {
+                }
+            }
+        }
+    }
+
     ListModel {
         id: settingsModel
     }
@@ -126,6 +153,11 @@ Item {
     Component.onCompleted: {
         settingsModel.append({"name": "Base Settings", "component": baseSettings})
         settingsModel.append({"name": "Text Settings", "component": textSettings})
+        settingsModel.append({"name": "Twitch Settings", "component": twitchSettings})
+
+        if (TwitchManager) {
+            // comboBox.targetModel.subscribeOnTarget(TwitchManager)
+        }
     }
 }
 

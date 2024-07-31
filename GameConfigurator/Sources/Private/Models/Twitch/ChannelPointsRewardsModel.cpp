@@ -90,9 +90,9 @@ void ChannelPointsRewardsModel::OnTargetSubscribed()
 
 void ChannelPointsRewardsModel::UnsubscribeFromTarget()
 {
-    BaseTwitchModel::UnsubscribeFromTarget();
     if (Manager) {
         QObject::disconnect(Manager, &TwitchManager::channelPointsRewardsUpdated, this, &ChannelPointsRewardsModel::onChannelPointsRewardsUpdated);
     }
 
+    BaseTwitchModel::UnsubscribeFromTarget();
 }

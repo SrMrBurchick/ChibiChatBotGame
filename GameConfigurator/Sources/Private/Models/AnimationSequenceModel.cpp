@@ -87,8 +87,6 @@ void AnimationSequenceModel::OnTargetSubscribed()
 
 void AnimationSequenceModel::UnsubscribeFromTarget()
 {
-    BaseListModel::OnTargetSubscribed();
-
     if (Manager)
     {
         QObject::disconnect(Manager, &ActionsManager::actionSelected, this, &AnimationSequenceModel::actionSelected);
@@ -97,6 +95,8 @@ void AnimationSequenceModel::UnsubscribeFromTarget()
             QObject::disconnect(SelectedAction, &Action::spriteSequenceUpdated, this, &AnimationSequenceModel::sequenceUpdated);
         }
     }
+
+    BaseListModel::OnTargetSubscribed();
 }
 
 void AnimationSequenceModel::actionSelected(Action* selectedAction)

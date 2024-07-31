@@ -18,7 +18,7 @@ class ChannelPointsReward : public QObject, public ITwitchNetwork
 
 public:
     explicit ChannelPointsReward(QObject* Parent = nullptr);
-    virtual ~ChannelPointsReward() = default;
+    virtual ~ChannelPointsReward();
 
     QString RewardID;
     QString Title;
