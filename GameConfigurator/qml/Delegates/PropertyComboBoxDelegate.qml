@@ -11,7 +11,7 @@ Rectangle {
     property string fieldName: ""
     property string fieldDescription: ""
     required property var targetModel
-    required property variant targetDelegate
+    required property var targetDelegate
 
     color: Style.propertyDelegateBGColor
     border.color: Style.propertyDelegateBorderColor

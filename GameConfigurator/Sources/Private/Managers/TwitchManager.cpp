@@ -12,6 +12,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QQmlEngine>
 
 TwitchManager::TwitchManager(QObject* Parent)
     :QObject(Parent)
@@ -234,7 +235,8 @@ ChannelPointsReward* TwitchManager::getChannelPointRewardByID(const QString& ID)
 {
     for (const QSharedPointer<ChannelPointsReward>& Reward : ChannelPointsRewards) {
         if (!Reward.isNull() && Reward->RewardID == ID) {
-            return Reward.get();
+            QQmlEngine::setObjectOwnership(Reward.data(), QQmlEngine::CppOwnership);
+            return Reward.data();
         }
     }
 

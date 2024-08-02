@@ -106,6 +106,10 @@ Item {
         }
     }
 
+    ChannelPointsRewardsModel {
+        id: rewardsModel
+    }
+
 
     Component {
         id: twitchSettings
@@ -113,13 +117,12 @@ Item {
             width: parent.width
 
             PropertyComboBoxDelegate {
-                id: comboBox
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.margins: 10
 
                 fieldName: "Listen:"
-                targetModel: ChannelPointsRewardsModel {}
+                targetModel: rewardsModel
 
                 targetDelegate: Component {
                     ChannelPointsRewardNameDelegate {}
@@ -151,13 +154,14 @@ Item {
     }
 
     Component.onCompleted: {
+        if (TwitchManager) {
+            TwitchManager.requestChannelPointsRewards()
+            rewardsModel.subscribeOnTarget(TwitchManager)
+        }
+
         settingsModel.append({"name": "Base Settings", "component": baseSettings})
         settingsModel.append({"name": "Text Settings", "component": textSettings})
         settingsModel.append({"name": "Twitch Settings", "component": twitchSettings})
-
-        if (TwitchManager) {
-            // comboBox.targetModel.subscribeOnTarget(TwitchManager)
-        }
     }
 }
 

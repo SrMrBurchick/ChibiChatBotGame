@@ -10,11 +10,11 @@ class ChannelPointsReward : public QObject, public ITwitchNetwork
     Q_OBJECT
 
     Q_PROPERTY(QString id MEMBER RewardID)
-    Q_PROPERTY(QString title MEMBER Title)
-    Q_PROPERTY(int cost MEMBER Cost)
-    Q_PROPERTY(bool enabled MEMBER bIsEnabled)
+    Q_PROPERTY(QString title MEMBER Title NOTIFY titleUpdated)
+    Q_PROPERTY(int cost MEMBER Cost NOTIFY costUpdated)
+    Q_PROPERTY(bool enabled MEMBER bIsEnabled NOTIFY enabledUpdated)
     Q_PROPERTY(bool userInputRequired MEMBER bIsUserInputRequired NOTIFY userInputRequiredChanged)
-    Q_PROPERTY(QString userInputPrompt MEMBER UserPrompt)
+    Q_PROPERTY(QString userInputPrompt MEMBER UserPrompt NOTIFY userPromptUpdated)
 
 public:
     explicit ChannelPointsReward(QObject* Parent = nullptr);
@@ -33,4 +33,8 @@ public:
 
 signals:
     void userInputRequiredChanged(bool isRequired);
+    void titleUpdated(const QString& newTitle);
+    void costUpdated(int newCost);
+    void enabledUpdated(int newEnabled);
+    void userPromptUpdated(const QString& newUserPromopt);
 };
