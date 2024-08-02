@@ -35,6 +35,7 @@ signals:
     void failedToConnect();
     void dataReceived(const QByteArray& Data);
     void onChannelNameReceived(const QString& ChannelName);
+    void responseState(bool isSuccess);
 
 protected:
     void OnBroadcasterInfoReceived(const QByteArray& Data);

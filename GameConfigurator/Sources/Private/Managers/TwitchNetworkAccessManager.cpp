@@ -35,10 +35,14 @@ void TwitchNetworkAccessManager::InitBroadcasterInfo(const QString& BroadcasterN
     }
 
     QNetworkRequest Request = CreateDefaultRequest("https://api.twitch.tv/helix/users?login=" + BroadcasterName.toLower());
-    QNetworkReply* Reply = get(Request);
-    QObject::connect(Reply, &QNetworkReply::finished, this, [=](){
-        OnBroadcasterInfoReceived(Reply->readAll());
-    });
+    if (QNetworkReply* Reply = get(Request)) {
+        QObject::connect(Reply, &QNetworkReply::finished, this, [Reply, this](){
+            OnBroadcasterInfoReceived(Reply->readAll());
+            emit responseState(Reply->error() == QNetworkReply::NoError);
+        });
+    } else {
+        emit responseState(false);
+    }
 }
 
 void TwitchNetworkAccessManager::OnBroadcasterInfoReceived(const QByteArray& Data)
@@ -94,7 +98,7 @@ void TwitchNetworkAccessManager::Get(const QString URL, std::function<void(const
 {
     QNetworkRequest Request = CreateDefaultRequestWithBroadcasterID(URL);
     if (QNetworkReply* Reply = get(Request)) {
-        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply](){
+        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply, this](){
             QByteArray Data = Reply->readAll();
             QJsonDocument InfoDocument = QJsonDocument::fromJson(Data);
             QJsonObject InfoMap = InfoDocument.object();
@@ -105,10 +109,13 @@ void TwitchNetworkAccessManager::Get(const QString URL, std::function<void(const
                     Handler(InfoMap[TWITCH_DATA_FIELD].toArray());
                 }
             }
+
+            emit responseState(Reply->error() == QNetworkReply::NoError);
         });
     } else {
         LOG_CRITICAL("Failed to create reply for request: %s", URL.toStdString().c_str());
         NotificationsManager::SendNotification("TwitchNetworkAccessManager", "Failed to get reply");
+        emit responseState(false);
     }
 }
 
@@ -117,7 +124,7 @@ void TwitchNetworkAccessManager::Post(const QString URL, const QJsonObject& Data
     QNetworkRequest Request = CreateDefaultRequestWithBroadcasterID(URL);
     Request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     if (QNetworkReply* Reply = post(Request, QJsonDocument(Data).toJson())) {
-        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply](){
+        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply, this](){
             QByteArray Data = Reply->readAll();
             QJsonDocument InfoDocument = QJsonDocument::fromJson(Data);
             QJsonObject InfoMap = InfoDocument.object();
@@ -128,10 +135,13 @@ void TwitchNetworkAccessManager::Post(const QString URL, const QJsonObject& Data
                     Handler(InfoMap[TWITCH_DATA_FIELD].toArray());
                 }
             }
+
+            emit responseState(Reply->error() == QNetworkReply::NoError);
         });
     } else {
         LOG_CRITICAL("Failed to create reply for request: %s", URL.toStdString().c_str());
         NotificationsManager::SendNotification("TwitchNetworkAccessManager", "Failed to get reply");
+        emit responseState(false);
     }
 }
 
@@ -146,15 +156,17 @@ void TwitchNetworkAccessManager::Delete(const QString URL, const QString& ID, st
     Request.setUrl(RequestURL);
 
     if (QNetworkReply* Reply = deleteResource(Request)) {
-        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply](){
+        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply, this](){
             QByteArray Data = Reply->readAll();
             LOG_INFO("Delete result: %s", Data.data());
             QJsonArray Array;
             Handler(Array);
+            emit responseState(Reply->error() == QNetworkReply::NoError);
         });
     } else {
         LOG_CRITICAL("Failed to create reply for request: %s", URL.toStdString().c_str());
         NotificationsManager::SendNotification("TwitchNetworkAccessManager", "Failed to get reply");
+        emit responseState(false);
     }
 }
 
@@ -170,7 +182,7 @@ void TwitchNetworkAccessManager::Patch(const QString URL, const QJsonObject& Dat
     Request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     if (QNetworkReply* Reply = sendCustomRequest(Request, "PATCH", QJsonDocument(Data).toJson())) {
-        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply](){
+        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply, this](){
             QByteArray Data = Reply->readAll();
             QJsonDocument InfoDocument = QJsonDocument::fromJson(Data);
             QJsonObject InfoMap = InfoDocument.object();
@@ -181,10 +193,13 @@ void TwitchNetworkAccessManager::Patch(const QString URL, const QJsonObject& Dat
                     Handler(InfoMap[TWITCH_DATA_FIELD].toArray());
                 }
             }
+
+            emit responseState(Reply->error() == QNetworkReply::NoError);
         });
     } else {
         LOG_CRITICAL("Failed to create reply for request: %s", URL.toStdString().c_str());
         NotificationsManager::SendNotification("TwitchNetworkAccessManager", "Failed to get reply");
+        emit responseState(false);
     }
 
 }
@@ -228,12 +243,16 @@ void TwitchNetworkAccessManager::RequestChannelInfo(const QString& OAuthToken)
                     QJsonObject ItemObj = Item.toObject();
                     if (ItemObj.contains(TWITCH_LOGIN_FIELD)) {
                         emit onChannelNameReceived(ItemObj[TWITCH_LOGIN_FIELD].toString());
+                        emit responseState(Reply->error() == QNetworkReply::NoError);
                         return;
                     }
                 }
 
+                emit responseState(Reply->error() == QNetworkReply::NoError);
+
             } else {
                 LOG_CRITICAL("Request channel info error! %s", Reply->errorString().toStdString().c_str());
+                emit responseState(false);
             }
         });
     }

@@ -14,6 +14,7 @@ class TwitchManager : public QObject
     Q_OBJECT
 
     Q_PROPERTY(bool isConnected MEMBER bIsConnected NOTIFY connectionUpdated)
+    Q_PROPERTY(bool isBusy MEMBER bIsBusy NOTIFY busyUpdated)
 
 public:
     explicit TwitchManager(QObject* Parent = nullptr);
@@ -53,11 +54,13 @@ public:
 signals:
     void channelPointsRewardsUpdated();
     void connectionUpdated(bool isConnected);
+    void busyUpdated(bool isBusy);
     void authorizationURLReady(const QString& URL);
 
 public slots:
     void onConnectionSuccess();
     void onConnectionFailed();
+    void onResponseReceived(bool isSuccessful);
     void onChannelNameReceived(const QString& NewChannelName);
 
 protected:
@@ -70,4 +73,5 @@ private:
     bool bIsConnected = false;
     QString ChannelName;
     QString UserOAuthToken;
+    bool bIsBusy = false;
 };

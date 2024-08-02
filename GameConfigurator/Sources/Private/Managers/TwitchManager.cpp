@@ -34,6 +34,7 @@ void TwitchManager::SetNetworkManager(TwitchNetworkAccessManager* Manager)
         QObject::disconnect(NetworkManager, &TwitchNetworkAccessManager::successfullyConnected, this, &TwitchManager::onConnectionSuccess);
         QObject::disconnect(NetworkManager, &TwitchNetworkAccessManager::failedToConnect, this, &TwitchManager::onConnectionFailed);
         QObject::disconnect(NetworkManager, &TwitchNetworkAccessManager::onChannelNameReceived, this, &TwitchManager::onChannelNameReceived);
+        QObject::disconnect(NetworkManager, &TwitchNetworkAccessManager::responseState, this, &TwitchManager::onResponseReceived);
     }
 
     NetworkManager = Manager;
@@ -41,6 +42,7 @@ void TwitchManager::SetNetworkManager(TwitchNetworkAccessManager* Manager)
         QObject::connect(NetworkManager, &TwitchNetworkAccessManager::successfullyConnected, this, &TwitchManager::onConnectionSuccess);
         QObject::connect(NetworkManager, &TwitchNetworkAccessManager::failedToConnect, this, &TwitchManager::onConnectionFailed);
         QObject::connect(NetworkManager, &TwitchNetworkAccessManager::onChannelNameReceived, this, &TwitchManager::onChannelNameReceived);
+        QObject::connect(NetworkManager, &TwitchNetworkAccessManager::responseState, this, &TwitchManager::onResponseReceived);
     }
 
 }
@@ -57,6 +59,7 @@ void TwitchManager::requestChannelPointsRewards()
         return;
     }
 
+    bIsBusy = true;
     NetworkManager->Get("https://api.twitch.tv/helix/channel_points/custom_rewards", [this](const QJsonArray& Data) {
         ParseChannelPointsRewards(Data);
     });
@@ -87,6 +90,7 @@ void TwitchManager::updateChannelPointsReward(ChannelPointsReward* RewardToUpdat
             return;
         }
 
+        bIsBusy = true;
         NetworkManager->Patch("https://api.twitch.tv/helix/channel_points/custom_rewards", RewardToUpdate->GetNetworkData(), RewardToUpdate->RewardID, [this, RewardToUpdate](const QJsonArray &Data) {
             if (Data.count() == 1 && RewardToUpdate != nullptr) {
                 RewardToUpdate->ParseJson(Data[0]);
@@ -105,6 +109,7 @@ void TwitchManager::removeChannelPointsRewardById(const QString& ID)
         return;
     }
 
+    bIsBusy = true;
     NetworkManager->Delete("https://api.twitch.tv/helix/channel_points/custom_rewards", ID, [this](const QJsonArray &Data) {
         NotificationsManager::SendNotification("Twitch Manager", "Reward was removed");
         emit channelPointsRewardsUpdated();
@@ -132,6 +137,8 @@ void TwitchManager::connectToTheChannel(const QString& Channel)
 {
     if (NetworkManager && !Channel.isEmpty()) {
         ChannelName = Channel;
+
+        bIsBusy = true;
         NetworkManager->InitBroadcasterInfo(Channel);
     }
 }
@@ -165,6 +172,7 @@ void TwitchManager::userAuthorized(const QString& Token)
         NotificationsManager::SendNotification("Twitch Manager", "Successfully authorized");
 
         if (NetworkManager) {
+            bIsBusy = true;
             NetworkManager->RequestChannelInfo(UserOAuthToken);
         }
 
@@ -255,4 +263,9 @@ bool TwitchManager::isCanCreateNewEmptyReward() const
     }
 
     return bCan;
+}
+
+void TwitchManager::onResponseReceived(bool isSuccessful)
+{
+    bIsBusy = false;
 }
