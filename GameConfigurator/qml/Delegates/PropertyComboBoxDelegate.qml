@@ -41,11 +41,15 @@ Rectangle {
             delegate: targetDelegate
             onActivated: {
                 valueChanged(comboBox.currentText)
-                comboBox.displayText = comboBox.popup.contentItem.currentItem.text
+                setDisplayText(comboBox.popup.contentItem.currentItem.text)
             }
         }
     }
 
     signal valueChanged(string value)
+
+    function setDisplayText(value) {
+        comboBox.displayText = value
+    }
 }
 

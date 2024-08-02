@@ -1,6 +1,20 @@
 #include "Core/Action.h"
 #include "System/Logger.h"
 
+#include <QQmlEngine>
+
+ActionConfig::ActionConfig(QObject* Parent)
+    :QObject(Parent)
+{
+
+}
+
+ActionConfig::~ActionConfig()
+{
+
+}
+
+
 Action::Action(QObject* Parent)
     : QObject(Parent)
 {
@@ -15,7 +29,7 @@ void Action::MarkConfigUpdated()
 {
     QVariantMap VariantConfig;
     VariantConfig["text"] = Config.Text;
-    VariantConfig["executionTime"] = Config.ExecutionTime;
+    VariantConfig["executionTime"] = Config.DisplayTime;
     VariantConfig["isCanInterrupt"] = Config.bCanInterrupt;
     VariantConfig["fontSize"] = Config.FontSize;
     VariantConfig["textColor"] = Config.TextColor;
@@ -144,4 +158,11 @@ QVariantMap Action::getNextSprite()
 void Action::MarkSelected()
 {
     emit spriteSequenceUpdated();
+}
+
+ActionConfig* Action::getConfig()
+{
+    ActionConfig* OutConfig = &Config;
+    QQmlEngine::setObjectOwnership(OutConfig, QQmlEngine::CppOwnership);
+    return OutConfig;
 }

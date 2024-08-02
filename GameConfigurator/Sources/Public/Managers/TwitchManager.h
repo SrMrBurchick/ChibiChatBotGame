@@ -54,7 +54,7 @@ public:
 signals:
     void channelPointsRewardsUpdated();
     void connectionUpdated(bool isConnected);
-    void busyUpdated(bool isBusy);
+    void busyUpdated();
     void authorizationURLReady(const QString& URL);
 
 public slots:
@@ -66,6 +66,7 @@ public slots:
 protected:
     void ParseChannelPointsRewards(const QJsonArray& Rewards);
     void CreateChannelPointsReward(QSharedPointer<ChannelPointsReward> Reward);
+    void SetBusy(bool isBusy);
 
 private:
     TwitchNetworkAccessManager* NetworkManager;

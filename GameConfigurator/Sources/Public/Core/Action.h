@@ -6,14 +6,32 @@
 
 #include "Components/ActionComponent.h"
 
-struct ActionConfig {
+class ActionConfig : public QObject{
+    Q_OBJECT
+
+    Q_PROPERTY(QString text MEMBER Text)
+    Q_PROPERTY(int displayTime MEMBER DisplayTime)
+    Q_PROPERTY(bool canInterrupt MEMBER bCanInterrupt)
+    Q_PROPERTY(int fontSize MEMBER FontSize)
+    Q_PROPERTY(QColor textColor MEMBER TextColor)
+    Q_PROPERTY(QString rewardID MEMBER ChannelPointsRewardID NOTIFY rewardUpdated)
+public:
+    explicit ActionConfig(QObject* Parent = nullptr);
+    virtual ~ActionConfig();
+
     QString Text;
-    int ExecutionTime;
+    int DisplayTime;
     bool bCanInterrupt;
 
     // Text Config
     int FontSize;
     QColor TextColor;
+
+    // Twitch Config
+    QString ChannelPointsRewardID;
+
+signals:
+    void rewardUpdated(const QString& newRewardID);
 };
 
 class Action : public QObject {
@@ -39,6 +57,7 @@ public:
     Q_INVOKABLE int getSpriteCounts(int Column, int Row) const;
     Q_INVOKABLE QString getName() const;
     Q_INVOKABLE int getTotalSpritesCounts() const;
+    Q_INVOKABLE ActionConfig* getConfig();
 
     Q_INVOKABLE QVariantMap getNextSprite();
 

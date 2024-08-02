@@ -89,7 +89,7 @@ ApplicationWindow {
     ChibiBusyIndicator {
         id: busy
         anchors.centerIn: parent
-        running: GlobalConfig.isBusy
+        running: GlobalConfig.isBusy || TwitchManager.isBusy
     }
 
     WorkerScript {

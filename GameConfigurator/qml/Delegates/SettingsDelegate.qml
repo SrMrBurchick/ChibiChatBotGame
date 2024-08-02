@@ -5,6 +5,7 @@ import Base
 Rectangle {
     id: root
     property bool isExpanded: false
+    property bool isEnabled: true
     color: Style.settingsDelegateBGColor
     border.color: Style.settingsDelegateBorderColor
     border.width: 2
@@ -28,7 +29,9 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    root.isExpanded = !root.isExpanded
+                    if (root.isEnabled) {
+                        root.isExpanded = !root.isExpanded
+                    }
                 }
             }
         }
@@ -40,5 +43,10 @@ Rectangle {
         anchors.top: content.bottom
         width: root.width
         sourceComponent: component
+        onLoaded: {
+            componentLoaded(component)
+        }
     }
+
+    signal componentLoaded(Component loaded_component)
 }

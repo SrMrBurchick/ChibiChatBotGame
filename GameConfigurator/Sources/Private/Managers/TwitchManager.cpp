@@ -59,7 +59,7 @@ void TwitchManager::requestChannelPointsRewards()
         return;
     }
 
-    bIsBusy = true;
+    SetBusy(true);
     NetworkManager->Get("https://api.twitch.tv/helix/channel_points/custom_rewards", [this](const QJsonArray& Data) {
         ParseChannelPointsRewards(Data);
     });
@@ -90,7 +90,7 @@ void TwitchManager::updateChannelPointsReward(ChannelPointsReward* RewardToUpdat
             return;
         }
 
-        bIsBusy = true;
+        SetBusy(true);
         NetworkManager->Patch("https://api.twitch.tv/helix/channel_points/custom_rewards", RewardToUpdate->GetNetworkData(), RewardToUpdate->RewardID, [this, RewardToUpdate](const QJsonArray &Data) {
             if (Data.count() == 1 && RewardToUpdate != nullptr) {
                 RewardToUpdate->ParseJson(Data[0]);
@@ -109,7 +109,7 @@ void TwitchManager::removeChannelPointsRewardById(const QString& ID)
         return;
     }
 
-    bIsBusy = true;
+    SetBusy(true);
     NetworkManager->Delete("https://api.twitch.tv/helix/channel_points/custom_rewards", ID, [this](const QJsonArray &Data) {
         NotificationsManager::SendNotification("Twitch Manager", "Reward was removed");
         emit channelPointsRewardsUpdated();
@@ -138,7 +138,7 @@ void TwitchManager::connectToTheChannel(const QString& Channel)
     if (NetworkManager && !Channel.isEmpty()) {
         ChannelName = Channel;
 
-        bIsBusy = true;
+        SetBusy(true);
         NetworkManager->InitBroadcasterInfo(Channel);
     }
 }
@@ -172,7 +172,7 @@ void TwitchManager::userAuthorized(const QString& Token)
         NotificationsManager::SendNotification("Twitch Manager", "Successfully authorized");
 
         if (NetworkManager) {
-            bIsBusy = true;
+            SetBusy(true);
             NetworkManager->RequestChannelInfo(UserOAuthToken);
         }
 
@@ -267,5 +267,11 @@ bool TwitchManager::isCanCreateNewEmptyReward() const
 
 void TwitchManager::onResponseReceived(bool isSuccessful)
 {
-    bIsBusy = false;
+    SetBusy(false);
+}
+
+void TwitchManager::SetBusy(bool isBusy)
+{
+    bIsBusy = isBusy;
+    emit busyUpdated();
 }

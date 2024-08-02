@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
 
     // Types
     qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
+    qmlRegisterType<ActionConfig>("ActionsManagerComponent", 1, 0, "ActionConfig");
     qmlRegisterType<ChannelPointsReward>("TwitchManagerComponent", 1, 0, "ChannelPointsReward");
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));

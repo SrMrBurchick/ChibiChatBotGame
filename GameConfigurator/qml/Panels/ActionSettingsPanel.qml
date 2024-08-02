@@ -8,11 +8,14 @@ import Delegates
 import Base
 import Managers
 import TwitchModels
+import ActionsManagerComponent
 
 Item {
     id: root
     anchors.fill: parent
     anchors.leftMargin: 6
+    property ActionConfig actionConfig
+    property string actionName
 
     Component {
         id: baseSettings
@@ -117,18 +120,44 @@ Item {
             width: parent.width
 
             PropertyComboBoxDelegate {
+                id: rewardsComboBox
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.margins: 10
 
                 fieldName: "Listen:"
                 targetModel: rewardsModel
+                defaultValue: actionConfig.rewardID
 
                 targetDelegate: Component {
                     ChannelPointsRewardNameDelegate {}
                 }
 
                 onValueChanged:(value) => {
+                    console.log("Selected: ", value)
+
+                    if (actionConfig) {
+                        actionConfig.rewardID = value
+                    }
+                }
+
+                Component.onCompleted: {
+                    if (ActionsManager && TwitchManager) {
+                        ActionsManager.onActionSelected.connect(function(action) {
+                            var displayText = ""
+                            if (action) {
+                                var config = action.getConfig()
+                                if (config) {
+                                    var reward = TwitchManager.getChannelPointRewardByID(config.rewardID)
+                                    if (reward) {
+                                        displayText = reward.title
+                                    }
+                                }
+                            }
+
+                            setDisplayText(displayText)
+                        })
+                    }
                 }
             }
         }
@@ -138,25 +167,49 @@ Item {
         id: settingsModel
     }
 
-    ScrollView {
-        id: panel
+    ColumnLayout {
         anchors.fill: root
         anchors.margins: 10
-        clip: true
-        ListView {
-            width: parent.width
-            spacing: 10
-            model: settingsModel
+        BaseText {
+            text: "Config: " + actionName
+            font.pixelSize : 54
+        }
+        ScrollView {
+            id: panel
+            clip: true
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            ListView {
+                id: settingsView
+                width: parent.width
+                spacing: 10
+                model: settingsModel
 
-            delegate: SettingsDelegate {
+                delegate: SettingsDelegate {
+                    isEnabled: actionConfig ? true : false
+                    onComponentLoaded: (component) => {
+                        console.log("Component loaded ==>", component.comboBox)
+                    }
+                }
             }
         }
+
     }
 
     Component.onCompleted: {
         if (TwitchManager) {
             TwitchManager.requestChannelPointsRewards()
             rewardsModel.subscribeOnTarget(TwitchManager)
+        }
+
+        if (ActionsManager) {
+            ActionsManager.onActionSelected.connect(function(action) {
+                console.log("Selected Action: ", action)
+                if (action) {
+                    actionConfig = action.getConfig()
+                    actionName = action.name
+                }
+            })
         }
 
         settingsModel.append({"name": "Base Settings", "component": baseSettings})

@@ -2,6 +2,9 @@
 #include "Core/Action.h"
 #include "System/Logger.h"
 
+#include <QSharedPointer>
+#include <QQmlEngine>
+
 ActionsManager::ActionsManager(QObject* Parent)
     : QObject(Parent)
 {
@@ -70,12 +73,20 @@ QSharedPointer<Action> ActionsManager::GetActionById(int Index) const
 
 Action* ActionsManager::getActionByName(const QString& ActionName) const
 {
-    return GetActionByName(ActionName).get();
+    QSharedPointer<Action> TargetAction = GetActionByName(ActionName);
+    if (!TargetAction.isNull()) {
+        QQmlEngine::setObjectOwnership(TargetAction.data(), QQmlEngine::CppOwnership);
+    }
+    return TargetAction.data();
 }
 
 Action* ActionsManager::getActionById(int Index) const
 {
-    return GetActionById(Index).get();
+    QSharedPointer<Action> TargetAction = GetActionById(Index);
+    if (!TargetAction.isNull()) {
+        QQmlEngine::setObjectOwnership(TargetAction.data(), QQmlEngine::CppOwnership);
+    }
+    return TargetAction.data();
 }
 
 const QVector<QSharedPointer<Action>>& ActionsManager::getActions() const
@@ -101,7 +112,11 @@ void ActionsManager::markSelectedAction(int Index)
 {
     if (QSharedPointer<Action> TargetAction = GetActionById(Index))
     {
-        emit actionSelected(TargetAction.get());
+        if (!TargetAction.isNull()) {
+            QQmlEngine::setObjectOwnership(TargetAction.data(), QQmlEngine::CppOwnership);
+        }
+
+        emit actionSelected(TargetAction.data());
         SelectedAction = TargetAction;
         if (SelectedAction)
         {
@@ -170,5 +185,9 @@ const QVector<QString> ActionsManager::getPossibleActionsToAdd() const
 
 Action* ActionsManager::getSelectedAction() const
 {
-    return SelectedAction.get();
+    if (!SelectedAction.isNull()) {
+        QQmlEngine::setObjectOwnership(SelectedAction.data(), QQmlEngine::CppOwnership);
+    }
+
+    return SelectedAction.data();
 }
