@@ -3,11 +3,12 @@ use tokio::sync::mpsc;
 
 pub mod parsers;
 pub mod wss;
+pub mod components;
 
 #[tokio::main]
 async fn main() {
     // let (tx, rx) = mpsc::channel::<parsers::request_parser::EventType>(32);
-    let config = parsers::config::parse_config(String::from("config.json"));
+    let config = parsers::config::parse_config(String::from("ChibiChatBotConfig.json"));
 
     // let blocking_task = tokio::task::spawn_blocking(|| {
     //
