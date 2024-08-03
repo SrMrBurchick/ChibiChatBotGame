@@ -73,8 +73,6 @@ void AnimationSequenceModel::registerModel(const QString& ModuleName)
 
 void AnimationSequenceModel::OnTargetSubscribed()
 {
-    BaseListModel::OnTargetSubscribed();
-
     if (Manager)
     {
         QObject::connect(Manager, &ActionsManager::actionSelected, this, &AnimationSequenceModel::actionSelected);
@@ -83,6 +81,8 @@ void AnimationSequenceModel::OnTargetSubscribed()
             QObject::connect(SelectedAction, &Action::spriteSequenceUpdated, this, &AnimationSequenceModel::sequenceUpdated);
         }
     }
+
+    BaseListModel::OnTargetSubscribed();
 }
 
 void AnimationSequenceModel::UnsubscribeFromTarget()
@@ -96,7 +96,7 @@ void AnimationSequenceModel::UnsubscribeFromTarget()
         }
     }
 
-    BaseListModel::OnTargetSubscribed();
+    BaseListModel::UnsubscribeFromTarget();
 }
 
 void AnimationSequenceModel::actionSelected(Action* selectedAction)

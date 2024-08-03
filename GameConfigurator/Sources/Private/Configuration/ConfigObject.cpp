@@ -1,6 +1,7 @@
 #include "Configuration/ConfigObject.h"
 #include "Managers/NotificationsManager.h"
 #include "System/Logger.h"
+#include "Managers/ActionsManager.h"
 
 #include <QClipboard>
 #include <QFile>
@@ -26,6 +27,7 @@ constexpr char TWITCH_SETTINGS[] = "twitch-settings";
 constexpr char TWITCH_BOT_SETTINGS[] = "twitch-bot-settings";
 constexpr char TWITCH_CHANNEL[] = "twitch-channel";
 constexpr char TWITCH_OAUTH[] = "oauth-token";
+constexpr char TWITCH_CLIENT_ID[] = "client-id";
 
 // Action execution time
 constexpr char ACTION_EXECUTION_TIME[] = "action-execution-time";
@@ -70,6 +72,18 @@ constexpr char PREDEFINED_ACTIONS_SETTINGS[] = "predefined-actions";
 constexpr char PREDEFINED_ACTIONS_ITEM_ACTION[] = "action";
 constexpr char PREDEFINED_ACTIONS_ITEM_CHANCE[] = "chance";
 
+// Action config
+constexpr char ACTIONS_SETTINGS[] = "actions";
+constexpr char ACTION_NAME[] = "name";
+constexpr char ACTION_CONFIG_SETTINGS[] = "config";
+constexpr char ACTION_CONFIG_INTERRUPT[] = "can-interrupt";
+constexpr char ACTION_CONFIG_TWITCH_REWARD_ID[] = "twitch-reward-id";
+constexpr char ACTION_CONFIG_TEXT_SETTINGS[] = "text-settings";
+constexpr char ACTION_CONFIG_TEXT_MESSAGE[] = "message";
+constexpr char ACTION_CONFIG_TEXT_DISPLAY_TIME[] = "display-time";
+constexpr char ACTION_CONFIG_TEXT_COLOR[] = "color";
+constexpr char ACTION_CONFIG_TEXT_SIZE[] = "size";
+
 ConfigObject::ConfigObject(QObject* Parent)
     : QObject(Parent)
 {
@@ -93,7 +107,6 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     QVariantMap JsonTwitchSettings = ConfigMap[TWITCH_SETTINGS].toMap();
     QVariantMap JsonScreenResolution = ConfigMap[SCREEN_RESOLUTION].toMap();
     QVariantMap JsonMessageSettings = ConfigMap[MESSAGE_SETTINGS].toMap();
-    QJsonArray JsonActionsArray = ConfigMap[ANIMATIONS_SETTINGS].toJsonArray();
     QJsonArray JsonPredefinedActions = ConfigMap[PREDEFINED_ACTIONS_SETTINGS].toJsonArray();
 
     // Init source file
@@ -166,36 +179,9 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
         SystemSettings.Logging = ConfigMap[LOGGING].toBool();
     }
 
-    // Init animation map
-    if (!JsonActionsArray.isEmpty()) {
-        for (QJsonValueConstRef Item : JsonActionsArray) {
-            QJsonObject Action = Item.toObject();
-            QStringList ActionKeys = Action.keys();
-            QString ActionName;
-            QList<ActionSequenceSprite> AnimationSequence;
-            if (ActionKeys.size() == 1) {
-                ActionName = ActionKeys[0];
-            }
-
-            if (Action.contains(ActionName) && Action[ActionName].isArray()) {
-                QJsonArray Sequence = Action[ActionName].toArray();
-                for (QJsonValueConstRef Sprite : Sequence) {
-                    if (!Sprite.isObject()) {
-                        continue;
-                    }
-
-                    QJsonObject SpriteObj = Sprite.toObject();
-                    ActionSequenceSprite SpriteInfo(0, 0);
-                    SpriteInfo.Row = SpriteObj[ANIMATIONS_ITEM_ROW].toInt();
-                    SpriteInfo.Column = SpriteObj[ANIMATIONS_ITEM_COLUMN].toInt();
-                    SpriteInfo.bInverted = SpriteObj[ANIMATIONS_ITEM_INVERTED].toBool();
-
-                    AnimationSequence.push_back(SpriteInfo);
-                }
-
-                Map[ActionName] = AnimationSequence;
-            }
-        }
+    // Init actions
+    if (ConfigMap.contains(ACTIONS_SETTINGS)) {
+        ActionsArray = ConfigMap[ACTIONS_SETTINGS].toJsonArray();
     }
 
     // Init predefined actions
@@ -228,6 +214,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     // Twitch settings
     JsonTwitchSettings[TWITCH_CHANNEL] = SystemSettings.Twitch.ChannelName;
     JsonTwitchSettings[TWITCH_OAUTH] = SystemSettings.Twitch.OAuthToken;
+    JsonTwitchSettings[TWITCH_CLIENT_ID] = QT_STRINGIFY(CLIENT_ID);
     JsonTwitchBotSettings[CHAT_BOT_SETTINGS_URL] = SystemSettings.Twitch.Bot.WebSockURL;
     JsonTwitchBotSettings[CHAT_BOT_SETTINGS_PORT] = SystemSettings.Twitch.Bot.WebSockPort;
     JsonTwitchBotSettings[CHAT_BOT_USER] = SystemSettings.Twitch.Bot.ChatAnyUser;
@@ -248,21 +235,6 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     JsonMessageSettings[MESSAGE_TEXT_COLOR] = SystemSettings.Message.MessageTextColor.name();
     JsonMessageFontSettings[MESSAGE_FONT_SIZE] = SystemSettings.Message.FontSize;
     JsonMessageSettings[MESSAGE_FONT_SETTINGS] = JsonMessageFontSettings;
-
-    // Actions map
-    for (auto Iter = Map.begin(); Iter != Map.end(); ++Iter) {
-        QJsonObject JsonAction;
-        QJsonArray JsonActionSprites;
-        for (const ActionSequenceSprite& Sprite : Iter.value()) {
-            QJsonObject JsonActionSprite;
-            JsonActionSprite[ANIMATIONS_ITEM_COLUMN] = Sprite.Column;
-            JsonActionSprite[ANIMATIONS_ITEM_ROW] = Sprite.Row;
-            JsonActionSprite[ANIMATIONS_ITEM_INVERTED] = Sprite.bInverted;
-            JsonActionSprites.push_back(JsonActionSprite);
-        }
-        JsonAction[Iter.key()] = JsonActionSprites;
-        JsonActionsArray.push_back(JsonAction);
-    }
 
     // Predefined actions
     for (const PredefinedAction& Action : PredefinedActionsList) {
@@ -285,7 +257,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     Config[SPRITE_SETTINGS] = JsonSpriteSettings;
     Config[SCREEN_RESOLUTION] = JsonScreenResolution;
     Config[PREDEFINED_ACTIONS_SETTINGS] = JsonPredefinedActions;
-    Config[ANIMATIONS_SETTINGS] = JsonActionsArray;
+    Config[ACTIONS_SETTINGS] = ActionsArray;
 
     QFile ConfigFile(ConfigFileName);
     if (ConfigFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -300,19 +272,26 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 
 void ConfigObject::saveConfig()
 {
+    SetBusy(true);
     SaveConfigToFile(QT_STRINGIFY(CONFIG_FILE));
     bConfigLoaded = true;
+    SetBusy(false);
 }
 
 void ConfigObject::loadConfig()
 {
+    SetBusy(true);
     QFile ConfigFile(QT_STRINGIFY(CONFIG_FILE));
     if (ConfigFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QJsonDocument JsonConfig = QJsonDocument::fromJson(ConfigFile.readAll());
         ParseJsonDocument(JsonConfig);
         ConfigFile.close();
         emit loggerEnabled(SystemSettings.Logging);
+        NotificationsManager::SendNotification("Config", "Loaded successfully!");
+    } else {
+        NotificationsManager::SendNotification("Config", QString("Failed to load. %1").arg(ConfigFile.errorString()));
     }
+    SetBusy(false);
 }
 
 void ConfigObject::saveChatBotConfig(const QString& URL, const int Port)
@@ -536,4 +515,115 @@ void ConfigObject::saveTwitchInfo(const QString& ChannelName, const QString& OAu
 {
     SystemSettings.Twitch.ChannelName = ChannelName;
     SystemSettings.Twitch.OAuthToken = OAuthToken;
+}
+
+void ConfigObject::SaveActions(const QVector<QSharedPointer<Action>>& Actions)
+{
+    if (ActionsArray.count() > 0) {
+        ActionsArray = QJsonArray();
+    }
+
+    for (const QSharedPointer<Action>& Action : Actions) {
+        QJsonObject JsonAction;
+        JsonAction[ACTION_NAME] = Action->getName();
+
+        // Config
+        QJsonObject JsonActionConfig;
+        if (ActionConfig* Config = Action->getConfig()) {
+            QJsonObject TextConfig;
+            JsonActionConfig[ACTION_CONFIG_INTERRUPT] = Config->bCanInterrupt;
+            JsonActionConfig[ACTION_CONFIG_TWITCH_REWARD_ID] = Config->ChannelPointsRewardID;
+
+            TextConfig[ACTION_CONFIG_TEXT_COLOR] = Config->TextColor.name();
+            TextConfig[ACTION_CONFIG_TEXT_DISPLAY_TIME] = Config->DisplayTime;
+            TextConfig[ACTION_CONFIG_TEXT_SIZE] = Config->FontSize;
+            TextConfig[ACTION_CONFIG_TEXT_MESSAGE] = Config->Text;
+
+            JsonActionConfig[ACTION_CONFIG_TEXT_SETTINGS] = TextConfig;
+        }
+
+        JsonAction[ACTION_CONFIG_SETTINGS] = JsonActionConfig;
+
+        // Animations
+        QJsonArray Animations;
+        for (int i = 0; i < Action->getTotalSpritesCounts(); ++i) {
+            ActionSequenceSprite Sprite = Action->GetSpriteById(i);
+            QJsonObject JsonSprite;
+            JsonSprite[ANIMATIONS_ITEM_INVERTED] = Sprite.bInverted;
+            JsonSprite[ANIMATIONS_ITEM_COLUMN] = Sprite.Column;
+            JsonSprite[ANIMATIONS_ITEM_ROW] = Sprite.Row;
+
+            Animations.push_back(JsonSprite);
+        }
+
+        JsonAction[ANIMATIONS_SETTINGS] = Animations;
+        ActionsArray.push_back(JsonAction);
+    }
+}
+
+void ConfigObject::InitActionsManager(ActionsManager* Manager) const
+{
+    if (!Manager) {
+        LOG_WARNING("ConfigObject: Invalid Manager to init");
+        return;
+    }
+
+    for (QJsonValueConstRef JsonActionRef : ActionsArray) {
+        QJsonObject JsonAction = JsonActionRef.toObject();
+        QSharedPointer<Action> Action = Manager->CreateNewAction(JsonAction[ACTION_NAME].toString());
+        if (!Action.isNull()) {
+            // Config
+            if (ActionConfig* Config = Action->getConfig()) {
+                if (JsonAction.contains(ACTION_CONFIG_SETTINGS)) {
+                    QJsonObject JsonActionConfig = JsonAction[ACTION_CONFIG_SETTINGS].toObject();
+                    if (JsonActionConfig.contains(ACTION_CONFIG_TWITCH_REWARD_ID)
+                        && JsonActionConfig.contains(ACTION_CONFIG_INTERRUPT)) {
+                        Config->bCanInterrupt = JsonActionConfig[ACTION_CONFIG_INTERRUPT].toBool();
+                        Config->ChannelPointsRewardID = JsonActionConfig[ACTION_CONFIG_TWITCH_REWARD_ID].toString();
+
+                        if (JsonActionConfig.contains(ACTION_CONFIG_TEXT_SETTINGS)) {
+                            QJsonObject ActionTextConfig = JsonActionConfig[ACTION_CONFIG_TEXT_SETTINGS].toObject();
+                            if (ActionTextConfig.contains(ACTION_CONFIG_TEXT_MESSAGE)) {
+                                Config->Text = ActionTextConfig[ACTION_CONFIG_TEXT_MESSAGE].toString();
+                            }
+                            if (ActionTextConfig.contains(ACTION_CONFIG_TEXT_SIZE)) {
+                                Config->FontSize = ActionTextConfig[ACTION_CONFIG_TEXT_SIZE].toInt();
+                            }
+                            if (ActionTextConfig.contains(ACTION_CONFIG_TEXT_DISPLAY_TIME)) {
+                                Config->DisplayTime = ActionTextConfig[ACTION_CONFIG_TEXT_DISPLAY_TIME].toInt();
+                            }
+                            if (ActionTextConfig.contains(ACTION_CONFIG_TEXT_COLOR)) {
+                                Config->TextColor = QColor(ActionTextConfig[ACTION_CONFIG_TEXT_COLOR].toString());
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Animations
+            QJsonArray Animations;
+            if (JsonAction.contains(ANIMATIONS_SETTINGS)) {
+                Animations = JsonAction[ANIMATIONS_SETTINGS].toArray();
+            }
+
+            for (QJsonValueConstRef AnimationRef : Animations) {
+                QJsonObject Animation = AnimationRef.toObject();
+                if (Animation.contains(ANIMATIONS_ITEM_COLUMN)
+                    && Animation.contains(ANIMATIONS_ITEM_ROW)
+                    && Animation.contains(ANIMATIONS_ITEM_INVERTED)) {
+
+                }
+
+                if (ActionSequenceSprite* NewSprite = Action->CreateNewSprite(Animation[ANIMATIONS_ITEM_COLUMN].toInt(), Animation[ANIMATIONS_ITEM_ROW].toInt())) {
+                    NewSprite->bInverted = Animation[ANIMATIONS_ITEM_INVERTED].toBool();
+                }
+            }
+        }
+    }
+}
+
+void ConfigObject::SetBusy(bool isBusy)
+{
+    bIsBusy = isBusy;
+    emit busyUpdated();
 }

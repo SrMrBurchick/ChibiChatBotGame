@@ -6,6 +6,7 @@ import Pages
 import SystemTools
 import Managers
 import Base
+import ConfigComponent
 
 ApplicationWindow {
     id: root
@@ -89,7 +90,7 @@ ApplicationWindow {
     ChibiBusyIndicator {
         id: busy
         anchors.centerIn: parent
-        running: GlobalConfig.isBusy || TwitchManager.isBusy
+        running: Config.isBusy || TwitchManager.isBusy
     }
 
     WorkerScript {
@@ -119,9 +120,6 @@ ApplicationWindow {
     Component {
         id: config_menu
         ConfigurationPage {
-            onGoBack: {
-                stack.pop()
-            }
             onGoActionsConfiguration: {
                 worker.sendMessage({'page': "ActionsConfig"})
             }
@@ -130,6 +128,9 @@ ApplicationWindow {
             }
             onGoTwitchConfiguration: {
                 worker.sendMessage({'page': "TwitchConfig"})
+            }
+            onGoBack: {
+                stack.pop()
             }
         }
     }

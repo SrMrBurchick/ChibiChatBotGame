@@ -55,12 +55,20 @@ void Action::placeSpriteAt(int OriginLocation, int NewLocation)
     emit spriteSequenceUpdated();
 }
 
-void Action::addNewSprite(int Column, int Row)
+
+ActionSequenceSprite* Action::CreateNewSprite(int Column, int Row)
 {
     ActionSequenceSprite NewSprite(Column, Row);
     SpriteSequence.push_back(NewSprite);
 
-    emit spriteSequenceUpdated();
+    return &SpriteSequence.back();
+}
+
+void Action::addNewSprite(int Column, int Row)
+{
+    if (CreateNewSprite(Column, Row)) {
+        emit spriteSequenceUpdated();
+    }
 }
 
 void Action::removeSprite(int Index)

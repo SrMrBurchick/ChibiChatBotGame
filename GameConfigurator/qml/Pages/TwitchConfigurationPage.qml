@@ -62,10 +62,6 @@ Item {
     }
 
     Component.onCompleted: {
-        if (!TwitchManager.isAuthorized()) {
-            TwitchManager.initByConfig(Config)
-        }
-
         TwitchManager.authorizationURLReady.connect(function (url){
             webView.setup(url)
             webView.open()
@@ -74,6 +70,7 @@ Item {
         TwitchManager.connectionUpdated.connect(function (isConnected){
             if (isConnected) {
                 TwitchManager.saveConfig(Config)
+                Config.saveConfig()
             }
         })
     }

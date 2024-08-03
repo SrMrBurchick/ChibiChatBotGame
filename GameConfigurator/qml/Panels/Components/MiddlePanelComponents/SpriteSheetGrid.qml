@@ -64,18 +64,7 @@ Item {
     }
 
     Component.onCompleted: {
-        // ActionsManager.sequenceModel.onSpriteRemoved.connect(function (column, row) {
-        //     ActionsManager.spriteSheetModel.removeAction(
-        //         column, row,
-        //         ActionsManager.actionsListModel.getSelectedAction()
-        //     )
-        //     sequenceUpdated()
-        // })
-        //
-        // ActionsManager.actionsListModel.onActionRemoved.connect(function(action) {
-        //     ActionsManager.spriteSheetModel.removeActionFromAll(action)
-        //     sequenceUpdated()
-        // })
+        initModel()
     }
 
     function initModel() {

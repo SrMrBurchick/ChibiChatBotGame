@@ -5,11 +5,13 @@
 #include <QObject>
 #include <QString>
 #include <QColor>
+#include <QJsonArray>
 
 #include "Components/ActionComponent.h"
-#include "Models/ActionsListModel.h"
-#include "Models/AnimationSequenceModel.h"
 #include "Models/PredefinedActionsModel.h"
+#include "Core/Action.h"
+
+class ActionsManager;
 
 struct SpriteSize {
     int Height;
@@ -64,13 +66,26 @@ struct SystemConfig {
 class ConfigObject : public QObject {
     Q_OBJECT
 
+    Q_PROPERTY(bool isBusy MEMBER bIsBusy NOTIFY busyUpdated)
+
 public:
     explicit ConfigObject(QObject* Parent = nullptr);
     virtual ~ConfigObject();
 
+    //============================ C++ ========================================
+    // Modifiers
     void ParseJsonDocument(const QJsonDocument& JsonDocument);
     void SaveConfigToFile(const QString& ConfigFile);
+    void InitActionsManager(ActionsManager* Manager) const;
 
+    void SaveLogging(bool Logging);
+    void SaveActions(const QVector<QSharedPointer<Action>>& Actions);
+
+    // Getters
+    const TwitchSettings GetTwitchSettings() const { return SystemSettings.Twitch; };
+
+    //============================ QML ========================================
+    // Getters
     Q_INVOKABLE QString getSpriteSheetPath() const;
     Q_INVOKABLE QString getChatBotURL() const;
     Q_INVOKABLE int getChatBotPort() const;
@@ -89,10 +104,12 @@ public:
     Q_INVOKABLE int getFontSize() const;
     Q_INVOKABLE bool getChatBotUser() const;
     Q_INVOKABLE bool getLogging() const;
+    Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
 
+
+    // Modifiers
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
-
     Q_INVOKABLE void saveSpriteSheetPath(const QString& ImagePath);
     Q_INVOKABLE void saveChatBotConfig(const QString& URL, const int Port);
     Q_INVOKABLE void saveSpriteWidth(const int Width);
@@ -110,23 +127,18 @@ public:
     Q_INVOKABLE void saveFontSize(const int FontSize);
     Q_INVOKABLE void saveChatBotUser(const bool AnyUser);
     Q_INVOKABLE void saveTwitchInfo(const QString& ChannelName, const QString& OAuthToken);
-
-    Q_INVOKABLE bool isConfigLoaded() const { return bConfigLoaded; }
-
     Q_INVOKABLE void setLoggerEnabled(bool Enabled);
     Q_INVOKABLE void saveDataToClipboard(const QString& Data);
 
-    void SaveLogging(bool Logging);
-
-    const TwitchSettings GetTwitchSettings() const { return SystemSettings.Twitch; };
-
 signals:
     void actionsConfigured();
+    void busyUpdated();
     void globalSettingsConfigured();
     void loggerEnabled(bool Enabled);
 
 protected:
     void CopyImageToAssets();
+    void SetBusy(bool isBusy);
 
     bool bConfigLoaded = false;
     SpriteSize SpriteSettings = {256, 256};
@@ -136,6 +148,10 @@ protected:
     // List of the animations
     ActionsMap Map;
 
+    QJsonArray ActionsArray;
+
     // List of the predefined actions
     QVector<PredefinedAction> PredefinedActionsList;
+
+    bool bIsBusy = false;
 };

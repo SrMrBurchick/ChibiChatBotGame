@@ -4,6 +4,8 @@
 
 #include <QSharedPointer>
 #include <QQmlEngine>
+#include <QJsonArray>
+#include <QJsonObject>
 
 ActionsManager::ActionsManager(QObject* Parent)
     : QObject(Parent)
@@ -11,7 +13,7 @@ ActionsManager::ActionsManager(QObject* Parent)
     SelectedAction = nullptr;
 }
 
-void ActionsManager::addNewAction(const QString& ActionName)
+QSharedPointer<Action> ActionsManager::CreateNewAction(const QString& ActionName)
 {
     if (GetActionByName(ActionName).isNull())
     {
@@ -21,8 +23,18 @@ void ActionsManager::addNewAction(const QString& ActionName)
             Actions.push_back(NewAction);
 
             LOG_INFO("New Action added = %s", ActionName.toStdString().c_str());
-            emit actionsUpdated();
+            return NewAction;
         }
+    }
+
+    return nullptr;
+}
+
+void ActionsManager::addNewAction(const QString& ActionName)
+{
+    if (!CreateNewAction(ActionName).isNull())
+    {
+        emit actionsUpdated();
     }
 }
 
@@ -176,7 +188,7 @@ const QVector<QString> ActionsManager::getPossibleActionsToAdd() const
     PossibleActions.append(GameDefaultActions);
     PossibleActions.append(TwitchDefaultActions);
 
-    PossibleActions.removeIf([=](const QString& name){
+    PossibleActions.removeIf([this](const QString& name){
         return !GetActionByName(name).isNull();
     });
 
@@ -190,4 +202,24 @@ Action* ActionsManager::getSelectedAction() const
     }
 
     return SelectedAction.data();
+}
+
+void ActionsManager::saveConfig(ConfigObject* Config)
+{
+    if (!Config) {
+        LOG_WARNING("Actions Manager: Invalid config to save");
+        return;
+    }
+
+    Config->SaveActions(Actions);
+}
+
+void ActionsManager::initByConfig(const ConfigObject* Config)
+{
+    if (!Config) {
+        LOG_WARNING("Actions Manager: Invalid config to initialize");
+        return;
+    }
+
+    Config->InitActionsManager(this);
 }

@@ -143,7 +143,7 @@ Item {
     }
 
     Component.onCompleted: {
-        GlobalConfig.isBusy = false
+        root.isImageSplited = Config.isConfigLoaded()
     }
 
     function splitImageToSprites() {
@@ -152,6 +152,7 @@ Item {
     }
 
     function saveActionsConfig() {
+        ActionsManager.saveConfig(Config)
         if (Config.isConfigLoaded() == false) {
             Config.actionsConfigured()
         } else {

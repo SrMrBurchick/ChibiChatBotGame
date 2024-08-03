@@ -6,6 +6,7 @@ import Panels
 import ActionsModels
 import ConfigComponent
 import Base
+import Managers
 
 Item {
     id: configuration_menu
@@ -46,37 +47,26 @@ Item {
         if (!Config.isConfigLoaded()) {
             Config.loadConfig()
 
-            // if (!ActionsManager.isActionsConfigured) {
-            //     Config.initActionsListModel(ActionsManager.actionsListModel)
-            //     Config.initAnimationsSequenceModel(ActionsManager.sequenceModel)
-            //     ActionsManager.isActionsConfigured = true
-            // }
+            ActionsManager.initByConfig(Config)
+            TwitchManager.initByConfig(Config)
         }
-
-        Config.onActionsConfigured.connect(function(){
-            saveDefaultConfig()
-        })
-
-        Config.onGlobalSettingsConfigured.connect(function(){
-            saveDefaultConfig()
-        })
     }
 
     function saveDefaultConfig() {
         console.log("Save default")
-        Config.saveChatBotConfig(GlobalConfig.chatBotURL, GlobalConfig.chatBotPort)
-        Config.saveScreenResolution(GlobalConfig.screenHeight, GlobalConfig.screenWidth)
-        Config.saveTargetTwitchChannel(GlobalConfig.twitchChannel)
-        Config.saveActionExecutionTime(GlobalConfig.actionExecutionTime)
-        Config.saveMessageTextColor(GlobalConfig.messageTextColor)
-        Config.saveMovementSpeed(GlobalConfig.movementSpeed)
-        Config.saveNextActionTimeout(GlobalConfig.nextActionTimeout)
+        // Config.saveChatBotConfig(GlobalConfig.chatBotURL, GlobalConfig.chatBotPort)
+        // Config.saveScreenResolution(GlobalConfig.screenHeight, GlobalConfig.screenWidth)
+        // Config.saveTargetTwitchChannel(GlobalConfig.twitchChannel)
+        // Config.saveActionExecutionTime(GlobalConfig.actionExecutionTime)
+        // Config.saveMessageTextColor(GlobalConfig.messageTextColor)
+        // Config.saveMovementSpeed(GlobalConfig.movementSpeed)
+        // Config.saveNextActionTimeout(GlobalConfig.nextActionTimeout)
         // Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
         // Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
         // Config.saveSpriteScale(ActionsManager.spriteScale)
         // Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
 
-        Config.saveConfig()
+        // Config.saveConfig()
     }
 
     signal goBack()

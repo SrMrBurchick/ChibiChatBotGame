@@ -64,6 +64,7 @@ public:
     //============================ C++ ========================================
     // Modifiers
     void SetName(const QString& NewName);
+    ActionSequenceSprite* CreateNewSprite(int Column, int Row);
 
     // Getters
     const ActionSequenceSprite GetSpriteById(int Index) const;

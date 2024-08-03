@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QSharedPointer>
 
+#include "Configuration/ConfigObject.h"
+
 class Action;
 
 class ActionsManager : public QObject
@@ -18,6 +20,8 @@ public:
     Q_INVOKABLE void addNewAction(const QString& ActionName);
     Q_INVOKABLE void removeActionById(int Index);
     Q_INVOKABLE void changeActionName(int Index, const QString& NewName);
+    Q_INVOKABLE void saveConfig(ConfigObject* Config);
+    Q_INVOKABLE void initByConfig(const ConfigObject* Config);
 
     // Getters
     Q_INVOKABLE int getActionsCount() const;
@@ -42,6 +46,7 @@ public:
     // ============================== C++ ======================================
     // Modifiers
     void removeAction(QSharedPointer<Action> ActionToRemove);
+    QSharedPointer<Action> CreateNewAction(const QString& ActionName);
 
     // Getters
     QSharedPointer<Action> GetActionByName(const QString& ActionName) const;
