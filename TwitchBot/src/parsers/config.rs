@@ -2,19 +2,17 @@ use std::error::Error;
 use std::fs;
 use json::{self, JsonValue};
 
-use crate::components::action::Action;
+use crate::components::{action::Action, twitch::Twitch};
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Config {
     pub host: String,
     pub port: u32,
-    pub actions: Vec<Action>,
-    pub client_id: String,
-    pub user_token: String
+    content: JsonValue
 }
 
-fn get_value(content: &JsonValue, key: &str) -> Result<JsonValue, Box<dyn Error>> {
+pub fn get_value(content: &JsonValue, key: &str) -> Result<JsonValue, Box<dyn Error>> {
     let value: JsonValue;
 
     if 0 == key.len() {
@@ -39,29 +37,8 @@ impl Config {
         Config {
             host: String::new(),
             port: 0,
-            actions: Vec::new(),
-            client_id: String::new(),
-            user_token: String::new()
+            content: JsonValue::new_object()
         }
-    }
-
-    fn init_twitch_info(&mut self, data: &JsonValue) {
-        if data.is_object() {
-            match get_value(data, "oauth-token") {
-                Ok(value) => {
-                    self.user_token = value.to_string();
-                },
-                Err(_) => {},
-            }
-
-            match get_value(data, "client-id") {
-                Ok(value) => {
-                    self.client_id = value.to_string();
-                },
-                Err(_) => {},
-            }
-        }
-
     }
 
     fn init_base_info(&mut self, data: &JsonValue) {
@@ -82,9 +59,10 @@ impl Config {
         }
     }
 
-    fn init_actions(&mut self, actions: &JsonValue) {
-        if actions.is_array() {
-            for element in actions.members() {
+    fn init_actions(&self, json_actions: &JsonValue) -> Vec<Action> {
+        let mut actions : Vec<Action> = vec![];
+        if json_actions.is_array() {
+            for element in json_actions.members() {
                 let mut action: Action = Action::new();
                 match get_value(&element, "name") {
                     Ok(name) => {
@@ -105,13 +83,51 @@ impl Config {
                 }
 
                 println!("Action parsed: {:?}", action);
-                self.actions.push(action);
-
+                actions.push(action);
             }
+        }
+
+        return actions;
+    }
+
+    pub fn init_twitch(&self, twitch: &mut Twitch) {
+        match get_value(&self.content, "actions") {
+            Ok(actions) => {
+                twitch.actions = self.init_actions(&actions);
+            },
+            Err(_) => {},
+        }
+
+        match get_value(&self.content, "twitch-settings") {
+            Ok(settings) => {
+                match get_value(&settings, "oauth-token") {
+                    Ok(value) => {
+                        twitch.user_token = value.to_string();
+                    },
+                    Err(_) => {},
+                }
+
+                match get_value(&settings, "client-id") {
+                    Ok(value) => {
+                        twitch.client_id = value.to_string();
+                    },
+                    Err(_) => {},
+                }
+
+                match get_value(&settings, "user-id") {
+                    Ok(value) => {
+                        twitch.user_id = value.to_string();
+                    },
+                    Err(_) => {},
+                }
+
+            },
+            Err(_) => {},
         }
     }
 
     pub fn init(&mut self, content: JsonValue) {
+        self.content = content.clone();
         match get_value(&content, "twitch-bot") {
             Ok(bot) => {
                 self.init_base_info(&bot);
@@ -120,22 +136,6 @@ impl Config {
 
             },
         }
-
-        match get_value(&content, "actions") {
-            Ok(actions) => {
-                self.init_actions(&actions);
-            },
-            Err(_) => {},
-        }
-
-        match get_value(&content, "twitch-settings") {
-            Ok(settings) => {
-                self.init_twitch_info(&settings);
-            },
-            Err(_) => {},
-        }
-
-        println!("Config initialied: {:?}", self);
     }
 }
 

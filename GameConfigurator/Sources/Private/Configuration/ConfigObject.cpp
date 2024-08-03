@@ -28,6 +28,7 @@ constexpr char TWITCH_BOT_SETTINGS[] = "twitch-bot-settings";
 constexpr char TWITCH_CHANNEL[] = "twitch-channel";
 constexpr char TWITCH_OAUTH[] = "oauth-token";
 constexpr char TWITCH_CLIENT_ID[] = "client-id";
+constexpr char TWITCH_USER_ID[] = "user-id";
 
 // Action execution time
 constexpr char ACTION_EXECUTION_TIME[] = "action-execution-time";
@@ -214,6 +215,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     // Twitch settings
     JsonTwitchSettings[TWITCH_CHANNEL] = SystemSettings.Twitch.ChannelName;
     JsonTwitchSettings[TWITCH_OAUTH] = SystemSettings.Twitch.OAuthToken;
+    JsonTwitchSettings[TWITCH_USER_ID] = SystemSettings.Twitch.UserId;
     JsonTwitchSettings[TWITCH_CLIENT_ID] = QT_STRINGIFY(CLIENT_ID);
     JsonTwitchBotSettings[CHAT_BOT_SETTINGS_URL] = SystemSettings.Twitch.Bot.WebSockURL;
     JsonTwitchBotSettings[CHAT_BOT_SETTINGS_PORT] = SystemSettings.Twitch.Bot.WebSockPort;
@@ -511,10 +513,11 @@ bool ConfigObject::getLogging() const
     return SystemSettings.Logging;
 }
 
-void ConfigObject::saveTwitchInfo(const QString& ChannelName, const QString& OAuthToken)
+void ConfigObject::saveTwitchInfo(const QString& ChannelName, const QString& OAuthToken, const QString& UserId)
 {
     SystemSettings.Twitch.ChannelName = ChannelName;
     SystemSettings.Twitch.OAuthToken = OAuthToken;
+    SystemSettings.Twitch.UserId = UserId;
 }
 
 void ConfigObject::SaveActions(const QVector<QSharedPointer<Action>>& Actions)

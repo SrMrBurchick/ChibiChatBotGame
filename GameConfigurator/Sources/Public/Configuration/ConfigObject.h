@@ -44,6 +44,7 @@ struct TwitchSettings {
     TwitchBotSettings Bot;
     QString OAuthToken = "";
     QString ChannelName = "";
+    QString UserId = "";
 };
 
 struct GameSettings {
@@ -126,7 +127,7 @@ public:
     Q_INVOKABLE void saveNextActionTimeout(const float NextActionTimeout);
     Q_INVOKABLE void saveFontSize(const int FontSize);
     Q_INVOKABLE void saveChatBotUser(const bool AnyUser);
-    Q_INVOKABLE void saveTwitchInfo(const QString& ChannelName, const QString& OAuthToken);
+    Q_INVOKABLE void saveTwitchInfo(const QString& ChannelName, const QString& OAuthToken, const QString& UserId);
     Q_INVOKABLE void setLoggerEnabled(bool Enabled);
     Q_INVOKABLE void saveDataToClipboard(const QString& Data);
 

@@ -19,7 +19,7 @@ constexpr char TWITCH_LOGIN_FIELD[] = "login";
 
 
 // Data
-constexpr char TWITCH_ACCESS_SCOPES[] = "channel:read:redemptions channel:manage:redemptions";
+constexpr char TWITCH_ACCESS_SCOPES[] = "channel:read:redemptions channel:manage:redemptions moderator:read:followers channel:read:subscriptions channel:moderate moderation:read";
 
 TwitchNetworkAccessManager::TwitchNetworkAccessManager(QObject* Parent)
     : QNetworkAccessManager(Parent)
@@ -212,9 +212,9 @@ const QString TwitchNetworkAccessManager::GetAuthorizationURL() const
         "&redirect_uri=https://localhost:1337"
         "&response_type=token"
         "&force_verify=true"
-        "&scope=channel:read:redemptions channel:manage:redemptions"
+        "&scope=%2"
         "&state=unique_state")
-        .arg(QT_STRINGIFY(CLIENT_ID));
+        .arg(QT_STRINGIFY(CLIENT_ID), TWITCH_ACCESS_SCOPES);
 }
 
 void TwitchNetworkAccessManager::SetupRedirectURI(const QString& URI)

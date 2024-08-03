@@ -220,8 +220,8 @@ void TwitchManager::initByConfig(const ConfigObject* Config)
 
 void TwitchManager::saveConfig(ConfigObject* Config)
 {
-    if (Config) {
-        Config->saveTwitchInfo(ChannelName, UserOAuthToken);
+    if (Config && NetworkManager) {
+        Config->saveTwitchInfo(ChannelName, UserOAuthToken, NetworkManager->BroadcasterID);
     }
 }
 

@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Action {
     pub name: String,
     pub reward_to_listen: String

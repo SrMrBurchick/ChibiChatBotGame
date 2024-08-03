@@ -5,6 +5,7 @@
 #include <functional>
 
 class QNetworkRequest;
+class TwitchManager;
 
 class TwitchNetworkAccessManager : public QNetworkAccessManager
 {
@@ -47,4 +48,6 @@ private:
     QString BroadcasterID;
     QString RedirectURI;
     QString UserToken;
+
+    friend TwitchManager;
 };
