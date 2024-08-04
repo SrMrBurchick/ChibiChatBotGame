@@ -64,6 +64,9 @@
         <file>qml/Images/sprite-sheet.png</file>
         <file>qml/Images/copy.png</file>
         <file>qml/Images/copy_white.png</file>
+        <file>qml/Images/twitch-logo.png</file>
+        <file>qml/Images/template_icon.png</file>
+        <file>qml/Images/gear_icon.png</file>
 
         <!-- Scripts -->
         <file>qml/pageLoader.mjs</file>

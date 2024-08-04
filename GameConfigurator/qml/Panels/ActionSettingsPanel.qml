@@ -31,7 +31,6 @@ Item {
                 fieldDescription: "Text that should appear if action is execute"
                 defaultText: GlobalConfig.twitchChannel
                 onValueChanged:(text) => {
-                    // GlobalConfig.twitchChannel = text
                 }
             }
 
@@ -43,7 +42,6 @@ Item {
                 fieldName: "Can Interrupt:"
                 defaultValue: false
                 onValueChanged:(value) => {
-                    // Config.saveChatBotUser(value)
                 }
             }
 
@@ -55,25 +53,8 @@ Item {
                 fieldName: "Custom Animation:"
                 defaultValue: false
                 onValueChanged:(value) => {
-                    // Config.saveChatBotUser(value)
                 }
             }
-
-            PropertyIntDelegate {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
-                minValue: 1
-                maxValue: 20
-
-                fieldName: "Text display time:"
-                // defaultValue: GlobalConfig.screenHeight
-                // onValueChanged:(value) => {
-                //     GlobalConfig.screenHeight = value
-                // }
-            }
-
-
         }
     }
 
@@ -106,6 +87,18 @@ Item {
                 }
             }
 
+            PropertyIntDelegate {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 10
+                minValue: 1
+                maxValue: 20
+
+                fieldName: "Text display time:"
+                // defaultValue: GlobalConfig.screenHeight
+                onValueChanged:(value) => {
+                }
+            }
         }
     }
 
@@ -172,7 +165,7 @@ Item {
         anchors.margins: 10
         BaseText {
             text: "Config: " + actionName
-            font.pixelSize : 54
+            font.pixelSize : 32
         }
         ScrollView {
             id: panel
@@ -206,15 +199,20 @@ Item {
             ActionsManager.onActionSelected.connect(function(action) {
                 console.log("Selected Action: ", action)
                 if (action) {
+                    settingsModel.clear()
                     actionConfig = action.getConfig()
                     actionName = action.name
+                    if (!ActionsManager.isGameDefaultAction(action)) {
+                        settingsModel.append({"name": "Base Settings", "component": baseSettings})
+                        settingsModel.append({"name": "Text Settings", "component": textSettings})
+                    }
+
+                    if (!ActionsManager.isTwitchDefaultAction(action)) {
+                        settingsModel.append({"name": "Twitch Settings", "component": twitchSettings})
+                    }
                 }
             })
         }
-
-        settingsModel.append({"name": "Base Settings", "component": baseSettings})
-        settingsModel.append({"name": "Text Settings", "component": textSettings})
-        settingsModel.append({"name": "Twitch Settings", "component": twitchSettings})
     }
 }
 
