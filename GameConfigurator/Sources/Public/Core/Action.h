@@ -29,6 +29,7 @@ public:
 
     // Twitch Config
     QString ChannelPointsRewardID;
+    QString EventType;
 
 signals:
     void rewardUpdated(const QString& newRewardID);

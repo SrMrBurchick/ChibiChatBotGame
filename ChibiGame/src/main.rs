@@ -61,7 +61,7 @@ fn main() {
         .add_systems(OnEnter(GameStates::ConfigLoading), config_state::setup_config_loader)
         .add_systems(Update, config_state::handle_config.run_if(in_state(GameStates::ConfigLoading)))
 
-        .add_systems(OnEnter(GameStates::ChatBotConnectionSetup), chat_bot_connection::setup_chat_bot_client)
+        .add_systems(OnEnter(GameStates::ChatBotConnectionSetup), bot_connection::setup_bot_client)
         .add_systems(OnEnter(GameStates::GameSetup), game_setup::setup_game)
         .add_systems(OnEnter(GameStates::AnimationsSetup), animations_setup::setup_animation)
         .add_systems(OnEnter(GameStates::PlayerSetup), player_setup::setup_player)

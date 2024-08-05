@@ -42,20 +42,31 @@ impl Config {
     }
 
     fn init_base_info(&mut self, data: &JsonValue) {
-        if data.is_object() {
-            match get_value(data, "port") {
-                Ok(value) => {
-                    self.port = value.as_u32().unwrap();
-                },
-                Err(_) => {},
-            }
+        match get_value(&data, "twitch-settings") {
+            Ok(twitch) => {
+                match get_value(&twitch, "bot-settings") {
+                    Ok(bot) => {
+                        if bot.is_object() {
+                            match get_value(&bot, "port") {
+                                Ok(value) => {
+                                    self.port = value.as_u32().unwrap();
+                                },
+                                Err(_) => {},
+                            }
 
-            match get_value(data, "host") {
-                Ok(value) => {
-                    self.host = value.to_string();
-                },
-                Err(_) => {},
-            }
+                            match get_value(&bot, "url") {
+                                Ok(value) => {
+                                    self.host = value.to_string();
+                                },
+                                Err(_) => {},
+                            }
+                        }
+                    },
+                    Err(_) => {},
+                }
+
+            },
+            Err(_) => {},
         }
     }
 
@@ -78,6 +89,13 @@ impl Config {
                             },
                             Err(_) => {},
                         }
+                        match get_value(&config, "twitch-event-type") {
+                            Ok(event_type) => {
+                                action.event_type = event_type.to_string();
+                            },
+                            Err(_) => {},
+                        }
+
                     },
                     Err(_) => {},
                 }
@@ -128,14 +146,7 @@ impl Config {
 
     pub fn init(&mut self, content: JsonValue) {
         self.content = content.clone();
-        match get_value(&content, "twitch-bot") {
-            Ok(bot) => {
-                self.init_base_info(&bot);
-            },
-            Err(_) => {
-
-            },
-        }
+        self.init_base_info(&content);
     }
 }
 
@@ -152,7 +163,9 @@ pub fn parse_config(config_path: String) -> Config {
                 },
             }
         },
-        Err(_) => {},
+        Err(e) => {
+            println!("Failed to parse config! {:?}", e);
+        },
     }
 
     return config;

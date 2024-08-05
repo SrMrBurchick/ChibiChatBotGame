@@ -5,7 +5,7 @@
 
 enum eProcessType {
     Game,
-    ChatBot
+    Bot
 };
 
 class IProcess: public QObject {

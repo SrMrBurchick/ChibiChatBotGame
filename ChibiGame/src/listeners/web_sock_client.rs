@@ -8,7 +8,7 @@ use web_sys::{MessageEvent, WebSocket};
 use crate::components::actions::{string_to_action, Actions};
 
 #[derive(Resource, Deref)]
-pub struct ChatBotEventsReceiver(pub Receiver<Actions>);
+pub struct BotEventsReceiver(pub Receiver<Actions>);
 
 pub fn run_client(sender: Sender<Actions>, url: String, port: u32) {
     info!("Wait for TCP client");

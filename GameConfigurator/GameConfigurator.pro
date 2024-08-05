@@ -27,7 +27,7 @@ QML2_IMPORT_PATH = qml
 QML_DESIGNER_IMPORT_PATH =
 
 # Executables path
-DEFINES += CHAT_BOT_PATH="./chat_bot"
+DEFINES += TWITCH_BOT_PATH="./TwitchBot"
 DEFINES += GAME_ASSETS_PATH="./Game/assets"
 DEFINES += CONFIG_FILE="./Game/config/ChibiChatBotConfig.json"
 DEFINES += GAME_ASSET_IMAGE_PATH="./Game/assets/sprite-sheet.png"
@@ -37,7 +37,7 @@ DEFINES += GAME="./Game/ChibiGame.wasm"
 
 # Check if the target OS is Windows
 win32 {
-    DEFINES += CHAT_BOT_PATH="./chat_bot.exe"
+    DEFINES += TWITCH_BOT_PATH="./TwitchBot.exe"
     DEFINES += WASM_SERVER_RUNNER="./Tools/wasm-server-runner.exe"
 }
 

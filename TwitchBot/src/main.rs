@@ -1,6 +1,6 @@
-use parsers::config::Config;
-use tokio::sync::mpsc;
-use wss::wss_twitch_client;
+use std::{sync::Arc, time::Duration};
+
+use wss::{wss_server, wss_twitch_client};
 
 pub mod parsers;
 pub mod wss;
@@ -8,18 +8,11 @@ pub mod components;
 
 #[tokio::main]
 async fn main() {
-    let (tx, rx) = mpsc::channel::<parsers::request_parser::EventType>(32);
-    let config = parsers::config::parse_config(String::from("ChibiChatBotConfig.json"));
+    let (tx, mut rx) = crossbeam_channel::unbounded::<components::action::Action>();
+    let config = parsers::config::parse_config(String::from("Game/config/ChibiChatBotConfig.json"));
 
-    // let blocking_task = tokio::task::spawn_blocking(|| {
-    // });
+    let twitch_client = tokio::spawn(wss_twitch_client::run_wss_client(config.clone(), tx));
+    let game_server = tokio::spawn(wss_server::run_wss_server(config.clone(), rx));
 
-    let twitch_client = tokio::spawn(wss_twitch_client::run_wss_client(config, rx));
-    twitch_client.await;
-    // tokio::spawn(wss_server::run_wss_server(rx));
-
-    // We can wait for the blocking task like this:
-    // If the blocking task panics, the unwrap below will propagate the
-    // panic.
-    // blocking_task.await.unwrap();
+    let _ = tokio::try_join!(twitch_client, game_server);
 }

@@ -19,8 +19,8 @@ use web_sys::{Request, RequestInit, RequestMode, Response};
 
 #[derive(Debug, Default, Component, Clone)]
 pub struct SystemConfigData {
-    pub chat_bot_url: String,
-    pub chat_bot_port: u32
+    pub bot_url: String,
+    pub bot_port: u32
 }
 
 #[derive(Debug)]
@@ -38,7 +38,27 @@ pub struct Config {
     pub system_config: SystemConfigData
 }
 
-pub fn init_chat_bot_settings(obj: &JsonValue) -> Result<SystemConfigData, Box<dyn Error>> {
+pub fn get_value(content: &JsonValue, key: &str) -> Result<JsonValue, Box<dyn Error>> {
+    let value: JsonValue;
+
+    if 0 == key.len() {
+        return Err(Box::from(format!("Unknown key {:?}", key)));
+    }
+
+    if JsonValue::is_null(content) {
+        return Err(Box::from("Config content not initialized!"));
+    }
+
+    value = content[key].clone();
+
+    if JsonValue::is_null(&value) {
+        return Err(Box::from(format!("Key {} not configured", key)));
+    }
+
+    return Ok(value);
+}
+
+pub fn init_bot_settings(obj: &JsonValue) -> Result<SystemConfigData, Box<dyn Error>> {
     if JsonValue::is_null(obj) {
         return Err(Box::from("Unknown param"));
     }
@@ -48,8 +68,8 @@ pub fn init_chat_bot_settings(obj: &JsonValue) -> Result<SystemConfigData, Box<d
     }
 
     Ok(SystemConfigData {
-        chat_bot_url: obj["url"].to_string(),
-        chat_bot_port: obj["port"].as_u32().unwrap()
+        bot_url: obj["url"].to_string(),
+        bot_port: obj["port"].as_u32().unwrap()
     })
 }
 
@@ -191,66 +211,71 @@ impl Config {
         }
     }
 
-    pub fn init_animations_map(&mut self) -> Result<(), Box<dyn Error>> {
-        let animations_array: JsonValue;
+    pub fn init_actions_map(&mut self) -> Result<(), Box<dyn Error>> {
+        let actions_array: JsonValue;
 
-        match self.get_value("animations") {
+        match self.get_value("actions") {
             Ok(array) => {
-                animations_array = array;
+                actions_array = array;
             }
             Err(e) => {
                 return Err(Box::from(format!("Failed to get animations {:?}", e)));
             }
         }
 
-        if false == animations_array.is_array() {
+        if false == actions_array.is_array() {
             return Err(Box::from("Animations must be an array! Corrupted config"));
         }
 
         let hash_map = &mut self.animations_map.0;
 
-        for item in animations_array.members() {
-            for entry in item.entries() {
-                let key = string_to_action(entry.0);
-                let mut is_user_action = false;
+        for item in actions_array.members() {
+            match get_value(&item, "name") {
+                Ok(name) => {
+                    let key = string_to_action(&name.to_string());
+                    let mut is_user_action = false;
 
-                if key == Actions::Unknown {
-                    if false == entry.1.is_array() {
-                        continue;
-                    } else {
+                    if key == Actions::Unknown {
                         is_user_action = true;
                     }
-                }
 
-                let mut animations_list: Vec<SpriteIndex> = vec![];
+                    let mut animations_list: Vec<SpriteIndex> = vec![];
+                    match get_value(&item, "animations") {
+                        Ok(animations) => {
+                            if !animations.is_array() {
+                                return Err(Box::from("Broken animation item"));
+                            }
 
-                if false == entry.1.is_array() {
-                    return Err(Box::from("Broken animation item"));
-                }
+                            for animation in animations.members() {
+                                match init_sprite_index(animation) {
+                                    Ok(sprite_index) => {
+                                        animations_list.push(sprite_index);
+                                    }
+                                    Err(_) => {
+                                        // continue;
+                                    }
+                                }
+                            }
+                            info!("Detected animation in {:?}: {:?}", key, animations_list);
 
-                for animation in entry.1.members() {
-                    match init_sprite_index(animation) {
-                        Ok(sprite_index) => {
-                            animations_list.push(sprite_index);
-                        }
-                        Err(_) => {
-                            // continue;
-                        }
+                            if is_user_action {
+                                self.user_actions.push(
+                                    UserAction {
+                                        action: name.to_string(),
+                                        animations: animations_list 
+                                    }
+                                );
+                            } else {
+                                hash_map.insert(key, animations_list);
+                                info!("Animations has been updated: {:?}", hash_map);
+                            }
+
+                        },
+                        Err(_) => {},
                     }
-                }
-                info!("Detected animation in {:?}: {:?}", key, animations_list);
 
-                if is_user_action {
-                    self.user_actions.push(
-                        UserAction {
-                            action: entry.0.to_string(),
-                            animations: animations_list 
-                        }
-                    );
-                } else {
-                    hash_map.insert(key, animations_list);
-                    info!("Animations has been updated: {:?}", hash_map);
-                }
+                },
+                Err(_) => {},
             }
         }
 
@@ -261,7 +286,7 @@ impl Config {
         let mut map: Vec<SpriteIndex> = vec![];
 
         if self.animations_map.0.is_empty() {
-            match self.init_animations_map() {
+            match self.init_actions_map() {
                 Err(_) => { return map; },
                 _ => {}
             }
@@ -305,16 +330,22 @@ impl Config {
         self.loaded
     }
 
-    pub fn init_chat_bot_settings(&mut self) -> Result<(), Box<dyn Error>>{
-        match self.get_value("chat-bot") {
-            Ok(chat_bot_settings) => {
-                match init_chat_bot_settings(&chat_bot_settings) {
-                    Ok(system_config) => {
-                        self.system_config = system_config;
+    pub fn init_bot_settings(&mut self) -> Result<(), Box<dyn Error>>{
+        match self.get_value("twitch-settings") {
+            Ok(twitch_settings) => {
+                match get_value(&twitch_settings, "bot-settings") {
+                    Ok(bot_settings) => {
+                        match init_bot_settings(&bot_settings) {
+                            Ok(system_config) => {
+                                self.system_config = system_config;
+                            },
+                            Err(e) => {
+                                return Err(Box::from(format!("Failed to parse chat-bot {:?}", e)));
+                            },
+                        }
+
                     },
-                    Err(e) => {
-                        return Err(Box::from(format!("Failed to parse chat-bot {:?}", e)));
-                    },
+                    Err(_) => {},
                 }
             }
             Err(e) => {

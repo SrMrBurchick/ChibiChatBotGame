@@ -2,12 +2,12 @@ use crate::{
     components::common::events::{
         Event, Events, GameEvents
     },
-    listeners::web_sock_client::ChatBotEventsReceiver
+    listeners::web_sock_client::BotEventsReceiver
 };
 use bevy::prelude::*;
 
 pub fn handle_commands(
-    receiver: Res<ChatBotEventsReceiver>,
+    receiver: Res<BotEventsReceiver>,
     mut event_writer: EventWriter<Event>,
 ) {
     for action in receiver.try_iter() {

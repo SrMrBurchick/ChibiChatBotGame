@@ -5,9 +5,9 @@ use crate::components::{
 };
 use bevy::prelude::*;
 
-use crate::listeners::web_sock_client::{run_client, ChatBotEventsReceiver};
+use crate::listeners::web_sock_client::{run_client, BotEventsReceiver};
 
-pub fn setup_chat_bot_client(
+pub fn setup_bot_client(
     mut commands: Commands,
     mut event_writer: EventWriter<Event>,
     query: Query<&Config>,
@@ -16,12 +16,12 @@ pub fn setup_chat_bot_client(
         let (sender, receiver) = crossbeam_channel::bounded::<Actions>(10);
         run_client(
             sender,
-            config.system_config.chat_bot_url.clone(),
-            config.system_config.chat_bot_port,
+            config.system_config.bot_url.clone(),
+            config.system_config.bot_port,
         );
 
         // At that channel will be sender chat bot commands
-        commands.insert_resource(ChatBotEventsReceiver(receiver));
+        commands.insert_resource(BotEventsReceiver(receiver));
 
         event_writer.send(Event {
             // By default set to true

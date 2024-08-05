@@ -1,11 +1,12 @@
-use std::str::FromStr;
+use std::sync::Arc;
 
 use json::{self, JsonValue};
-use reqwest::header::{HeaderName, HeaderValue, AUTHORIZATION};
-use reqwest::{Method, Url};
 use serde_json::Value;
-use websocket::sync::server::upgrade::HyperRequest;
-use crate::parsers::config::get_value;
+use crate::parsers::{
+    config::get_value, request_parser::{
+        convert_twitch_type_to_enum, EventType, RequestSender
+    }
+};
 use crate::components::action::Action;
 
 #[derive(Debug, Clone)]
@@ -14,7 +15,10 @@ pub struct Twitch {
     pub client_id: String,
     pub session_id: String,
     pub user_id: String,
-    pub actions: Vec<Action>
+    pub actions: Vec<Action>,
+    pub isConnected: bool,
+    pub isSubscribed: bool,
+    sender: Option<crossbeam_channel::Sender<Action>>
 }
 
 impl Twitch {
@@ -24,16 +28,104 @@ impl Twitch {
             client_id: String::new(),
             session_id: String::new(),
             user_id: String::new(),
-            actions: vec![]
+            actions: vec![],
+            isConnected: false,
+            isSubscribed: false,
+            sender: None
         }
     }
 
-    pub fn parse_welcome_message(&mut self, data: &JsonValue) {
+    pub fn setup_sender(&mut self, sender: crossbeam_channel::Sender<Action>) {
+        self.sender = Some(sender);
+    }
+
+    fn parse_welcome_message(&mut self, data: &JsonValue) {
         match get_value(&data, "session") {
             Ok(session) => {
                 match get_value(&session, "id") {
                     Ok(id) => {
                         self.session_id = id.to_string();
+                        if !self.session_id.is_empty() {
+                            self.isConnected = true;
+                        }
+                    },
+                    Err(_) => {},
+                }
+            },
+            Err(_) => {},
+        }
+    }
+
+    fn parse_notification(&mut self, data: &JsonValue) {
+        match get_value(&data, "subscription") {
+            Ok(subscription) => {
+                match get_value(&subscription, "type") {
+                    Ok(event_type) => {
+                        for action in self.actions.iter_mut() {
+                            if action.event_type == event_type.to_string() {
+                                match get_value(&data, "event") {
+                                    Ok(event) => {
+                                        action.prepare_action(convert_twitch_type_to_enum(event_type.to_string(), &event));
+                                    },
+                                    Err(_) => {},
+                                }
+                            }
+                        }
+                    },
+                    Err(_) => {},
+                }
+            },
+            Err(_) => {},
+        }
+    }
+
+    pub fn do_action(&mut self) {
+        for action in self.actions.iter_mut() {
+            match action.action_event_type {
+                EventType::Unknown => {
+                    // Do nothing
+                }
+                _ => {
+                    match &self.sender {
+                        Some(request_sender) => {
+                            match request_sender.send(action.clone()) {
+                                Ok(_) => {
+                                    println!("Action sent! {:?}", action.clone());
+                                },
+                                Err(_) => {
+                                    println!("Failed to send action! {:?}", action.clone());
+                                },
+                            };
+
+                            action.action_event_type = EventType::Unknown;
+                        },
+                        None => {},
+                    }
+                },
+            }
+        }
+    }
+
+    pub async fn parse_message(&mut self, data: &JsonValue) {
+        match get_value(&data, "metadata") {
+            Ok(metadata) => {
+                match get_value(&metadata, "message_type") {
+                    Ok(message_type) => {
+                        match get_value(&data, "payload") {
+                            Ok(payload) => {
+                                match message_type.to_string().as_ref() {
+                                    "session_welcome" => {
+                                        self.parse_welcome_message(&payload);
+                                    },
+                                    "notification" => {
+                                        self.parse_notification(&payload);
+                                    }
+                                    _ => {},
+                                }
+                            },
+                            Err(_) => {},
+                        }
+
                     },
                     Err(_) => {},
                 }
@@ -192,6 +284,7 @@ impl Twitch {
     }
 
     pub async fn subscribe_to_events(&mut self) {
+        self.isSubscribed = true;
         self.subscribe_to_channel_points_rewards().await;
         self.subscribe_to_subscription().await;
         self.subscribe_to_follow().await;

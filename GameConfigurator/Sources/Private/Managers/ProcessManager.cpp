@@ -63,8 +63,8 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
                 case eProcessType::Game:
                     emit gameEnded();
                     break;
-                case eProcessType::ChatBot:
-                    emit chatBotEnded();
+                case eProcessType::Bot:
+                    emit botEnded();
                     break;
             }
         }
@@ -77,8 +77,8 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
                 case eProcessType::Game:
                     emit gameStarted();
                     break;
-                case eProcessType::ChatBot:
-                    emit chatBotStarted();
+                case eProcessType::Bot:
+                    emit botStarted();
                     break;
             }
         }
@@ -95,18 +95,18 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
     return true;
 }
 
-void ProcessManager::runChatBot()
+void ProcessManager::runBot()
 {
-    if (TryToRunProcess(eProcessType::ChatBot)) {
-        NotificationsManager::SendNotification("Chat bot process", "Chat bot is running");
+    if (TryToRunProcess(eProcessType::Bot)) {
+        NotificationsManager::SendNotification("Bot process", "Bot is running");
     } else {
         QString Error;
-        QPointer<IProcess> Process = ProcessesList[eProcessType::ChatBot];
+        QPointer<IProcess> Process = ProcessesList[eProcessType::Bot];
         if (!Process.isNull()) {
             Error = Process->GetLastError();
         }
 
-        NotificationsManager::SendNotification("Chat bot process", QString::asprintf("Failed to run chat bot\n %s", Error.toStdString().c_str()));
+        NotificationsManager::SendNotification("Bot process", QString::asprintf("Failed to run bot\n %s", Error.toStdString().c_str()));
     }
 }
 
@@ -130,14 +130,14 @@ void ProcessManager::killAll()
     StopAll();
 }
 
-bool ProcessManager::isChatBotRunning() const
+bool ProcessManager::isBotRunning() const
 {
-    if (!ProcessesList.contains(eProcessType::ChatBot)) {
+    if (!ProcessesList.contains(eProcessType::Bot)) {
         NotificationsManager::SendNotification("Chat Bot not configured");
         return false;
     }
 
-    return ProcessesList[eProcessType::ChatBot]->IsProcessRunning();
+    return ProcessesList[eProcessType::Bot]->IsProcessRunning();
 }
 
 bool ProcessManager::isGameRunning() const
@@ -150,14 +150,14 @@ bool ProcessManager::isGameRunning() const
     return ProcessesList[eProcessType::Game]->IsProcessRunning();
 }
 
-void ProcessManager::stopChatBotRunning()
+void ProcessManager::stopBotRunning()
 {
-    if (!ProcessesList.contains(eProcessType::ChatBot)) {
+    if (!ProcessesList.contains(eProcessType::Bot)) {
         NotificationsManager::SendNotification("Chat Bot not configured");
         return;
     }
 
-    ProcessesList[eProcessType::ChatBot]->Kill();
+    ProcessesList[eProcessType::Bot]->Kill();
 }
 
 void ProcessManager::stopGameRunning()

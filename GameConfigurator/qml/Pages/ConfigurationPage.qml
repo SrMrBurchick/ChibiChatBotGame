@@ -44,6 +44,10 @@ Item {
     }
 
     Component.onCompleted: {
+        TwitchManager.onConnectionUpdated.connect(function (isConnected) {
+            TwitchManager.saveConfig(Config)
+            Config.saveConfig()
+        })
         if (!Config.isConfigLoaded()) {
             Config.loadConfig()
 

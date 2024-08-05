@@ -21,6 +21,13 @@ QSharedPointer<Action> ActionsManager::CreateNewAction(const QString& ActionName
         {
             NewAction->SetName(ActionName);
             Actions.push_back(NewAction);
+            if (ActionConfig* actionConfig = NewAction->getConfig()) {
+                if (isTwitchDefaultAction(NewAction.get())) {
+                    actionConfig->EventType = TwitchDefaultActions[ActionName];
+                } else {
+                    actionConfig->EventType = "channel.channel_points_custom_reward_redemption.add";
+                }
+            }
 
             LOG_INFO("New Action added = %s", ActionName.toStdString().c_str());
             return NewAction;
@@ -177,16 +184,16 @@ const QVector<QString>& ActionsManager::getGameDefaultActions() const
     return GameDefaultActions;
 }
 
-const QVector<QString>& ActionsManager::getTwitchDefaultAction() const
+const QVector<QString> ActionsManager::getTwitchDefaultAction() const
 {
-    return TwitchDefaultActions;
+    return TwitchDefaultActions.keys().toVector();
 }
 
 const QVector<QString> ActionsManager::getPossibleActionsToAdd() const
 {
     QVector<QString> PossibleActions;
     PossibleActions.append(GameDefaultActions);
-    PossibleActions.append(TwitchDefaultActions);
+    PossibleActions.append(getTwitchDefaultAction());
 
     PossibleActions.removeIf([this](const QString& name){
         return !GetActionByName(name).isNull();

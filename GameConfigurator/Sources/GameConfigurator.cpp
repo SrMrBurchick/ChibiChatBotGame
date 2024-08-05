@@ -6,7 +6,7 @@
 #include "Configuration/ConfigObject.h"
 #include "Managers/NotificationsManager.h"
 #include "Managers/ProcessManager.h"
-#include "Managers/Processes/ChatBotProcess.h"
+#include "Managers/Processes/BotProcess.h"
 #include "Managers/Processes/GameProcess.h"
 #include "Models/ActionsListModel.h"
 #include "Models/AnimationSequenceModel.h"
@@ -38,11 +38,11 @@ int main(int argc, char *argv[])
     QScopedPointer<TwitchManager> Twitch(new TwitchManager);
     QPointer<TwitchNetworkAccessManager> TwitchNtwrk (new TwitchNetworkAccessManager);
     QPointer<IProcess> Game(new GameProcess);
-    QPointer<IProcess> ChatBot(new ChatBotProcess);
+    QPointer<IProcess> Bot(new BotProcess);
 
     Twitch->SetNetworkManager(TwitchNtwrk);
     Manager->AddProcess(Game);
-    Manager->AddProcess(ChatBot);
+    Manager->AddProcess(Bot);
 
     engine.addImportPath(":/qml");
 

@@ -36,7 +36,7 @@ struct MessageSettings {
 
 struct TwitchBotSettings {
     QString WebSockURL = "localhost";
-    int WebSockPort = 656565;
+    int WebSockPort = 6565;
     bool ChatAnyUser = false;
 };
 

@@ -40,17 +40,17 @@ Item {
         }
 
         BaseButton {
-            id: chatBotButton
+            id: botButton
             scaler: 1.5
             property bool isRunning: false
-            text: isRunning ? "Stop chat bot" : "Start chat bot"
+            text: isRunning ? "Stop twitch bot" : "Start twitch bot"
             onClicked: {
-                chatBotButton.enabled = false
+                botButton.enabled = false
                 GlobalConfig.isBusy = true
-                if (ProcessManager.isChatBotRunning()) {
-                    ProcessManager.stopChatBotRunning();
+                if (ProcessManager.isBotRunning()) {
+                    ProcessManager.stopBotRunning();
                 } else {
-                    ProcessManager.runChatBot()
+                    ProcessManager.runBot()
                 }
             }
         }
@@ -90,14 +90,14 @@ Item {
             gameRunningDelegate.show()
         })
 
-        ProcessManager.onChatBotStarted.connect(function() {
-            chatBotButton.isRunning = true
-            chatBotButton.enabled = true
+        ProcessManager.onBotStarted.connect(function() {
+            botButton.isRunning = true
+            botButton.enabled = true
             GlobalConfig.isBusy = false
         })
-        ProcessManager.onChatBotEnded.connect(function() {
-            chatBotButton.isRunning = false
-            chatBotButton.enabled = true
+        ProcessManager.onBotEnded.connect(function() {
+            botButton.isRunning = false
+            botButton.enabled = true
             GlobalConfig.isBusy = false
         })
     }

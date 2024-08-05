@@ -35,7 +35,7 @@ public:
     Q_INVOKABLE bool isTwitchDefaultAction(Action* ActionToCheck) const;
 
     Q_INVOKABLE const QVector<QString>& getGameDefaultActions() const;
-    Q_INVOKABLE const QVector<QString>& getTwitchDefaultAction() const;
+    Q_INVOKABLE const QVector<QString> getTwitchDefaultAction() const;
     Q_INVOKABLE const QVector<QString> getPossibleActionsToAdd() const;
 
     Q_INVOKABLE Action* getSelectedAction() const;
@@ -63,7 +63,14 @@ private:
 
     // Default actions
     QVector<QString> GameDefaultActions = {"walk", "fall", "climb", "standby"};
-    QVector<QString> TwitchDefaultActions = {
-        "subscription", "subscriptionsGift", "raid", "ban", "follow", "moderatorAdded", "moderatorRemoved"
+    QMap<QString, QString> TwitchDefaultActions = {
+        {"ban", "channel.ban"},
+        {"unban", "channel.unban"},
+        {"follow", "channel.follow"},
+        {"moderatorAdded", "channel.moderator.add"},
+        {"moderatorRemoved", "channel.moderator.remove"},
+        {"raid", "channel.raid"},
+        {"subscription", "channel.subscribe"},
+        {"subscriptionsGift", "channel.subscription.gift"},
     };
 };

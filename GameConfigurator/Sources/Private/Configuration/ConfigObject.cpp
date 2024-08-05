@@ -47,9 +47,10 @@ constexpr char MOVEMENT_SPEED[] = "movement-speed";
 constexpr char NEXT_ACTION_TIMEOUT[] = "next-action-timeout";
 
 // Chat bot settings fields
-constexpr char CHAT_BOT_SETTINGS_URL[] = "url";
-constexpr char CHAT_BOT_SETTINGS_PORT[] = "port";
-constexpr char CHAT_BOT_USER[] = "any-user";
+constexpr char BOT_SETTINGS[] = "bot-settings";
+constexpr char BOT_SETTINGS_URL[] = "url";
+constexpr char BOT_SETTINGS_PORT[] = "port";
+constexpr char BOT_USER[] = "any-user";
 
 // Table settings fields
 constexpr char TABLE_SETTINGS[] = "table-size";
@@ -79,6 +80,7 @@ constexpr char ACTION_NAME[] = "name";
 constexpr char ACTION_CONFIG_SETTINGS[] = "config";
 constexpr char ACTION_CONFIG_INTERRUPT[] = "can-interrupt";
 constexpr char ACTION_CONFIG_TWITCH_REWARD_ID[] = "twitch-reward-id";
+constexpr char ACTION_CONFIG_TWITCH_EVENT_TYPE[] = "twitch-event-type";
 constexpr char ACTION_CONFIG_TEXT_SETTINGS[] = "text-settings";
 constexpr char ACTION_CONFIG_TEXT_MESSAGE[] = "message";
 constexpr char ACTION_CONFIG_TEXT_DISPLAY_TIME[] = "display-time";
@@ -126,9 +128,9 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
         SystemSettings.Twitch.OAuthToken = JsonTwitchSettings[TWITCH_OAUTH].toString();
         if (JsonTwitchSettings.contains(TWITCH_BOT_SETTINGS)) {
             QVariantMap JsonTwitchBotSettings = JsonTwitchSettings[TWITCH_BOT_SETTINGS].toMap();
-            SystemSettings.Twitch.Bot.WebSockURL = JsonTwitchBotSettings[CHAT_BOT_SETTINGS_URL].toString();
-            SystemSettings.Twitch.Bot.WebSockPort = JsonTwitchBotSettings[CHAT_BOT_SETTINGS_PORT].toInt();
-            SystemSettings.Twitch.Bot.ChatAnyUser = JsonTwitchBotSettings[CHAT_BOT_USER].toInt();
+            SystemSettings.Twitch.Bot.WebSockURL = JsonTwitchBotSettings[BOT_SETTINGS_URL].toString();
+            SystemSettings.Twitch.Bot.WebSockPort = JsonTwitchBotSettings[BOT_SETTINGS_PORT].toInt();
+            SystemSettings.Twitch.Bot.ChatAnyUser = JsonTwitchBotSettings[BOT_USER].toInt();
         }
 
     }
@@ -217,9 +219,10 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     JsonTwitchSettings[TWITCH_OAUTH] = SystemSettings.Twitch.OAuthToken;
     JsonTwitchSettings[TWITCH_USER_ID] = SystemSettings.Twitch.UserId;
     JsonTwitchSettings[TWITCH_CLIENT_ID] = QT_STRINGIFY(CLIENT_ID);
-    JsonTwitchBotSettings[CHAT_BOT_SETTINGS_URL] = SystemSettings.Twitch.Bot.WebSockURL;
-    JsonTwitchBotSettings[CHAT_BOT_SETTINGS_PORT] = SystemSettings.Twitch.Bot.WebSockPort;
-    JsonTwitchBotSettings[CHAT_BOT_USER] = SystemSettings.Twitch.Bot.ChatAnyUser;
+    JsonTwitchBotSettings[BOT_SETTINGS_URL] = SystemSettings.Twitch.Bot.WebSockURL;
+    JsonTwitchBotSettings[BOT_SETTINGS_PORT] = SystemSettings.Twitch.Bot.WebSockPort;
+    JsonTwitchBotSettings[BOT_USER] = SystemSettings.Twitch.Bot.ChatAnyUser;
+    JsonTwitchSettings[BOT_SETTINGS] = JsonTwitchBotSettings;
 
     // Table settings
     JsonTableSettings[TABLE_SETTINGS_ROWS] = TableSettings.Rows;
@@ -536,6 +539,7 @@ void ConfigObject::SaveActions(const QVector<QSharedPointer<Action>>& Actions)
             QJsonObject TextConfig;
             JsonActionConfig[ACTION_CONFIG_INTERRUPT] = Config->bCanInterrupt;
             JsonActionConfig[ACTION_CONFIG_TWITCH_REWARD_ID] = Config->ChannelPointsRewardID;
+            JsonActionConfig[ACTION_CONFIG_TWITCH_EVENT_TYPE] = Config->EventType;
 
             TextConfig[ACTION_CONFIG_TEXT_COLOR] = Config->TextColor.name();
             TextConfig[ACTION_CONFIG_TEXT_DISPLAY_TIME] = Config->DisplayTime;
@@ -580,9 +584,11 @@ void ConfigObject::InitActionsManager(ActionsManager* Manager) const
                 if (JsonAction.contains(ACTION_CONFIG_SETTINGS)) {
                     QJsonObject JsonActionConfig = JsonAction[ACTION_CONFIG_SETTINGS].toObject();
                     if (JsonActionConfig.contains(ACTION_CONFIG_TWITCH_REWARD_ID)
-                        && JsonActionConfig.contains(ACTION_CONFIG_INTERRUPT)) {
+                        && JsonActionConfig.contains(ACTION_CONFIG_INTERRUPT)
+                        && JsonActionConfig.contains(ACTION_CONFIG_TWITCH_EVENT_TYPE)) {
                         Config->bCanInterrupt = JsonActionConfig[ACTION_CONFIG_INTERRUPT].toBool();
                         Config->ChannelPointsRewardID = JsonActionConfig[ACTION_CONFIG_TWITCH_REWARD_ID].toString();
+                        Config->EventType = JsonActionConfig[ACTION_CONFIG_TWITCH_EVENT_TYPE].toString();
 
                         if (JsonActionConfig.contains(ACTION_CONFIG_TEXT_SETTINGS)) {
                             QJsonObject ActionTextConfig = JsonActionConfig[ACTION_CONFIG_TEXT_SETTINGS].toObject();

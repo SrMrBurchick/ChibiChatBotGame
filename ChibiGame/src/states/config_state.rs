@@ -60,7 +60,7 @@ pub fn handle_config(
             }
         }
 
-        match config.init_animations_map() {
+        match config.init_actions_map() {
             Err(error) => {
                 error!(error);
                 event_writer.send(Event {
@@ -73,7 +73,7 @@ pub fn handle_config(
             }
         }
 
-        match config.init_chat_bot_settings() {
+        match config.init_bot_settings() {
             Err(error) => {
                 error!(error);
                 event_writer.send(Event {
