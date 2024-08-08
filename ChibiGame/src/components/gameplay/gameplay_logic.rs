@@ -28,6 +28,7 @@ pub struct GameplayLogicComponent {
     movement_enabled: bool,
     current_strategy: Option<Box<dyn Reflect>>,
     action_execution_time: f32,
+    reset_current_action: bool,
 }
 
 impl GameplayLogicComponent {
@@ -41,11 +42,22 @@ impl GameplayLogicComponent {
             current_strategy: None,
             movement_enabled: false,
             action_execution_time: 5.0,
+            reset_current_action: false,
         }
     }
 
+    fn reset_current_action_timer(&mut self) {
+        info!("Reset current action {:?}", self.current_action);
+        self.reset_current_action = true;
+    }
+
     pub fn try_to_set_action(&mut self, action: Actions) -> bool {
-        if self.current_action == action && action != Actions::Unknown {
+        if action == Actions::Unknown || action == Actions::SwapDirection {
+            return false;
+        }
+
+        if self.current_action == action {
+            self.reset_current_action_timer();
             return false;
         }
 
@@ -313,9 +325,14 @@ pub fn game_logic_system(
         Ok((entity, mut action_timer)) => {
             timer_entity = Some(entity);
             match gameplay_query.get_single_mut() {
-                Ok(gameplay_component) => {
+                Ok(mut gameplay_component) => {
                     if !gameplay_component.is_strategy_preparing(&type_registry) {
                         action_timer.timer.tick(time.delta());
+                    }
+
+                    if gameplay_component.reset_current_action {
+                        action_timer.timer.reset();
+                        gameplay_component.reset_current_action = false;
                     }
                 }
                 _ => {

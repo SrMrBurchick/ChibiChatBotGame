@@ -34,6 +34,10 @@ impl AIComponent {
         }
     }
 
+    pub fn get_total_weight(&self) -> f32 {
+        self.total_weight
+    }
+
     pub fn add_new_action(&mut self, action: Actions, weight: u8) {
         info!("Add new Action: {:?} with chance {:?} %", action, weight);
         let action_comp = AIActionComponent{
@@ -50,7 +54,7 @@ impl AIComponent {
 
     pub fn generate_action(&self) -> Actions {
         let mut rand = rand::thread_rng();
-        let new_action_weight = rand.gen_range(0.0..self.total_weight);
+        let new_action_weight = rand.gen_range(0.0.. if self.actions.len() == 1 { 100.0 } else {self.total_weight});
         let mut cumulative_weight = 0.0;
         for action in self.actions.iter() {
             cumulative_weight += action.weight;

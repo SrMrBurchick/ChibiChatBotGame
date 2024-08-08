@@ -29,7 +29,6 @@ pub async fn run_wss_server(config: Config, mut receiver : RequestReceiver) {
 
                         let sender_handler = tokio::spawn(async move {
                             loop {
-                                println!("Try to receive action");
                                 match rx_clone.recv() {
                                     Ok(action) => {
                                         println!("Received action: {:?}", action.clone());

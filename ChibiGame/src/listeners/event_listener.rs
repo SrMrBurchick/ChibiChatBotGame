@@ -22,7 +22,7 @@ pub fn system_event_listener(
     mut events: EventReader<Event>,
     mut next_state: ResMut<NextState<GameStates>>
 ) {
-    for event in events.iter() {
+    for event in events.read() {
         match event.event_type {
             Events::SystemEvents(system_event) => {
                 match system_event {

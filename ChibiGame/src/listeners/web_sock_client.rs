@@ -58,6 +58,7 @@ pub fn run_client(sender: Sender<Actions>, url: String, port: u32) {
 
 fn parse_response(string: String) -> Actions {
     let mut action: Actions = Actions::Unknown;
+    info!("Received response from wss server: {}", string.clone());
     match json::parse(string.as_str()) {
         Ok(content) => {
             if content.has_key("action") {
