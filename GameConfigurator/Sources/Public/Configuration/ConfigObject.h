@@ -88,8 +88,8 @@ public:
     //============================ QML ========================================
     // Getters
     Q_INVOKABLE QString getSpriteSheetPath() const;
-    Q_INVOKABLE QString getChatBotURL() const;
-    Q_INVOKABLE int getChatBotPort() const;
+    Q_INVOKABLE QString getBotURL() const;
+    Q_INVOKABLE int getBotPort() const;
     Q_INVOKABLE int getSpriteHeight() const;
     Q_INVOKABLE int getSpriteWidth() const;
     Q_INVOKABLE int getTableColumns() const;
@@ -112,7 +112,7 @@ public:
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
     Q_INVOKABLE void saveSpriteSheetPath(const QString& ImagePath);
-    Q_INVOKABLE void saveChatBotConfig(const QString& URL, const int Port);
+    Q_INVOKABLE void saveBotConfig(const QString& URL, const int Port);
     Q_INVOKABLE void saveSpriteWidth(const int Width);
     Q_INVOKABLE void saveSpriteHeight(const int Height);
     Q_INVOKABLE void saveTableColumns(const int Columns);
@@ -126,7 +126,6 @@ public:
     Q_INVOKABLE void saveMovementSpeed(const float MovementSpeed);
     Q_INVOKABLE void saveNextActionTimeout(const float NextActionTimeout);
     Q_INVOKABLE void saveFontSize(const int FontSize);
-    Q_INVOKABLE void saveChatBotUser(const bool AnyUser);
     Q_INVOKABLE void saveTwitchInfo(const QString& ChannelName, const QString& OAuthToken, const QString& UserId);
     Q_INVOKABLE void setLoggerEnabled(bool Enabled);
     Q_INVOKABLE void saveDataToClipboard(const QString& Data);

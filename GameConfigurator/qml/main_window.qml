@@ -29,7 +29,7 @@ ApplicationWindow {
                 text: qsTr("Run Game") // TODO: Update title
             }
             MenuItem {
-                text: qsTr("Run ChatBot") // TODO: Update title
+                text: qsTr("Run Bot") // TODO: Update title
             }
             MenuItem {
                 text: qsTr("Quit")
@@ -100,7 +100,7 @@ ApplicationWindow {
             if (messageObject.reply == "ActionsConfig") {
                 stack.push(actions_config)
             } else if (messageObject.reply == "CommonConfig") {
-                stack.push(chatBotConfig)
+                stack.push(commonConfig)
             } else if (messageObject.reply == "TwitchConfig") {
                 stack.push(twitchConfig)
             }
@@ -143,8 +143,8 @@ ApplicationWindow {
     }
 
     Component {
-        id: chatBotConfig
-        ChatBotConfigurationPage {
+        id: commonConfig
+        CommonConfigurationPage {
             rootStack: stack
         }
     }

@@ -15,6 +15,7 @@ class TwitchManager : public QObject
 
     Q_PROPERTY(bool isConnected MEMBER bIsConnected NOTIFY connectionUpdated)
     Q_PROPERTY(bool isBusy MEMBER bIsBusy NOTIFY busyUpdated)
+    Q_PROPERTY(QString channelName MEMBER ChannelName)
 
 public:
     explicit TwitchManager(QObject* Parent = nullptr);

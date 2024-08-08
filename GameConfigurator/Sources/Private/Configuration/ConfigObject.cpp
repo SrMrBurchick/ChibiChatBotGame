@@ -299,7 +299,7 @@ void ConfigObject::loadConfig()
     SetBusy(false);
 }
 
-void ConfigObject::saveChatBotConfig(const QString& URL, const int Port)
+void ConfigObject::saveBotConfig(const QString& URL, const int Port)
 {
     SystemSettings.Twitch.Bot.WebSockURL = URL;
     SystemSettings.Twitch.Bot.WebSockPort = Port;
@@ -336,12 +336,12 @@ QString ConfigObject::getSpriteSheetPath() const
     return SystemSettings.ImagePath;
 }
 
-QString ConfigObject::getChatBotURL() const
+QString ConfigObject::getBotURL() const
 {
     return SystemSettings.Twitch.Bot.WebSockURL;
 }
 
-int ConfigObject::getChatBotPort() const
+int ConfigObject::getBotPort() const
 {
     return SystemSettings.Twitch.Bot.WebSockPort;
 }
@@ -499,11 +499,6 @@ void ConfigObject::saveDataToClipboard(const QString& Data)
 bool ConfigObject::getChatBotUser() const
 {
     return SystemSettings.Twitch.Bot.ChatAnyUser;
-}
-
-void ConfigObject::saveChatBotUser(const bool AnyUser)
-{
-    SystemSettings.Twitch.Bot.ChatAnyUser = AnyUser;
 }
 
 void ConfigObject::SaveLogging(bool Logging)

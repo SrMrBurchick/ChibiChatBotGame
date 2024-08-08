@@ -18,7 +18,7 @@
         <file>qml/Pages/MainPage.qml</file>
         <file>qml/Pages/ConfigurationPage.qml</file>
         <file>qml/Pages/ActionsConfigurationPage.qml</file>
-        <file>qml/Pages/ChatBotConfigurationPage.qml</file>
+        <file>qml/Pages/CommonConfigurationPage.qml</file>
         <file>qml/Pages/TwitchConfigurationPage.qml</file>
 
         <file>qml/Pages/TwitchComponents/ChannelPointsConfigurationPage.qml</file>

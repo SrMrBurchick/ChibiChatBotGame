@@ -8,6 +8,7 @@ import ConfigComponent
 import Dialogs
 import Base
 import ConfigTools
+import Managers
 
 Item {
     id: root
@@ -30,7 +31,7 @@ Item {
         }
 
         Component {
-            id: chatBotSettings
+            id: twitchBotSettings
             ColumnLayout {
                 width: parent.width
 
@@ -38,13 +39,11 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
+                    isEditable: false
 
                     fieldName: "Chanel name:"
                     fieldDescription: "Twitch chanel target"
-                    defaultText: GlobalConfig.twitchChannel
-                    onValueChanged:(text) => {
-                        GlobalConfig.twitchChannel = text
-                    }
+                    defaultText: TwitchManager.channelName
                 }
 
                 PropertyDelegate {
@@ -52,10 +51,9 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: 10
 
-                    fieldName: "Chat bot URL:"
-                    defaultText: GlobalConfig.chatBotURL
+                    fieldName: "Twitch bot URL:"
+                    defaultText: Config.getBotURL()
                     onValueChanged:(text) => {
-                        GlobalConfig.chatBotURL = text
                     }
                 }
 
@@ -66,25 +64,11 @@ Item {
                     minValue: 1111
                     maxValue: 9999
 
-                    fieldName: "Chat bot port:"
-                    defaultValue: GlobalConfig.chatBotPort
+                    fieldName: "Twitch bot port:"
+                    defaultValue: Config.getBotPort()
                     onValueChanged:(value) => {
-                        GlobalConfig.chatBotPort = value
                     }
                 }
-
-                PropertyBoolDelegate {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.margins: 10
-
-                    fieldName: "Any user can execute chat command [NO=>Only streamer]:"
-                    defaultValue: false
-                    onValueChanged:(value) => {
-                        Config.saveChatBotUser(value)
-                    }
-                }
-
             }
         }
 
@@ -112,7 +96,7 @@ Item {
                     minValue: 800
                     maxValue: 2560
 
-                    fieldName: "screen width:"
+                    fieldName: "Screen width:"
                     defaultValue: GlobalConfig.screenWidth
                     onValueChanged:(value) => {
                         GlobalConfig.screenWidth = value
@@ -126,7 +110,7 @@ Item {
                     minValue: 600
                     maxValue: 1440
 
-                    fieldName: "screen height:"
+                    fieldName: "Screen height:"
                     defaultValue: GlobalConfig.screenHeight
                     onValueChanged:(value) => {
                         GlobalConfig.screenHeight = value
@@ -344,7 +328,7 @@ Item {
 
     Component.onCompleted: {
         settingsModel.append({"name": "System Settings", "component": systemSettings})
-        settingsModel.append({"name": "ChatBot Settings", "component": chatBotSettings})
+        settingsModel.append({"name": "Twitch Settings", "component": twitchBotSettings})
         settingsModel.append({"name": "Game settings", "component": gameSettings})
         settingsModel.append({"name": "Predefined actions", "component": predefinedActions})
 
@@ -366,7 +350,7 @@ Item {
     }
 
     function saveChatBotConfig() {
-        Config.saveChatBotConfig(GlobalConfig.chatBotURL, GlobalConfig.chatBotPort)
+        Config.saveBotConfig(GlobalConfig.chatBotURL, GlobalConfig.chatBotPort)
         Config.saveScreenResolution(GlobalConfig.screenHeight, GlobalConfig.screenWidth)
         Config.saveTargetTwitchChannel(GlobalConfig.twitchChannel)
         Config.savePredefinedActions(actionsModel)

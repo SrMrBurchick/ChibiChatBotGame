@@ -2,6 +2,6 @@ module Pages
 MainPage 1.0 MainPage.qml
 ConfigurationPage 1.0 ConfigurationPage.qml
 ActionsConfigurationPage 1.0 ActionsConfigurationPage.qml
-ChatBotConfigurationPage 1.0 ChatBotConfigurationPage.qml
+CommonConfigurationPage 1.0 CommonConfigurationPage.qml
 TwitchConfigurationPage 1.0 TwitchConfigurationPage.qml
 ChannelPointsConfigurationPage 1.0 TwitchComponents/ChannelPointsConfigurationPage.qml

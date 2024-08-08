@@ -29,8 +29,11 @@ Item {
 
                 fieldName: "Text:"
                 fieldDescription: "Text that should appear if action is execute"
-                defaultText: GlobalConfig.twitchChannel
+                defaultText: actionConfig ? actionConfig.text : ""
                 onValueChanged:(text) => {
+                    if (actionConfig) {
+                        actionConfig.text = text
+                    }
                 }
             }
 
@@ -40,19 +43,11 @@ Item {
                 anchors.margins: 10
 
                 fieldName: "Can Interrupt:"
-                defaultValue: false
+                defaultValue: actionConfig ? actionConfig.canInterrupt : false
                 onValueChanged:(value) => {
-                }
-            }
-
-            PropertyBoolDelegate {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
-
-                fieldName: "Custom Animation:"
-                defaultValue: false
-                onValueChanged:(value) => {
+                    if (actionConfig) {
+                        actionConfig.canInterrupt = value
+                    }
                 }
             }
         }
@@ -69,8 +64,11 @@ Item {
                 anchors.margins: 10
 
                 fieldName: "Color:"
-                defaultValue: GlobalConfig.messageTextColor
+                defaultValue: actionConfig ? actionConfig.textColor : "red"
                 onValueChanged:(value) => {
+                    if (actionConfig) {
+                        actionConfig.textColor = value
+                    }
                 }
             }
 
@@ -82,8 +80,11 @@ Item {
                 maxValue: 72
 
                 fieldName: "Font size:"
-                defaultValue: GlobalConfig.fontSize
+                defaultValue: actionConfig ? actionConfig.fontSize : 54
                 onValueChanged:(value) => {
+                    if (actionConfig) {
+                        actionConfig.fontSize = value
+                    }
                 }
             }
 
@@ -95,8 +96,11 @@ Item {
                 maxValue: 20
 
                 fieldName: "Text display time:"
-                // defaultValue: GlobalConfig.screenHeight
+                defaultValue: actionConfig ? actionConfig.displayTime : 10
                 onValueChanged:(value) => {
+                    if (actionConfig) {
+                        actionConfig.displayTime = value
+                    }
                 }
             }
         }
@@ -134,22 +138,25 @@ Item {
                     }
                 }
 
+                function updateDisplayText() {
+                    var action = ActionsManager.getSelectedAction();
+                    var displayText = ""
+                    if (action) {
+                        var config = action.getConfig()
+                        if (config) {
+                            var reward = TwitchManager.getChannelPointRewardByID(config.rewardID)
+                            if (reward) {
+                                displayText = reward.title
+                            }
+                        }
+                    }
+
+                    setDisplayText(displayText)
+                }
+
                 Component.onCompleted: {
                     if (ActionsManager && TwitchManager) {
-                        ActionsManager.onActionSelected.connect(function(action) {
-                            var displayText = ""
-                            if (action) {
-                                var config = action.getConfig()
-                                if (config) {
-                                    var reward = TwitchManager.getChannelPointRewardByID(config.rewardID)
-                                    if (reward) {
-                                        displayText = reward.title
-                                    }
-                                }
-                            }
-
-                            setDisplayText(displayText)
-                        })
+                        updateDisplayText()
                     }
                 }
             }
