@@ -14,18 +14,20 @@ class ActionConfig : public QObject{
     Q_PROPERTY(bool canInterrupt MEMBER bCanInterrupt)
     Q_PROPERTY(int fontSize MEMBER FontSize)
     Q_PROPERTY(QColor textColor MEMBER TextColor)
+    Q_PROPERTY(QColor textBorderColor MEMBER TextBorderColor)
     Q_PROPERTY(QString rewardID MEMBER ChannelPointsRewardID NOTIFY rewardUpdated)
 public:
     explicit ActionConfig(QObject* Parent = nullptr);
     virtual ~ActionConfig();
 
     QString Text;
-    int DisplayTime;
-    bool bCanInterrupt;
+    int DisplayTime = 0;
+    bool bCanInterrupt = false;
 
     // Text Config
-    int FontSize;
-    QColor TextColor;
+    int FontSize = 54;
+    QColor TextColor = "white";
+    QColor TextBorderColor = "black";
 
     // Twitch Config
     QString ChannelPointsRewardID;

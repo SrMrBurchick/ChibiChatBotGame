@@ -4,6 +4,7 @@ ActionSpriteDelegate 1.0 ActionSpriteDelegate.qml
 ActionListDelegate 1.0 ActionListDelegate.qml
 PropertyDelegate 1.0 PropertyDelegate.qml
 SettingsDelegate 1.0 SettingsDelegate.qml
+SettingsPanelDelegate 1.0 SettingsPanelDelegate.qml
 PredefinedActionDelegate 1.0 PredefinedActionDelegate.qml
 PropertyRealDelegate 1.0 PropertyRealDelegate.qml
 PropertyIntDelegate 1.0 PropertyIntDelegate.qml

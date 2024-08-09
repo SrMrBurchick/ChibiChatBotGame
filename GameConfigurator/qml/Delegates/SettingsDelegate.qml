@@ -16,6 +16,7 @@ Rectangle {
         spacing: 10
         BaseText {
             id: description
+            Layout.leftMargin: 5
             text: name
             font.pixelSize: 32
             font.bold: true

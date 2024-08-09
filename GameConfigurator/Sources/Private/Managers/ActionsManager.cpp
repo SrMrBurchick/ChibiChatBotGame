@@ -189,6 +189,19 @@ const QVector<QString> ActionsManager::getTwitchDefaultAction() const
     return TwitchDefaultActions.keys().toVector();
 }
 
+const QVector<QString> ActionsManager::getPossiblePredefinedActionsToAdd() const
+{
+    QVector<QString> PossibleActions;
+    for (QSharedPointer<Action> Item : Actions) {
+        if (!isTwitchDefaultAction(Item.get())) {
+            PossibleActions.append(Item->getName());
+        }
+    }
+
+    return PossibleActions;
+}
+
+
 const QVector<QString> ActionsManager::getPossibleActionsToAdd() const
 {
     QVector<QString> PossibleActions;
@@ -219,6 +232,7 @@ void ActionsManager::saveConfig(ConfigObject* Config)
     }
 
     Config->SaveActions(Actions);
+    Config->saveConfig();
 }
 
 void ActionsManager::initByConfig(const ConfigObject* Config)

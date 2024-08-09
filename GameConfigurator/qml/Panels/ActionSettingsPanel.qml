@@ -13,7 +13,6 @@ import ActionsManagerComponent
 Item {
     id: root
     anchors.fill: parent
-    anchors.leftMargin: 6
     property ActionConfig actionConfig
     property string actionName
 
@@ -23,9 +22,8 @@ Item {
             width: parent.width
 
             PropertyDelegate {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
+                Layout.fillWidth: true
+                Layout.margins: 10
 
                 fieldName: "Text:"
                 fieldDescription: "Text that should appear if action is execute"
@@ -38,9 +36,9 @@ Item {
             }
 
             PropertyBoolDelegate {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
+                Layout.fillWidth: true
+                Layout.margins: 10
+                Layout.topMargin: 0
 
                 fieldName: "Can Interrupt:"
                 defaultValue: actionConfig ? actionConfig.canInterrupt : false
@@ -59,9 +57,8 @@ Item {
             width: parent.width
 
             PropertyColorDelegate {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
+                Layout.fillWidth: true
+                Layout.margins: 10
 
                 fieldName: "Color:"
                 defaultValue: actionConfig ? actionConfig.textColor : "red"
@@ -72,12 +69,26 @@ Item {
                 }
             }
 
+            PropertyColorDelegate {
+                Layout.fillWidth: true
+                Layout.margins: 10
+                Layout.topMargin: 0
+
+                fieldName: "Border Color:"
+                defaultValue: actionConfig ? actionConfig.textBorderColor : "black"
+                onValueChanged:(value) => {
+                    if (actionConfig) {
+                        actionConfig.textBorderColor = value
+                    }
+                }
+            }
+
             PropertyIntDelegate {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
                 minValue: 8
                 maxValue: 72
+                Layout.fillWidth: true
+                Layout.margins: 10
+                Layout.topMargin: 0
 
                 fieldName: "Font size:"
                 defaultValue: actionConfig ? actionConfig.fontSize : 54
@@ -89,12 +100,11 @@ Item {
             }
 
             PropertyIntDelegate {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
                 minValue: 1
                 maxValue: 20
-
+                Layout.fillWidth: true
+                Layout.margins: 10
+                Layout.topMargin: 0
                 fieldName: "Text display time:"
                 defaultValue: actionConfig ? actionConfig.displayTime : 10
                 onValueChanged:(value) => {
@@ -118,9 +128,8 @@ Item {
 
             PropertyComboBoxDelegate {
                 id: rewardsComboBox
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
+                Layout.fillWidth: true
+                Layout.margins: 10
 
                 fieldName: "Listen:"
                 targetModel: rewardsModel
@@ -172,6 +181,8 @@ Item {
         anchors.margins: 10
         BaseText {
             text: "Config: " + actionName
+            Layout.maximumWidth: parent.width
+            wrapMode: Text.WordWrap
             font.pixelSize : 32
         }
         ScrollView {
@@ -179,6 +190,7 @@ Item {
             clip: true
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.maximumWidth: root.width
             ListView {
                 id: settingsView
                 width: parent.width

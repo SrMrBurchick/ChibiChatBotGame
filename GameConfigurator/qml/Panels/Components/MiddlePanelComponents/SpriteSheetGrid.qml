@@ -68,12 +68,12 @@ Item {
     }
 
     function initModel() {
-        gridView.cellWidth = (panel.width / Config.getTableColumns())
-        gridView.cellHeight = (panel.width / Config.getTableColumns())
+        gridView.cellWidth = (panel.width / Config.tableSize.columns)
+        gridView.cellHeight = (panel.width / Config.tableSize.columns)
 
         gridView.model.initModel(
-            Config.getTableColumns(),
-            Config.getTableRows()
+            Config.tableSize.columns,
+            Config.tableSize.rows
         )
     }
 

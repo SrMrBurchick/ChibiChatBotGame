@@ -27,7 +27,7 @@ Item {
         onAccepted: {
             console.log(selectedFile)
             image.source = selectedFile
-            Config.saveSpriteSheetPath(selectedFile)
+            // Config.saveSpriteSheetPath(selectedFile)
         }
     }
 
@@ -87,7 +87,7 @@ Item {
                     Image {
                         id: image
                         visible: true
-                        source: Config.getSpriteSheetPath()
+                        source: Config.systemConfig.imagePath
 
                         BaseText {
                             text: "(" + image.sourceSize.width + "x" + image.sourceSize.height + ")"
@@ -143,7 +143,7 @@ Item {
     }
 
     Component.onCompleted: {
-        root.isImageSplited = Config.isConfigLoaded()
+        root.isImageSplited = Config.isLoaded
     }
 
     function splitImageToSprites() {
@@ -153,11 +153,6 @@ Item {
 
     function saveActionsConfig() {
         ActionsManager.saveConfig(Config)
-        if (Config.isConfigLoaded() == false) {
-            Config.actionsConfigured()
-        } else {
-            Config.saveConfig()
-        }
     }
 }
 

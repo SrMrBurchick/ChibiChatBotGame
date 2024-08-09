@@ -206,15 +206,16 @@ void TwitchManager::onChannelNameReceived(const QString& NewChannelName)
     }
 }
 
-void TwitchManager::initByConfig(const ConfigObject* Config)
+void TwitchManager::initByConfig(ConfigObject* Config)
 {
     if (!Config) {
         return;
     }
 
-    const TwitchSettings Settings = Config->GetTwitchSettings();
-    if (!isAuthorized() && !Settings.OAuthToken.isEmpty() && !Settings.ChannelName.isEmpty()) {
-        userAuthorized(Settings.OAuthToken);
+    if (SystemConfig* System = Config->getSystemConfig()) {
+        if (!isAuthorized() && !System->Twitch.OAuthToken.isEmpty() && !System->Twitch.ChannelName.isEmpty()) {
+            userAuthorized(System->Twitch.OAuthToken);
+        }
     }
 }
 
@@ -222,6 +223,7 @@ void TwitchManager::saveConfig(ConfigObject* Config)
 {
     if (Config && NetworkManager) {
         Config->saveTwitchInfo(ChannelName, UserOAuthToken, NetworkManager->BroadcasterID);
+        Config->saveConfig();
     }
 }
 

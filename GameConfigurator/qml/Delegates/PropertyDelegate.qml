@@ -69,6 +69,8 @@ Rectangle {
             id: contentLoader
             visible: true
             Layout.fillWidth: true
+            Layout.margins: 10
+
             sourceComponent: root.isEditable ? editableText : nonEditableText
         }
     }

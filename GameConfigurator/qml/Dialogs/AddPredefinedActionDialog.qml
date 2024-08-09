@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import Panels
 import Delegates
 import Base
+import Managers
 
 Dialog {
     id: root
@@ -29,7 +30,7 @@ Dialog {
             ComboBox {
                 id: actionSelector
                 Layout.fillWidth: true
-                // model: ActionsManager.actionsListModel.getActions()
+                model: ActionsManager.getPossiblePredefinedActionsToAdd()
 
                 onActivated: {
                     actionName = currentText

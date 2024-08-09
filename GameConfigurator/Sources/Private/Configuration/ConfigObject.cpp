@@ -36,6 +36,7 @@ constexpr char ACTION_EXECUTION_TIME[] = "action-execution-time";
 // Message settings
 constexpr char MESSAGE_SETTINGS[] = "message-settings";
 constexpr char MESSAGE_TEXT_COLOR[] = "text-color";
+constexpr char MESSAGE_TEXT_BORDER_COLOR[] = "text-border-color";
 constexpr char MESSAGE_FONT_SETTINGS[] = "font";
 constexpr char MESSAGE_FONT_SIZE[] = "size";
 constexpr char MESSAGE_FONT_TYPE[] = "type";
@@ -130,7 +131,6 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
             QVariantMap JsonTwitchBotSettings = JsonTwitchSettings[TWITCH_BOT_SETTINGS].toMap();
             SystemSettings.Twitch.Bot.WebSockURL = JsonTwitchBotSettings[BOT_SETTINGS_URL].toString();
             SystemSettings.Twitch.Bot.WebSockPort = JsonTwitchBotSettings[BOT_SETTINGS_PORT].toInt();
-            SystemSettings.Twitch.Bot.ChatAnyUser = JsonTwitchBotSettings[BOT_USER].toInt();
         }
 
     }
@@ -157,6 +157,10 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
         if (JsonFontSettings.contains(MESSAGE_FONT_SIZE)) {
             SystemSettings.Message.FontSize = JsonFontSettings[MESSAGE_FONT_SIZE].toInt();
         }
+    }
+
+    if (JsonMessageSettings.contains(MESSAGE_TEXT_BORDER_COLOR)) {
+        SystemSettings.Message.MessageBorderColor = QColor(JsonMessageSettings[MESSAGE_TEXT_BORDER_COLOR].toString());
     }
 
     // Init sprite settings
@@ -221,7 +225,6 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     JsonTwitchSettings[TWITCH_CLIENT_ID] = QT_STRINGIFY(CLIENT_ID);
     JsonTwitchBotSettings[BOT_SETTINGS_URL] = SystemSettings.Twitch.Bot.WebSockURL;
     JsonTwitchBotSettings[BOT_SETTINGS_PORT] = SystemSettings.Twitch.Bot.WebSockPort;
-    JsonTwitchBotSettings[BOT_USER] = SystemSettings.Twitch.Bot.ChatAnyUser;
     JsonTwitchSettings[BOT_SETTINGS] = JsonTwitchBotSettings;
 
     // Table settings
@@ -240,6 +243,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     JsonMessageSettings[MESSAGE_TEXT_COLOR] = SystemSettings.Message.MessageTextColor.name();
     JsonMessageFontSettings[MESSAGE_FONT_SIZE] = SystemSettings.Message.FontSize;
     JsonMessageSettings[MESSAGE_FONT_SETTINGS] = JsonMessageFontSettings;
+    JsonMessageSettings[MESSAGE_TEXT_BORDER_COLOR] = SystemSettings.Message.MessageBorderColor.name();
 
     // Predefined actions
     for (const PredefinedAction& Action : PredefinedActionsList) {
@@ -299,73 +303,6 @@ void ConfigObject::loadConfig()
     SetBusy(false);
 }
 
-void ConfigObject::saveBotConfig(const QString& URL, const int Port)
-{
-    SystemSettings.Twitch.Bot.WebSockURL = URL;
-    SystemSettings.Twitch.Bot.WebSockPort = Port;
-}
-
-void ConfigObject::saveSpriteWidth(const int Width)
-{
-    SpriteSettings.Width = Width;
-}
-
-void ConfigObject::saveSpriteHeight(const int Height)
-{
-    SpriteSettings.Height = Height;
-}
-
-void ConfigObject::saveTableColumns(const int Columns)
-{
-    TableSettings.Columns = Columns;
-}
-
-void ConfigObject::saveTableRows(const int Rows)
-{
-    TableSettings.Rows = Rows;
-}
-
-void ConfigObject::saveSpriteSheetPath(const QString& ImagePath)
-{
-    SystemSettings.ImagePath = ImagePath;
-    CopyImageToAssets();
-}
-
-QString ConfigObject::getSpriteSheetPath() const
-{
-    return SystemSettings.ImagePath;
-}
-
-QString ConfigObject::getBotURL() const
-{
-    return SystemSettings.Twitch.Bot.WebSockURL;
-}
-
-int ConfigObject::getBotPort() const
-{
-    return SystemSettings.Twitch.Bot.WebSockPort;
-}
-
-int ConfigObject::getSpriteHeight() const
-{
-    return SpriteSettings.Height;
-}
-
-int ConfigObject::getSpriteWidth() const
-{
-    return SpriteSettings.Width;
-}
-
-int ConfigObject::getTableColumns() const
-{
-    return TableSettings.Columns;
-}
-
-int ConfigObject::getTableRows() const
-{
-    return TableSettings.Rows;
-}
-
 void ConfigObject::CopyImageToAssets()
 {
     QImage image;
@@ -382,99 +319,6 @@ void ConfigObject::CopyImageToAssets()
     if (image.load(SystemPath)) {
         image.save(QT_STRINGIFY(GAME_ASSET_IMAGE_PATH));
     }
-}
-
-void ConfigObject::saveSpriteScale(const float SpriteScale)
-{
-    SystemSettings.Game.SpriteScale = SpriteScale;
-}
-
-float ConfigObject::getSpriteScale() const
-{
-    return SystemSettings.Game.SpriteScale;
-}
-
-void ConfigObject::saveScreenResolution(const int Height, const int Width)
-{
-    SystemSettings.Game.ScreenHeight = Height;
-    SystemSettings.Game.ScreenWidth = Width;
-}
-
-void ConfigObject::saveTargetTwitchChannel(const QString& TargetChannel)
-{
-    SystemSettings.Twitch.ChannelName = TargetChannel;
-}
-
-int ConfigObject::getScreenHeight() const
-{
-    return SystemSettings.Game.ScreenHeight;
-}
-
-int ConfigObject::getScreenWidth() const
-{
-    return SystemSettings.Game.ScreenWidth;
-}
-
-QString ConfigObject::getTwitchTargeChannel() const
-{
-    return SystemSettings.Twitch.ChannelName;
-}
-
-void ConfigObject::savePredefinedActions(const PredefinedActionsListModel* Model)
-{
-    if (Model != nullptr) {
-        PredefinedActionsList = Model->getList();
-    }
-}
-
-float ConfigObject::getActionExecutionTime() const
-{
-    return SystemSettings.Game.ActionExecutionTime;
-}
-
-QColor ConfigObject::getMessageTextColor() const
-{
-    return SystemSettings.Message.MessageTextColor;
-}
-
-void ConfigObject::saveActionExecutionTime(const float ActionExecutionTime)
-{
-    SystemSettings.Game.ActionExecutionTime = ActionExecutionTime;
-}
-
-void ConfigObject::saveMessageTextColor(const QColor& MessageTextColor)
-{
-    SystemSettings.Message.MessageTextColor = MessageTextColor;
-}
-
-float ConfigObject::getMovementSpeed() const
-{
-    return SystemSettings.Game.MovementSpeed;
-}
-
-void ConfigObject::saveMovementSpeed(const float MovementSpeed)
-{
-    SystemSettings.Game.MovementSpeed = MovementSpeed;
-}
-
-float ConfigObject::getNextActionTimeout() const
-{
-    return SystemSettings.Game.NextActionTimeout;
-}
-
-void ConfigObject::saveNextActionTimeout(const float NextActionTimeout)
-{
-    SystemSettings.Game.NextActionTimeout = NextActionTimeout;
-}
-
-int ConfigObject::getFontSize() const
-{
-    return SystemSettings.Message.FontSize;
-}
-
-void ConfigObject::saveFontSize(const int FontSize)
-{
-    SystemSettings.Message.FontSize = FontSize;
 }
 
 void ConfigObject::setLoggerEnabled(bool Enabled)
@@ -496,19 +340,9 @@ void ConfigObject::saveDataToClipboard(const QString& Data)
     }
 }
 
-bool ConfigObject::getChatBotUser() const
-{
-    return SystemSettings.Twitch.Bot.ChatAnyUser;
-}
-
 void ConfigObject::SaveLogging(bool Logging)
 {
     SystemSettings.Logging = Logging;
-}
-
-bool ConfigObject::getLogging() const
-{
-    return SystemSettings.Logging;
 }
 
 void ConfigObject::saveTwitchInfo(const QString& ChannelName, const QString& OAuthToken, const QString& UserId)
@@ -537,6 +371,7 @@ void ConfigObject::SaveActions(const QVector<QSharedPointer<Action>>& Actions)
             JsonActionConfig[ACTION_CONFIG_TWITCH_EVENT_TYPE] = Config->EventType;
 
             TextConfig[ACTION_CONFIG_TEXT_COLOR] = Config->TextColor.name();
+            TextConfig[MESSAGE_TEXT_BORDER_COLOR] = Config->TextBorderColor.name();
             TextConfig[ACTION_CONFIG_TEXT_DISPLAY_TIME] = Config->DisplayTime;
             TextConfig[ACTION_CONFIG_TEXT_SIZE] = Config->FontSize;
             TextConfig[ACTION_CONFIG_TEXT_MESSAGE] = Config->Text;
@@ -598,6 +433,9 @@ void ConfigObject::InitActionsManager(ActionsManager* Manager) const
                             }
                             if (ActionTextConfig.contains(ACTION_CONFIG_TEXT_COLOR)) {
                                 Config->TextColor = QColor(ActionTextConfig[ACTION_CONFIG_TEXT_COLOR].toString());
+                            }
+                            if (ActionTextConfig.contains(MESSAGE_TEXT_BORDER_COLOR)) {
+                                Config->TextBorderColor = QColor(ActionTextConfig[MESSAGE_TEXT_BORDER_COLOR].toString());
                             }
                         }
                     }

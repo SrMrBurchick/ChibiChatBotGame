@@ -48,7 +48,7 @@ Item {
                     Image {
                         id: actionPreview
                         anchors.fill: parent
-                        source: Config.getSpriteSheetPath()
+                        source: Config.systemConfig.imagePath
                     }
 
                 }
@@ -77,9 +77,9 @@ Item {
         {
             var nextSpriteData = selectedAction.getNextSprite()
             actionPreview.sourceClipRect = Qt.rect(
-                parseInt(nextSpriteData.sprite_column) * Config.getSpriteWidth(),
-                parseInt(nextSpriteData.sprite_row) * Config.getSpriteHeight(),
-                Config.getSpriteWidth(), Config.getSpriteHeight()
+                parseInt(nextSpriteData.sprite_column) * Config.spriteSize.width,
+                parseInt(nextSpriteData.sprite_row) * Config.spriteSize.height,
+                Config.spriteSize.width, Config.spriteSize.height
             )
             actionPreview.mirror = nextSpriteData.isInverted;
         }

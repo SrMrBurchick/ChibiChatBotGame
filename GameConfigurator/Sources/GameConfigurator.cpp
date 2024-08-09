@@ -71,6 +71,12 @@ int main(int argc, char *argv[])
     qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
     qmlRegisterType<ActionConfig>("ActionsManagerComponent", 1, 0, "ActionConfig");
     qmlRegisterType<ChannelPointsReward>("TwitchManagerComponent", 1, 0, "ChannelPointsReward");
+    qmlRegisterType<SpriteSize>("ConfigComponent", 1, 0, "SpriteSize");
+    qmlRegisterType<TwitchBotSettings>("ConfigComponent", 1, 0, "TwitchBotSettings");
+    qmlRegisterType<TwitchSettings>("ConfigComponent", 1, 0, "TwitchSettings");
+    qmlRegisterType<GameSettings>("ConfigComponent", 1, 0, "GameSettings");
+    qmlRegisterType<MessageSettings>("ConfigComponent", 1, 0, "MessageSettings");
+    qmlRegisterType<GameSettings>("ConfigComponent", 1, 0, "GameSettings");
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

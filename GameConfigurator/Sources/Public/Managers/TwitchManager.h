@@ -32,7 +32,7 @@ public:
     // ================================ QML ====================================
     // Modifiers
     Q_INVOKABLE void connectToTheChannel(const QString& Channel);
-    Q_INVOKABLE void initByConfig(const ConfigObject* Config);
+    Q_INVOKABLE void initByConfig(ConfigObject* Config);
     Q_INVOKABLE void saveConfig(ConfigObject* Config);
 
     // Rewards

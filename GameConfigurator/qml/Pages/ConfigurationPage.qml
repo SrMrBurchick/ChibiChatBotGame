@@ -46,31 +46,13 @@ Item {
     Component.onCompleted: {
         TwitchManager.onConnectionUpdated.connect(function (isConnected) {
             TwitchManager.saveConfig(Config)
-            Config.saveConfig()
         })
-        if (!Config.isConfigLoaded()) {
+        if (!Config.isLoaded) {
             Config.loadConfig()
 
             ActionsManager.initByConfig(Config)
             TwitchManager.initByConfig(Config)
         }
-    }
-
-    function saveDefaultConfig() {
-        console.log("Save default")
-        // Config.saveChatBotConfig(GlobalConfig.chatBotURL, GlobalConfig.chatBotPort)
-        // Config.saveScreenResolution(GlobalConfig.screenHeight, GlobalConfig.screenWidth)
-        // Config.saveTargetTwitchChannel(GlobalConfig.twitchChannel)
-        // Config.saveActionExecutionTime(GlobalConfig.actionExecutionTime)
-        // Config.saveMessageTextColor(GlobalConfig.messageTextColor)
-        // Config.saveMovementSpeed(GlobalConfig.movementSpeed)
-        // Config.saveNextActionTimeout(GlobalConfig.nextActionTimeout)
-        // Config.saveSpriteSheetPath(ActionsManager.spriteSheetPath)
-        // Config.saveSpriteSettings(ActionsManager.spriteSizeWidth, ActionsManager.spriteSizeHeight)
-        // Config.saveSpriteScale(ActionsManager.spriteScale)
-        // Config.saveTableSettings(ActionsManager.tableSettingsColumns, ActionsManager.tableSettingsRows)
-
-        // Config.saveConfig()
     }
 
     signal goBack()

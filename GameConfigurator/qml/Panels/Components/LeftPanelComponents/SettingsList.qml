@@ -27,9 +27,9 @@ ColumnLayout {
             fieldName: "Columns:"
             minValue: 1
             maxValue: 24
-            defaultValue: Config.getTableColumns()
+            defaultValue: Config.tableSize.columns
             onValueChanged:(value) => {
-                Config.saveTableColumns(value)
+                Config.tableSize.columns = value
             }
         }
 
@@ -40,9 +40,9 @@ ColumnLayout {
             maxValue: 24
 
             fieldName: "Rows:"
-            defaultValue: Config.getTableRows()
+            defaultValue: Config.tableSize.rows
             onValueChanged:(value) => {
-                Config.saveTableRows(value)
+                Config.tableSize.rows = value
             }
         }
     }
@@ -64,9 +64,9 @@ ColumnLayout {
             maxValue: 1000
 
             fieldName: "Width:"
-            defaultValue: Config.getSpriteWidth()
+            defaultValue: Config.spriteSize.width
             onValueChanged:(value) => {
-                GlobalCongi.saveSpriteWidth(value)
+                Config.spriteSize.width = value
             }
         }
 
@@ -77,9 +77,9 @@ ColumnLayout {
             maxValue: 1000
 
             fieldName: "Height:"
-            defaultValue: Config.getSpriteHeight()
+            defaultValue: Config.spriteSize.height
             onValueChanged:(value) => {
-                Config.saveSpriteHeight(value)
+                Config.spriteSize.height = value
             }
         }
 
@@ -88,9 +88,9 @@ ColumnLayout {
             Layout.margins: 10
 
             fieldName: "Scale:"
-            defaultValue: Config.getSpriteScale()
+            defaultValue: Config.systemConfig.gameSettings.spriteScale
             onValueChanged:(value) => {
-                Config.saveSpriteScale(value)
+                Config.systemConfig.gameSettings.spriteScale = value
             }
         }
     }

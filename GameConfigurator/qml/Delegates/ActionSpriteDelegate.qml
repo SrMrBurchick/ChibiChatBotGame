@@ -23,11 +23,11 @@ Rectangle {
     Image {
         id: image
         anchors.fill: parent
-        source: Config.getSpriteSheetPath()
+        source: Config.systemConfig.imagePath
         sourceClipRect: Qt.rect(
-            parseInt(sprite_column) * Config.getSpriteWidth(),
-            parseInt(sprite_row) * Config.getSpriteHeight(),
-            Config.getSpriteWidth(), Config.getSpriteHeight()
+            parseInt(sprite_column) * Config.spriteSize.width,
+            parseInt(sprite_row) * Config.spriteSize.height,
+            Config.spriteSize.width, Config.spriteSize.height
         )
 
         mirror: inverted
