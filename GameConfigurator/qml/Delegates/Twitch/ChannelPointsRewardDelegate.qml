@@ -69,6 +69,40 @@ BasePanel {
                     }
                 }
             }
+
+            PropertyBoolDelegate {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                fieldName: "User input required:"
+                defaultValue: target ? target.userInputRequired : false
+                onValueChanged:(value) => {
+                    if (target) {
+                        target.userInputRequired = value
+                    }
+                }
+            }
+
+            Component {
+                id: userInput
+                PropertyDelegate {
+                    defaultText: target ? target.userInputPrompt : ""
+                    fieldName: "UserInput:"
+                    fieldDescription: "Input description"
+                    onValueChanged:(value) => {
+                        if (target) {
+                            target.userInputPrompt = value
+                        }
+                    }
+                }
+            }
+
+            Loader {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: target ? target.userInputRequired : false
+                sourceComponent: userInput
+            }
         }
 
         RowLayout {
@@ -95,7 +129,6 @@ BasePanel {
                 }
             }
         }
-
     }
 
 

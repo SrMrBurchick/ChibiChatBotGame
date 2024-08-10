@@ -10,7 +10,7 @@ use crate::components::{
     common::events::{
         Event, Events, GameEvents
     },
-    actions::Actions
+    actions::ActionType
 };
 
 #[derive(Component, Debug, Reflect)]
@@ -36,7 +36,7 @@ impl ActionLogicStrategy for WalkStrategy {
         gameplay: &GameplayLogicComponent,
         event_writer: &mut EventWriter<Event>
     ) {
-        if gameplay.get_current_action() != Actions::Walk {
+        if gameplay.get_current_action() != ActionType::Walk {
             error!("Selected wrong strategy for action: {:?}", gameplay.get_current_action());
             return;
         }
@@ -44,10 +44,10 @@ impl ActionLogicStrategy for WalkStrategy {
         if movement.landed {
             self.preparing = false;
             if movement.can_climb {
-                if gameplay.get_current_action() == Actions::Walk && self.swap_direction_delay == 0 {
+                if gameplay.get_current_action() == ActionType::Walk && self.swap_direction_delay == 0 {
                     event_writer.send(
                         Event {
-                            event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::SwapDirection))
+                            event_type: Events::GameEvents(GameEvents::ActionChanged(ActionType::SwapDirection))
                         }
                     );
                     self.swap_direction_delay = 3;
@@ -65,7 +65,7 @@ impl ActionLogicStrategy for WalkStrategy {
         &self,
         gameplay: &GameplayLogicComponent
     ) -> bool {
-        gameplay.get_current_action() == Actions::Walk
+        gameplay.get_current_action() == ActionType::Walk
     }
 
     fn is_in_preparing_phase(&self) -> bool {

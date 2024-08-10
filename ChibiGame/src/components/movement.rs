@@ -4,7 +4,7 @@ use rand::prelude::*;
 
 use crate::components::{
     actions::{
-        Actions, WalkDirection, ClimbDirection, MoveType, ActionComponent
+        ActionType, WalkDirection, ClimbDirection, MoveType, ActionsManager
     },
     common::events::{
         Event, GameEvents, Events, OverlapType
@@ -121,12 +121,12 @@ impl PlayerMovementComponent {
 
     pub fn on_action_changed(
         &mut self,
-        action: Actions,
+        action: ActionType,
         velocity: &mut Velocity
     ) {
         self.active = true;
         match action {
-            Actions::Walk => {
+            ActionType::Walk => {
                 let mut rand = rand::thread_rng();
                 let direction_rand: f64 = rand.gen();
                 let mut walk_direction: WalkDirection;
@@ -144,7 +144,7 @@ impl PlayerMovementComponent {
                     direction: walk_direction
                 }));
             }
-            Actions::Climb => {
+            ActionType::Climb => {
                 self.movement = Some(Box::new(ClimbComponent {
                     direction: ClimbDirection::Up
                 }));
@@ -212,7 +212,7 @@ impl PlayerMovementComponent {
 pub fn move_player(
     time: Res<Time>,
     type_registry: Res<AppTypeRegistry>,
-    mut query: Query<(&mut PlayerMovementComponent, &GameplayLogicComponent, &ActionComponent, &mut Velocity)>,
+    mut query: Query<(&mut PlayerMovementComponent, &GameplayLogicComponent, &ActionsManager, &mut Velocity)>,
 ) {
     for (mut component, gameplay, action, mut velocity) in &mut query {
         if component.active == false || gameplay.is_movement_enabled() == false {
@@ -235,7 +235,7 @@ pub fn move_player(
                 info!("Movement {:?}. Last direction: {:?}", movement_trait.get_movement_type(), direction);
 
                 match action.current_action {
-                    Actions::Walk => {
+                    ActionType::Walk => {
                         match movement_trait.get_movement_type() {
                             MoveType::Walk(walk) => {
                                 direction = walk;
@@ -244,7 +244,7 @@ pub fn move_player(
                         }
                         can_move = component.landed;
                     }
-                    Actions::Climb => {
+                    ActionType::Climb => {
                         can_move = component.can_climb;
                     }
                     _ => {
@@ -332,8 +332,8 @@ pub fn monitor_movement(
         // Detect that the player is moving down
         if velocity.linvel.y < 0.0 {
             // Check is the current action is not climb
-            if gameplay.get_current_action() != Actions::Climb &&
-               gameplay.get_current_action() != Actions::Fall
+            if gameplay.get_current_action() != ActionType::Climb &&
+               gameplay.get_current_action() != ActionType::Fall
             {
                 if monitor_info.fall_populated {
                     continue;
@@ -341,7 +341,7 @@ pub fn monitor_movement(
 
                 event_writer.send(
                     Event {
-                        event_type: Events::GameEvents(GameEvents::SetNewAction(Actions::Fall))
+                        event_type: Events::GameEvents(GameEvents::SetNewAction(ActionType::Fall))
                     }
                 );
 

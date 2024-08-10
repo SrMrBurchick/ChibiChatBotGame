@@ -5,7 +5,7 @@ use crate::components::{
         sprite_index::SpriteIndex,
     },
     actions::{
-        Actions, string_to_action, UserAction
+        ActionType, string_to_action, UserAction
     }
 };
 
@@ -211,6 +211,10 @@ impl Config {
         }
     }
 
+    pub fn get_actions(&self) -> Result<JsonValue, Box<dyn Error>> {
+        self.get_value("actions")
+    }
+
     pub fn init_actions_map(&mut self) -> Result<(), Box<dyn Error>> {
         let actions_array: JsonValue;
 
@@ -235,7 +239,7 @@ impl Config {
                     let key = string_to_action(&name.to_string());
                     let mut is_user_action = false;
 
-                    if key == Actions::Unknown {
+                    if key == ActionType::Unknown {
                         is_user_action = true;
                     }
 
@@ -282,7 +286,7 @@ impl Config {
         return Ok(());
     }
 
-    pub fn get_action_animations(&mut self, action: Actions) -> Vec<SpriteIndex> {
+    pub fn get_action_animations(&mut self, action: ActionType) -> Vec<SpriteIndex> {
         let mut map: Vec<SpriteIndex> = vec![];
 
         if self.animations_map.0.is_empty() {
@@ -307,8 +311,8 @@ impl Config {
         self.get_value("sprite-scale").unwrap().as_f32().unwrap()
     }
 
-    pub fn get_configured_actions(&self) -> Vec<Actions> {
-        let mut actions: Vec<Actions> = vec![];
+    pub fn get_configured_actions(&self) -> Vec<ActionType> {
+        let mut actions: Vec<ActionType> = vec![];
 
         if self.animations_map.0.is_empty() {
             return actions;

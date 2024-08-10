@@ -26,6 +26,9 @@ QSharedPointer<Action> ActionsManager::CreateNewAction(const QString& ActionName
                     actionConfig->EventType = TwitchDefaultActions[ActionName];
                 } else {
                     actionConfig->EventType = "channel.channel_points_custom_reward_redemption.add";
+                    if (isGameDefaultAction(NewAction.get())) {
+                        actionConfig->bCanInterrupt = true;
+                    }
                 }
             }
 

@@ -95,6 +95,17 @@ impl Config {
                             },
                             Err(_) => {},
                         }
+                        match get_value(&config, "text-settings") {
+                            Ok(text_settings) => {
+                                match get_value(&text_settings, "message") {
+                                    Ok(message) => {
+                                        action.user_input = message.to_string();
+                                    },
+                                    Err(_) => {},
+                                }
+                            },
+                            Err(_) => {},
+                        }
 
                     },
                     Err(_) => {},

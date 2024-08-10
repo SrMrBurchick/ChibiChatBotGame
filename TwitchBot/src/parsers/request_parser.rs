@@ -41,6 +41,7 @@ pub enum EventType {
     ChannelPointsAction {
         user: String,
         reward_id: String,
+        user_input: String,
     },
     Unknown,
 }
@@ -159,10 +160,18 @@ pub fn convert_twitch_type_to_enum(twitch_type: String, data: &JsonValue) -> Eve
         "channel.channel_points_custom_reward_redemption.add" => {
             let mut user: String = String::default();
             let mut reward_id: String = String::default();
+            let mut user_input: String = String::default();
 
             match get_value(&data, "user_name") {
                 Ok(value) => {
                     user = value.to_string();
+                }
+                Err(_) => {}
+            }
+
+            match get_value(&data, "user_input") {
+                Ok(value) => {
+                    user_input = value.to_string();
                 }
                 Err(_) => {}
             }
@@ -177,7 +186,7 @@ pub fn convert_twitch_type_to_enum(twitch_type: String, data: &JsonValue) -> Eve
                 Err(_) => {}
             }
 
-            event_type = EventType::ChannelPointsAction { user, reward_id };
+            event_type = EventType::ChannelPointsAction { user, reward_id, user_input };
         }
         _ => {}
     }

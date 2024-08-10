@@ -14,33 +14,27 @@ import TwitchModels
 Item {
     id: root
     anchors.fill: parent
-    anchors.margins: 10
 
     property StackView rootStack: StackView.view
 
 
     ColumnLayout {
         anchors.fill: root
-
-        // Title
-        BaseText {
-            id: title
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Configuration"
-            font.pointSize: 32
-            font.bold: true
-        }
+        anchors.margins: 20
+        anchors.bottomMargin: 5
+        spacing: 20
 
         // Data
         ListView {
             id:rewardsList
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 10
+            spacing: 30
+            clip: true
             model: ChannelPointsRewardsModel {}
 
             delegate: ChannelPointsRewardDelegate {
-                width: parent.width / 2
+                width: parent.width / 2.8
                 anchors.horizontalCenter: parent.horizontalCenter
             }
         }

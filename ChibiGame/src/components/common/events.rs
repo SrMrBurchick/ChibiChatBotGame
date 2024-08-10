@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::components::actions::Actions;
+use crate::components::actions::ActionType;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub enum OverlapType {
@@ -9,8 +9,8 @@ pub enum OverlapType {
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub enum GameEvents {
-    ActionChanged(Actions),
-    SetNewAction(Actions),
+    ActionChanged(ActionType),
+    SetNewAction(ActionType),
     PlayerOverlapped(OverlapType)
 }
 

@@ -1,5 +1,5 @@
 use crate::components::{
-    actions::Actions,
+    actions::ActionType,
     common::events::{Event, Events, SystemEvents},
     system::config::Config,
 };
@@ -13,7 +13,7 @@ pub fn setup_bot_client(
     query: Query<&Config>,
 ) {
     for config in query.iter() {
-        let (sender, receiver) = crossbeam_channel::bounded::<Actions>(10);
+        let (sender, receiver) = crossbeam_channel::bounded::<ActionType>(10);
         run_client(
             sender,
             config.system_config.bot_url.clone(),

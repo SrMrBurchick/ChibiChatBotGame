@@ -5,12 +5,12 @@ use wasm_bindgen::prelude::Closure;
 use wasm_bindgen::JsCast;
 use web_sys::{MessageEvent, WebSocket};
 
-use crate::components::actions::{string_to_action, Actions};
+use crate::components::actions::{string_to_action, ActionType};
 
 #[derive(Resource, Deref)]
-pub struct BotEventsReceiver(pub Receiver<Actions>);
+pub struct BotEventsReceiver(pub Receiver<ActionType>);
 
-pub fn run_client(sender: Sender<Actions>, url: String, port: u32) {
+pub fn run_client(sender: Sender<ActionType>, url: String, port: u32) {
     info!("Wait for TCP client");
     let url = String::from(format!("ws://{}:{}", url, port));
 
@@ -56,8 +56,8 @@ pub fn run_client(sender: Sender<Actions>, url: String, port: u32) {
     }
 }
 
-fn parse_response(string: String) -> Actions {
-    let mut action: Actions = Actions::Unknown;
+fn parse_response(string: String) -> ActionType {
+    let mut action: ActionType = ActionType::Unknown;
     info!("Received response from wss server: {}", string.clone());
     match json::parse(string.as_str()) {
         Ok(content) => {
@@ -67,22 +67,18 @@ fn parse_response(string: String) -> Actions {
                     Some(value) => {
                         action = string_to_action(value);
                         match action.clone() {
-                            Actions::Unknown => {
+                            ActionType::Unknown => {
                                 if !value.is_empty() {
-                                    match value {
-                                        "say" => {
-                                            let message_str = content["message"].as_str();
-                                            match message_str {
-                                                Some(message) => {
-                                                    action = Actions::Say(String::from(message));
-                                                },
-                                                None => {},
-                                            }
-                                        }
-                                        _ => {
-                                            action = Actions::UserAction(String::from(value));
+                                    let mut message = String::default();
+                                    match content["message"].as_str() {
+                                        Some(value) => {
+                                            message = String::from(value);
+                                        },
+                                        None => {
                                         },
                                     }
+
+                                    action = ActionType::UserAction(String::from(value), message);
                                 }
                             }
                             _ => {},

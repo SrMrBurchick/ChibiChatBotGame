@@ -13,7 +13,7 @@ use crate::components::{
         player::PlayerComponent,
         gameplay_logic::GameplayLogicComponent, Border, BorderType
     },
-    actions::{ActionComponent, Actions},
+    actions::{ActionsManager, ActionType},
     movement::PlayerMovementComponent, animation::AnimationComponent
 };
 
@@ -82,7 +82,7 @@ pub fn system_event_listener(
 pub fn handle_game_events(
     mut events: EventReader<Event>,
     mut components: Query<(
-        &mut ActionComponent,
+        &mut ActionsManager,
         &mut AnimationComponent,
         &mut PlayerMovementComponent,
         &mut GameplayLogicComponent,
@@ -92,32 +92,52 @@ pub fn handle_game_events(
     type_registry: Res<AppTypeRegistry>,
     borders: Query<(Entity, &Border), With<Border>>
 ) {
-    for event in events.iter() {
+    for event in events.read() {
         match event.event_type.clone() {
             Events::GameEvents(game_event) => {
                 match game_event {
                     GameEvents::SetNewAction(new_action) => {
-                        for (_, _, _, mut gameplay_logic_component, _) in components.iter_mut() {
+                        for (actions_manager, _, _, mut gameplay_logic_component, _) in components.iter_mut() {
                             info!("Set new action {:?}", new_action.clone());
 
                             match new_action.clone() {
-                                Actions::Say(message_content) => {
-                                    match message_manager_query.get_single_mut() {
-                                        Ok(mut manager) => {
-                                            let message = Message {
-                                                content: message_content.clone()
-                                            };
+                                ActionType::UserAction(_, message) => {
+                                    match actions_manager.get_action_by_type(new_action.clone()) {
+                                        Some(action) => {
+                                            if !message.is_empty() {
+                                                match message_manager_query.get_single_mut() {
+                                                    Ok(mut manager) => {
+                                                        let message = Message {
+                                                            content: message.clone(),
+                                                            font_size: action.message_settings.font_size,
+                                                            message_color: action.message_settings.color.clone(),
+                                                            message_border_color: action.message_settings.border_color.clone(),
+                                                            timeout: action.message_settings.timeout
+                                                        };
 
-                                            manager.add_message(&message);
+                                                        manager.add_message(&message);
+                                                    },
+                                                    Err(_) => {},
+                                                }
+                                            }
                                         },
-                                        Err(_) => {},
+                                        None => {},
                                     }
                                 }
                                 _ => {
-                                    if !gameplay_logic_component.try_to_set_action(new_action.clone()) {
-                                        // TODO: send error message
+                                },
+                            }
+
+                            match actions_manager.get_action_by_type(new_action.clone()) {
+                                Some(action) => {
+                                    if action.can_interrupt {
+                                        if !gameplay_logic_component.try_to_set_action(new_action.clone()) {
+                                            // TODO: send error message
+                                        } else {
+                                        }
                                     }
                                 },
+                                None => {},
                             }
                         }
                     }
@@ -131,8 +151,8 @@ pub fn handle_game_events(
                         ) in components.iter_mut() {
                             info!("Action changed to {:?}", action.clone());
                             match action {
-                                Actions::SwapDirection => {
-                                    if action_component.current_action == Actions::Walk {
+                                ActionType::SwapDirection => {
+                                    if action_component.current_action == ActionType::Walk {
                                         movement_component.swap_direction(&type_registry);
                                     }
                                 }
@@ -192,8 +212,8 @@ pub fn handle_game_events(
 }
 
 fn on_action_changed(
-    new_action: Actions,
-    action_component: &mut ActionComponent,
+    new_action: ActionType,
+    action_component: &mut ActionsManager,
     animation_component : &mut AnimationComponent,
     movement_component: &mut PlayerMovementComponent,
     velocity: &mut Velocity
@@ -202,7 +222,7 @@ fn on_action_changed(
         return;
     }
 
-    let animations = action_component.get_animation_map_by_action(new_action.clone());
+    let animations = action_component.get_animation_map_by_action_type(new_action.clone());
     action_component.current_action = new_action.clone();
     animation_component.set_new_animation_sequence(&animations);
     movement_component.on_action_changed(new_action.clone(), velocity);

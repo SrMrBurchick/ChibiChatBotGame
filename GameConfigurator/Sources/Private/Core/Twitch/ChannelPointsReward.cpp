@@ -48,6 +48,11 @@ QJsonObject const ChannelPointsReward::GetNetworkData() const
     Data[CHANNEL_POINT_COST] = Cost;
     Data[CHANNEL_POINT_ENABLED] = bIsEnabled;
 
+    if (bIsUserInputRequired) {
+        Data[CHANNEL_POINT_USER_INPUT_REQUIRED] = bIsUserInputRequired;
+        Data[CHANNEL_POINT_PROMPT] = UserPrompt;
+    }
+
     return Data;
 }
 

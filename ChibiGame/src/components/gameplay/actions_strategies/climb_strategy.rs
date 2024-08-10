@@ -10,7 +10,7 @@ use crate::components::{
     common::events::{
         Event, Events, GameEvents
     },
-    actions::Actions
+    actions::ActionType
 };
 
 #[derive(Component, Debug, Reflect)]
@@ -32,7 +32,7 @@ impl ActionLogicStrategy for ClimbStrategy {
         gameplay: &GameplayLogicComponent,
         event_writer: &mut EventWriter<Event>
     ) {
-        if gameplay.get_current_action() != Actions::Climb {
+        if gameplay.get_current_action() != ActionType::Climb {
             error!("Selected wrong strategy for action: {:?}", gameplay.get_current_action());
             return;
         }
@@ -42,7 +42,7 @@ impl ActionLogicStrategy for ClimbStrategy {
                 self.preparing = false;
                 event_writer.send(
                     Event {
-                        event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::Climb))
+                        event_type: Events::GameEvents(GameEvents::ActionChanged(ActionType::Climb))
                     }
                 );
             }
@@ -51,7 +51,7 @@ impl ActionLogicStrategy for ClimbStrategy {
             if movement.landed {
                 event_writer.send(
                     Event {
-                        event_type: Events::GameEvents(GameEvents::ActionChanged(Actions::Walk))
+                        event_type: Events::GameEvents(GameEvents::ActionChanged(ActionType::Walk))
                     }
                 );
             }
@@ -61,7 +61,7 @@ impl ActionLogicStrategy for ClimbStrategy {
         &self,
         gameplay: &GameplayLogicComponent
     ) -> bool {
-        gameplay.get_current_action() == Actions::Climb
+        gameplay.get_current_action() == ActionType::Climb
     }
 
     fn is_in_preparing_phase(&self) -> bool {

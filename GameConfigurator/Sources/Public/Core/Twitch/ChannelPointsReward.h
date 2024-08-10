@@ -36,5 +36,5 @@ signals:
     void titleUpdated(const QString& newTitle);
     void costUpdated(int newCost);
     void enabledUpdated(int newEnabled);
-    void userPromptUpdated(const QString& newUserPromopt);
+    void userPromptUpdated(const QString& newUserPrompt);
 };

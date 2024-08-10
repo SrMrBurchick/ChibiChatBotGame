@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 bevy = "0.12" # make sure this is the latest version
+bevy_stroked_text = "0.1"
 rand = "*"
 rfd = "*"
 bevy_rapier2d = { git = "https://github.com/devil-ira/bevy_rapier", branch = "bevy-0.12" }

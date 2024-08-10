@@ -9,7 +9,7 @@ use crate::components::{
         }
     },
     animation::AnimationComponent,
-    actions::{ActionComponent, Actions},
+    actions::{ActionsManager, ActionType},
     movement::PlayerMovementComponent,
     gameplay::{
         player::*,
@@ -47,28 +47,32 @@ pub fn setup_player(
 
         info!("Animation_component {:?}", animation_component);
 
-        let mut action_component = ActionComponent::default();
+        let mut actions_manager = ActionsManager::default();
 
-        action_component.init_animation_map(&config.get_configured_animations_map());
-        action_component.init_user_animations(&config.get_user_actions());
+        match config.get_actions() {
+            Ok(actions) => {
+                actions_manager.parse_actions(&actions);
+            },
+            Err(_) => {},
+        }
 
-        info!("Action component {:?}", action_component);
+        info!("Actions manager {:?}", actions_manager);
 
         // Setup AI component
         let mut ai_component = AIComponent::new();
         let predefined_actions = config.get_predefined_actions();
         for predefined_action in predefined_actions.iter() {
             ai_component.add_new_action(
-                action_component.get_action_from_string(predefined_action.0.clone()),
+                actions_manager.get_action_type_from_string(predefined_action.0.clone()),
                 predefined_action.1
             );
         }
 
         // 1% chance to swap current direction
         if ai_component.get_total_weight() == 0.0 {
-            ai_component.add_new_action(Actions::SwapDirection, 1);
+            ai_component.add_new_action(ActionType::SwapDirection, 1);
         } else {
-            ai_component.add_new_action(Actions::SwapDirection, (ai_component.get_total_weight() / 100.0) as u8);
+            ai_component.add_new_action(ActionType::SwapDirection, (ai_component.get_total_weight() / 100.0) as u8);
         }
 
         commands.insert_resource(AITimer {
@@ -87,7 +91,7 @@ pub fn setup_player(
         let mut player = Player::new();
         player.set_texture_atlas(texture_atlas_handle);
         player.set_animation_component(animation_component);
-        player.set_action_component(action_component);
+        player.set_action_component(actions_manager);
         player.set_movement_component(movement_component);
 
         commands
@@ -117,6 +121,6 @@ pub fn setup_player(
     });
 
     event_writer.send(Event {
-        event_type: Events::GameEvents(GameEvents::SetNewAction(Actions::Fall)),
+        event_type: Events::GameEvents(GameEvents::SetNewAction(ActionType::Fall)),
     });
 }

@@ -7,12 +7,12 @@ pub mod message;
 pub mod ui;
 
 use crate::components::{
-    actions::Actions,
+    actions::ActionType,
     common::sprite_index::SpriteIndex
 };
 
 #[derive(Debug, Default, Clone, Deref)]
-pub struct AnimationsMap(pub HashMap<Actions, Vec<SpriteIndex>>);
+pub struct AnimationsMap(pub HashMap<ActionType, Vec<SpriteIndex>>);
 
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct TableSize {

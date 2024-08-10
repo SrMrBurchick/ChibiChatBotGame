@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use rand::prelude::*;
 use crate::components::{
-    actions::Actions,
+    actions::ActionType,
     gameplay::player::PlayerComponent,
     common::events::{
         Event, Events, GameEvents
@@ -16,7 +16,7 @@ pub struct AITimer {
 
 #[derive(Debug, PartialEq)]
 struct AIActionComponent {
-    pub action: Actions,
+    pub action: ActionType,
     pub weight: f32
 }
 
@@ -38,7 +38,7 @@ impl AIComponent {
         self.total_weight
     }
 
-    pub fn add_new_action(&mut self, action: Actions, weight: u8) {
+    pub fn add_new_action(&mut self, action: ActionType, weight: u8) {
         info!("Add new Action: {:?} with chance {:?} %", action, weight);
         let action_comp = AIActionComponent{
             action,
@@ -52,7 +52,7 @@ impl AIComponent {
         }
     }
 
-    pub fn generate_action(&self) -> Actions {
+    pub fn generate_action(&self) -> ActionType {
         let mut rand = rand::thread_rng();
         let new_action_weight = rand.gen_range(0.0.. if self.actions.len() == 1 { 100.0 } else {self.total_weight});
         let mut cumulative_weight = 0.0;
@@ -63,7 +63,7 @@ impl AIComponent {
             }
         }
 
-        return Actions::Unknown;
+        return ActionType::Unknown;
     }
 }
 
@@ -78,7 +78,7 @@ pub fn ai_system(
         for ai in components.iter_mut() {
             let new_action = ai.generate_action();
             match new_action {
-                Actions::Unknown => {
+                ActionType::Unknown => {
                     // Do nothing
                 }
                 _ => {

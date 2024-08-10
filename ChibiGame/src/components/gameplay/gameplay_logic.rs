@@ -1,5 +1,5 @@
 use crate::components::{
-    actions::{Actions, is_action_can_interrupt},
+    actions::{ActionType, is_action_can_interrupt},
     common::events::{Event, Events, GameEvents},
     gameplay::{
         player::PlayerComponent,
@@ -20,10 +20,10 @@ pub struct ActionDurationTimer {
 
 #[derive(Component)]
 pub struct GameplayLogicComponent {
-    pending_actions: VecDeque<Actions>,
-    high_priority_actions: VecDeque<Actions>,
+    pending_actions: VecDeque<ActionType>,
+    high_priority_actions: VecDeque<ActionType>,
     is_action_running: bool,
-    current_action: Actions,
+    current_action: ActionType,
     can_be_interrupted: bool,
     movement_enabled: bool,
     current_strategy: Option<Box<dyn Reflect>>,
@@ -37,7 +37,7 @@ impl GameplayLogicComponent {
             pending_actions: VecDeque::new(),
             high_priority_actions: VecDeque::new(),
             is_action_running: false,
-            current_action: Actions::Unknown,
+            current_action: ActionType::Unknown,
             can_be_interrupted: false,
             current_strategy: None,
             movement_enabled: false,
@@ -51,8 +51,8 @@ impl GameplayLogicComponent {
         self.reset_current_action = true;
     }
 
-    pub fn try_to_set_action(&mut self, action: Actions) -> bool {
-        if action == Actions::Unknown || action == Actions::SwapDirection {
+    pub fn try_to_set_action(&mut self, action: ActionType) -> bool {
+        if action == ActionType::Unknown || action == ActionType::SwapDirection {
             return false;
         }
 
@@ -91,12 +91,12 @@ impl GameplayLogicComponent {
 
         // Assign action strategy if exists
         match action {
-            Actions::Climb => {
+            ActionType::Climb => {
                 self.current_strategy = Some(Box::new(
                     ClimbStrategy::new()
                 ));
             }
-            Actions::Walk => {
+            ActionType::Walk => {
                 self.current_strategy = Some(Box::new(
                     WalkStrategy::new()
                 ));
@@ -109,11 +109,11 @@ impl GameplayLogicComponent {
         return true;
     }
 
-    pub fn get_current_action(&self) -> Actions {
+    pub fn get_current_action(&self) -> ActionType {
         self.current_action.clone()
     }
 
-    pub fn get_next_action(&mut self) -> Actions {
+    pub fn get_next_action(&mut self) -> ActionType {
         if !self.high_priority_actions.is_empty() {
             return self.high_priority_actions.pop_front().unwrap();
         }
@@ -121,7 +121,7 @@ impl GameplayLogicComponent {
         if self.pending_actions.is_empty() {
             self.is_action_running = false;
             self.can_be_interrupted = true;
-            return Actions::StandBy;
+            return ActionType::StandBy;
         }
 
         return self.pending_actions.pop_front().unwrap();
@@ -149,7 +149,7 @@ impl GameplayLogicComponent {
             BorderType::BottomBorder => {
                 movement.landed = true;
                 self.movement_enabled = true;
-                self.try_to_set_action(Actions::StandBy);
+                self.try_to_set_action(ActionType::StandBy);
             }
             BorderType::TopBorder => {
                 movement.landed = false;
@@ -190,13 +190,13 @@ impl GameplayLogicComponent {
 
     pub fn stop_action(&mut self) {
         match self.current_action {
-            Actions::Climb => {
-                self.high_priority_actions.push_front(Actions::Fall);
+            ActionType::Climb => {
+                self.high_priority_actions.push_front(ActionType::Fall);
             }
             _ => {},
         }
 
-        self.current_action = Actions::Unknown;
+        self.current_action = ActionType::Unknown;
         self.is_action_running = false;
         self.can_be_interrupted = true;
         self.current_strategy = None;
@@ -207,7 +207,7 @@ impl GameplayLogicComponent {
     }
 
     pub fn is_current_action_valid(&self) -> bool {
-        return self.current_action != Actions::Unknown;
+        return self.current_action != ActionType::Unknown;
     }
 
     pub fn execute_strategy(
@@ -291,12 +291,12 @@ impl GameplayLogicComponent {
 
         // Assign action strategy if exists
         match self.current_action {
-            Actions::Climb => {
+            ActionType::Climb => {
                 self.current_strategy = Some(Box::new(
                     ClimbStrategy::new()
                 ));
             }
-            Actions::Walk => {
+            ActionType::Walk => {
                 self.current_strategy = Some(Box::new(
                     WalkStrategy::new()
                 ));
@@ -366,7 +366,7 @@ pub fn game_logic_system(
             // If action timer completed
             if is_action_timer_finished && gameplay_component.get_action_running_status() {
                 // Fall action may stopped only when player is landed
-                if gameplay_component.get_current_action() == Actions::Fall {
+                if gameplay_component.get_current_action() == ActionType::Fall {
                     match movement_query.get_single() {
                         Ok(movement) => {
                             if movement.landed {
@@ -415,7 +415,7 @@ fn start_new_action(
     mut event_writer: EventWriter<Event>,
 ) {
     info!("Start new action {:?}", gameplay_component.get_current_action());
-    if gameplay_component.get_current_action() != Actions::Fall {
+    if gameplay_component.get_current_action() != ActionType::Fall {
         commands.spawn(ActionDurationTimer{
             timer: Timer::from_seconds(
                 gameplay_component.get_action_duration(), TimerMode::Once

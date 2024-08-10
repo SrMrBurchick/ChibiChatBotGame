@@ -4,6 +4,7 @@ use bevy::{
 };
 use bevy_rapier2d::prelude::*;
 use components::system::debug_info;
+use bevy_stroked_text::StrokedTextPlugin;
 
 pub mod components;
 pub mod listeners;
@@ -44,6 +45,7 @@ fn main() {
             }
         ))
         .add_plugins(FrameTimeDiagnosticsPlugin)
+        .add_plugins(StrokedTextPlugin)
         .add_state::<GameStates>()
         .add_event::<Event>()
 
@@ -73,8 +75,10 @@ fn main() {
         .add_systems(Update, ai::ai_system.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, commands_listener::handle_commands.run_if(in_state(GameStates::RunGame)))
         .add_systems(Update, message::message_system.run_if(in_state(GameStates::RunGame)))
-        // .add_systems(OnEnter(GameStates::RunGame), debug_info::setup_debug_info)
+        .add_systems(OnEnter(GameStates::RunGame), debug_info::setup_debug_info)
         // .add_systems(Update, debug_info::debug_info_system.run_if(in_state(GameStates::RunGame)))
+        // Test
+        // .add_systems(Update, message::test_message_system.run_if(in_state(GameStates::RunGame)))
 
         .run();
 }
