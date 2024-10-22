@@ -68,12 +68,9 @@ pub fn setup_player(
             );
         }
 
-        // 1% chance to swap current direction
-        if ai_component.get_total_weight() == 0.0 {
-            ai_component.add_new_action(ActionType::SwapDirection, 1);
-        } else {
-            ai_component.add_new_action(ActionType::SwapDirection, (ai_component.get_total_weight() / 100.0) as u8);
-        }
+        // 5% chance to swap current direction
+        ai_component.add_new_action(ActionType::SwapDirection, 5);
+        ai_component.normalize_chances();
 
         commands.insert_resource(AITimer {
             timer: Timer::from_seconds(config.get_generate_new_action_timeout(), TimerMode::Repeating),

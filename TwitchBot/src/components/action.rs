@@ -39,6 +39,7 @@ impl Action {
 
     pub fn get_action_json(&self) -> JsonValue {
         let mut action_obj = JsonValue::new_object();
+        let format_placeholders = vec!["{user}", "{admin}", "{timeout}", "{count}", "{gifter}", "{viewers}", "{role}", "{message}"];
 
         action_obj.insert("action", self.name.clone()).unwrap();
         match self.action_event_type.clone() {
@@ -46,7 +47,6 @@ impl Action {
                 if !user_input.is_empty() {
                     let mut message = user_input.clone();
                     if !self.user_input.is_empty() {
-                        let format_placeholders = vec!["{user}", "{admin}", "{timeout}", "{count}", "{gifter}", "{viewers}", "{role}", "{input}"];
                         println!("Try to format {} to {}", user_input.clone(), self.user_input.clone());
                         let mut format_message = self.user_input.clone();
                         for placeholder in format_placeholders {
@@ -57,7 +57,7 @@ impl Action {
                                     "{user}" => {
                                         place_holder_text = user.clone();
                                     }
-                                    "{input}" => {
+                                    "{message}" => {
                                         place_holder_text = user_input.clone();
                                     }
                                     _ => {},

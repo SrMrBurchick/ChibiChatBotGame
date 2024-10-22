@@ -30,6 +30,7 @@ public:
     static void registerModel(const QString& ModelName);
 
     void initModel(QVector<PredefinedAction>& ActionsList);
+    const QVector<PredefinedAction>& GetActionsList() const;
 
     Q_INVOKABLE void removeElement(const int Index);
     Q_INVOKABLE void addNewAction(const QString& NewAction, const int Chance);

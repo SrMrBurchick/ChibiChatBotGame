@@ -104,5 +104,6 @@ QtObject {
     readonly property string twitchIcon: "qrc:qml/Images/twitch-logo.png"
     readonly property string gearIcon: "qrc:qml/Images/gear_icon.png"
     readonly property string templateIcon: "qrc:qml/Images/template_icon.png"
+    readonly property string questionIcon: bIsDarkTheme ? "qrc:qml/Images/question_dark.png" : "grc:qml/Images/question_white.png"
 
 }

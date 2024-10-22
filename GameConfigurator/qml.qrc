@@ -58,6 +58,7 @@
         <file>qml/Dialogs/ChangeActionDialog.qml</file>
         <file>qml/Dialogs/AddPredefinedActionDialog.qml</file>
         <file>qml/Dialogs/AuthorizationDialog.qml</file>
+        <file>qml/Dialogs/ShowHelpDialog.qml</file>
 
         <!-- Images -->
         <file>qml/Images/trash_can.png</file>
@@ -68,6 +69,8 @@
         <file>qml/Images/twitch-logo.png</file>
         <file>qml/Images/template_icon.png</file>
         <file>qml/Images/gear_icon.png</file>
+        <file>qml/Images/question_dark.png</file>
+        <file>qml/Images/question_white.png</file>
 
         <!-- Scripts -->
         <file>qml/pageLoader.mjs</file>

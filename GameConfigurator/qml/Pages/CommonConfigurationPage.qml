@@ -171,10 +171,6 @@ Item {
         }
     }
 
-    PredefinedActionsModel {
-        id: actionsModel
-    }
-
     Component {
         id: predefinedActions
         ColumnLayout {
@@ -185,7 +181,7 @@ Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 clip: true
-                model: actionsModel
+                model: Config.predefinedActionsModel
                 spacing: 10
                 Component {
                     id: predefinedDelegate
@@ -195,11 +191,11 @@ Item {
                         anchors.margins: 10
 
                         onRemoveElement: (index) => {
-                            actionsModel.removeElement(index)
+                            Config.predefinedActionsModel.removeElement(index)
                         }
 
                         onChangeChance: (index, chance) => {
-                            actionsModel.updateChance(index, chance)
+                            Config.predefinedActionsModel.updateChance(index, chance)
                         }
                     }
                 }
@@ -222,21 +218,21 @@ Item {
                     onAddNewAction: (newAction, chance) => {
                         console.log("Add new action: ", newAction)
 
-                        actionsModel.addNewAction(newAction, chance);
+                        Config.predefinedActionsModel.addNewAction(newAction, chance);
                     }
 
                     Component.onCompleted: {
-                        actionsModel.onActionAdded.connect(function(action) {
+                        Config.predefinedActionsModel.onActionAdded.connect(function(action) {
                             addActionDialog.onActionAdded(action)
                         })
-                        actionsModel.onActionRemoved.connect(function(action) {
+                        Config.predefinedActionsModel.onActionRemoved.connect(function(action) {
                             addActionDialog.onActionRemoved(action)
                         })
                     }
                 }
 
                 onClicked: {
-                    addActionDialog.setupDialog(actionsModel.getActions())
+                    addActionDialog.setupDialog(Config.predefinedActionsModel.getActions())
                     addActionDialog.open()
                 }
             }

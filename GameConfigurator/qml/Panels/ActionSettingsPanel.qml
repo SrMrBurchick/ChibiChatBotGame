@@ -9,12 +9,87 @@ import Base
 import Managers
 import TwitchModels
 import ActionsManagerComponent
+import Dialogs
 
 Item {
     id: root
     anchors.fill: parent
     property ActionConfig actionConfig
     property string actionName
+
+    Component {
+        id: helperDelegate
+        Rectangle {
+            color: "transparent"
+            width: helperKey.width + helperValue.width + 40
+            height: 50
+            RowLayout {
+                anchors.fill: parent
+                spacing: 5
+                BaseText {
+                    id: helperKey
+                    text: key
+                    color: Style.textColor
+                    font.pixelSize: 40
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                }
+                BaseText {
+                    text: " - "
+                    color: Style.textColor
+                    font.pixelSize: 40
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                }
+
+                BaseText {
+                    id: helperValue
+                    text: value
+                    color: Style.textColor
+                    font.pixelSize: 40
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                }
+            }
+        }
+    }
+
+    ListModel {
+        id: helperContent
+        ListElement {
+            key: "{user}"
+            value: "NickName of the user that invokes reward, or banned/unbanend/moderAdd/moderremoveuser. Or raider channel name"
+        }
+        ListElement {
+            key: "{admin}"
+            value: "For ban, name of the admin that was granted ban/unban/modderadd/moderremove"
+        }
+        ListElement {
+            key: "{timeout}"
+            value: "Timeout for ban/unban"
+        }
+        ListElement {
+            key: "{gifter}"
+            value: "User nickname that was gift a sub"
+        }
+        ListElement {
+            key: "{viewers}"
+            value: "Raid viewers count"
+        }
+        ListElement {
+            key: "{message}"
+            value: "User input"
+        }
+    }
+
+    ShowHelpDialog {
+        id: helpDialog
+        customDelegate: helperDelegate
+        customModel: helperContent
+    }
 
     Component {
         id: baseSettings
@@ -25,6 +100,7 @@ Item {
                 Layout.fillWidth: true
                 Layout.margins: 10
 
+                isHelp: true
                 fieldName: "Text:"
                 fieldDescription: "Text that should appear if action is execute"
                 defaultText: actionConfig ? actionConfig.text : ""
@@ -32,6 +108,9 @@ Item {
                     if (actionConfig) {
                         actionConfig.text = text
                     }
+                }
+                onHelpClicked:{
+                    helpDialog.open()
                 }
             }
 

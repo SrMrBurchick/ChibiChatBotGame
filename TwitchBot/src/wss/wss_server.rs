@@ -33,14 +33,19 @@ pub async fn run_wss_server(config: Config, mut receiver : RequestReceiver) {
                                     Ok(action) => {
                                         println!("Received action: {:?}", action.clone());
                                         match client_tx.send_message(&websocket::Message::text(action.get_action_json().to_string())) {
-                                            Ok(_) => {},
-                                            Err(_) => {
+                                            Ok(_) => {
+                                                println!("Message successfully sended");
+                                            },
+                                            Err(e) => {
+                                                println!("Failed to send message to client: {:?}", e);
                                                 break;
                                             },
                                         }
-
                                     },
-                                    Err(_) => {},
+                                    Err(e) => {
+                                        println!("Failed to received action, reason = {:?}", e);
+                                        break;
+                                    },
                                 }
                             }
                         });

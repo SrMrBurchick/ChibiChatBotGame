@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_rapier2d::na::ComplexField;
 use rand::prelude::*;
 use crate::components::{
     actions::ActionType,
@@ -42,22 +43,33 @@ impl AIComponent {
         info!("Add new Action: {:?} with chance {:?} %", action, weight);
         let action_comp = AIActionComponent{
             action,
-            weight: weight as f32 / 100.0
+            weight: weight as f32
         };
 
         if !self.actions.contains(&action_comp) {
             self.total_weight += action_comp.weight;
-            info!("Total weight {:?} %", self.total_weight);
             self.actions.push(action_comp);
+        }
+
+        self.actions.sort_by(|a, b| a.weight.total_cmp(&b.weight));
+        info!("Predefined actions: {:?}", self.actions);
+    }
+
+    pub fn normalize_chances(&mut self) {
+        if (self.total_weight - 100.0).abs() > std::f32::EPSILON {
+            for action in self.actions.iter_mut() {
+                action.weight = (action.weight / self.total_weight) * 100.0;
+            }
         }
     }
 
     pub fn generate_action(&self) -> ActionType {
         let mut rand = rand::thread_rng();
-        let new_action_weight = rand.gen_range(0.0.. if self.actions.len() == 1 { 100.0 } else {self.total_weight});
+        let new_action_weight = rand.gen_range(0.0..100.0);
         let mut cumulative_weight = 0.0;
         for action in self.actions.iter() {
             cumulative_weight += action.weight;
+            info!("Try to chose action {:?}, CurrentWeight = {}, Cumulative = {}", action, new_action_weight, cumulative_weight);
             if new_action_weight < cumulative_weight {
                 return action.action.clone();
             }

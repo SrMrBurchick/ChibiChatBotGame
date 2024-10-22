@@ -13,6 +13,7 @@ Rectangle {
     property string fieldDescription: ""
     property RegularExpressionValidator typeValidator: RegularExpressionValidator{}
     property bool isEditable: true
+    property bool isHelp: false
 
     color: Style.propertyDelegateBGColor
     border.color: Style.propertyDelegateBorderColor
@@ -56,14 +57,31 @@ Rectangle {
         anchors.centerIn: root
 
         BaseText {
+            id: description
             text: fieldName
             Layout.margins: 10
             font.pixelSize : 24
         }
+
         Rectangle {
-            opacity: 0
-            Layout.fillWidth: true
+            visible: isHelp
+            Layout.margins: 2
+            height: description.height
+            width: description.height
+            color: "transparent"
+            Image {
+                anchors.fill: parent
+                source: Style.questionIcon
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    helpClicked()
+                }
+            }
         }
+
 
         Loader {
             id: contentLoader
@@ -77,5 +95,6 @@ Rectangle {
 
 
     signal valueChanged(string text)
+    signal helpClicked()
 }
 

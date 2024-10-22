@@ -117,3 +117,8 @@ void PredefinedActionsListModel::updateChance(const int Index, const int Chance)
 
     PredefinedActionsList[Index].Chance = Chance;
 }
+
+const QVector<PredefinedAction>& PredefinedActionsListModel::GetActionsList() const
+{
+    return PredefinedActionsList;
+}

@@ -91,7 +91,7 @@ constexpr char ACTION_CONFIG_TEXT_SIZE[] = "size";
 ConfigObject::ConfigObject(QObject* Parent)
     : QObject(Parent)
 {
-
+    PredefinedActionsModel = QPointer<PredefinedActionsListModel>(new PredefinedActionsListModel());
 }
 
 ConfigObject::~ConfigObject()
@@ -192,14 +192,10 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     }
 
     // Init predefined actions
-    if (!JsonPredefinedActions.isEmpty()) {
+    if (!JsonPredefinedActions.isEmpty() && !PredefinedActionsModel.isNull()) {
         for (QJsonValueConstRef Item : JsonPredefinedActions) {
             QJsonObject JsonAction = Item.toObject();
-            PredefinedAction Action;
-            Action.ActionName = JsonAction[PREDEFINED_ACTIONS_ITEM_ACTION].toString();
-            Action.Chance = JsonAction[PREDEFINED_ACTIONS_ITEM_CHANCE].toInt();
-
-            PredefinedActionsList.push_back(Action);
+            PredefinedActionsModel->addNewAction(JsonAction[PREDEFINED_ACTIONS_ITEM_ACTION].toString(), JsonAction[PREDEFINED_ACTIONS_ITEM_CHANCE].toInt());
         }
     }
 
@@ -246,11 +242,13 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     JsonMessageSettings[MESSAGE_TEXT_BORDER_COLOR] = SystemSettings.Message.MessageBorderColor.name();
 
     // Predefined actions
-    for (const PredefinedAction& Action : PredefinedActionsList) {
-        QJsonObject JsonAction;
-        JsonAction[PREDEFINED_ACTIONS_ITEM_ACTION] = Action.ActionName;
-        JsonAction[PREDEFINED_ACTIONS_ITEM_CHANCE] = Action.Chance;
-        JsonPredefinedActions.push_back(JsonAction);
+    if (!PredefinedActionsModel.isNull()) {
+        for (const PredefinedAction& Action : PredefinedActionsModel->GetActionsList()) {
+            QJsonObject JsonAction;
+            JsonAction[PREDEFINED_ACTIONS_ITEM_ACTION] = Action.ActionName;
+            JsonAction[PREDEFINED_ACTIONS_ITEM_CHANCE] = Action.Chance;
+            JsonPredefinedActions.push_back(JsonAction);
+        }
     }
 
     QJsonObject Config;

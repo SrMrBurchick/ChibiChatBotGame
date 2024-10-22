@@ -90,24 +90,25 @@ pub fn message_system(
                     commands.entity(entity).despawn_recursive();
                     continue;
                 }
+
                 //
                 // // TODO: Move message above character if player is not on the to border
                 // // Disable to message go through borders
-                // transform.translation = player_transform.translation;
+                transform.translation = player_transform.translation;
                 // transform.translation.y += text_info.logical_size.y;
                 //
-                // match config_query.get_single() {
-                //     Ok(config) => {
-                //         match config.get_sprite_size() {
-                //             Ok(sprite_size) => {
-                //                 let offset = sprite_size.height as f32 * player_transform.scale.y;
-                //                 transform.translation.y += offset;
-                //             },
-                //             Err(_) => {},
-                //         }
-                //     },
-                //     Err(_) => {},
-                // }
+                match config_query.get_single() {
+                    Ok(config) => {
+                        match config.get_sprite_size() {
+                            Ok(sprite_size) => {
+                                let offset = sprite_size.height as f32 * player_transform.scale.y;
+                                transform.translation.y += offset;
+                            },
+                            Err(_) => {},
+                        }
+                    },
+                    Err(_) => {},
+                }
             }
 
             if is_finished {

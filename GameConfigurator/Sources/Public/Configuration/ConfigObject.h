@@ -142,6 +142,7 @@ class ConfigObject : public QObject {
     Q_PROPERTY(SpriteSize* spriteSize READ getSpriteSize)
     Q_PROPERTY(TableSize* tableSize READ getTableSize)
     Q_PROPERTY(SystemConfig* systemConfig READ getSystemConfig)
+    Q_PROPERTY(PredefinedActionsListModel* predefinedActionsModel READ getPredefinedActionsModel)
 
 public:
     explicit ConfigObject(QObject* Parent = nullptr);
@@ -175,6 +176,12 @@ public:
         return OutSystemConfig;
     }
 
+    PredefinedActionsListModel* getPredefinedActionsModel() {
+        PredefinedActionsListModel* OutModel = PredefinedActionsModel.get();
+        QQmlEngine::setObjectOwnership(OutModel, QQmlEngine::CppOwnership);
+        return OutModel;
+    }
+
     //============================ QML ========================================
     // Modifiers
     Q_INVOKABLE void saveConfig();
@@ -197,14 +204,12 @@ protected:
     SpriteSize SpriteSettings;
     TableSize TableSettings;
     SystemConfig SystemSettings;
+    QPointer<PredefinedActionsListModel> PredefinedActionsModel;
 
     // List of the animations
     ActionsMap Map;
 
     QJsonArray ActionsArray;
-
-    // List of the predefined actions
-    QVector<PredefinedAction> PredefinedActionsList;
 
     bool bIsBusy = false;
 };

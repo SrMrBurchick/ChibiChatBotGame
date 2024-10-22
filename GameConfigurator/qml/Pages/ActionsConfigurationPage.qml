@@ -111,7 +111,7 @@ Item {
 
         // Right panel
         ColumnLayout {
-            Layout.maximumWidth: 400
+            Layout.maximumWidth: 600
             anchors.margins: 0
 
             BasePanel {
