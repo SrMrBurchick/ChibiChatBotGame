@@ -30,13 +30,6 @@ jobs:
         Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
       shell: powershell
 
-    # Run a PowerShell script (can be used to build or test your project)
-    - name: Install scoop.sh
-      run: |
-        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-        Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-      shell: powershell
-
     # Install dependencies (if any, using Chocolatey for example)
     - name: Install dependencies
       run: |
