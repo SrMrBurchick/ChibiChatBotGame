@@ -13,11 +13,8 @@ on:
 # Define the job
 jobs:
   build:
-
     # Specify the OS and the type of runner (self-hosted, windows)
     runs-on: self-hosted
-    # Alternatively, if you have labeled your runner, you can use:
-    # runs-on: [self-hosted, windows]
 
     steps:
     # Checkout the repository code
@@ -26,102 +23,94 @@ jobs:
       with:
         submodules: 'true'  # Automatically initialize and update submodules
 
-
+    # Set up environment variables
     - name: Set up environment variables
+      shell: pwsh
       run: |
-        echo "PROJECT_LOCATION=${{ github.workspace }}" >> $GITHUB_ENV
-        echo "WASM_SERVER_RUNNER=${{ github.workspace }}/tools/wasm-server-runner" >> $GITHUB_ENV
-        echo "GAME_CONFIGURATOR=${{ github.workspace }}/GameConfigurator" >> $GITHUB_ENV
-        echo "GAME=${{ github.workspace }}/ChibiGame" >> $GITHUB_ENV
-        echo "TWITCH_BOT=${{ github.workspace }}/TwitchBot" >> $GITHUB_ENV
-        echo "PACKAGE_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame" >> $GITHUB_ENV
-        echo "PACKAGE_GAME_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame/Game" >> $GITHUB_ENV
-        echo "PACKAGE_TOOLS_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame/Tools" >> $GITHUB_ENV
-      shell: cmd
+        $env:PROJECT_LOCATION = "${{ github.workspace }}"
+        $env:WASM_SERVER_RUNNER = "${{ github.workspace }}/tools/wasm-server-runner"
+        $env:GAME_CONFIGURATOR = "${{ github.workspace }}/GameConfigurator"
+        $env:GAME = "${{ github.workspace }}/ChibiGame"
+        $env:TWITCH_BOT = "${{ github.workspace }}/TwitchBot"
+        $env:PACKAGE_DIRECTORY = "${{ github.workspace }}/ChibiChatBotGame"
+        $env:PACKAGE_GAME_DIRECTORY = "${{ github.workspace }}/ChibiChatBotGame/Game"
+        $env:PACKAGE_TOOLS_DIRECTORY = "${{ github.workspace }}/ChibiChatBotGame/Tools"
 
-    - name: Setup Package folder
+    # Setup Package folders
+    - name: Setup Package folders
+      shell: pwsh
       run: |
-        if [ ! -d "$PACKAGE_DIRECTORY" ]; then
-          mkdir -p "$PACKAGE_DIRECTORY"
-          echo "Created PACKAGE_DIRECTORY: $PACKAGE_DIRECTORY"
-        else
-          echo "PACKAGE_DIRECTORY already exists: $PACKAGE_DIRECTORY"
-        fi
+        $directories = @(
+            $env:PACKAGE_DIRECTORY,
+            $env:PACKAGE_GAME_DIRECTORY,
+            $env:PACKAGE_TOOLS_DIRECTORY
+        )
 
-        if [ ! -d "$PACKAGE_GAME_DIRECTORY" ]; then
-          mkdir -p "$PACKAGE_GAME_DIRECTORY"
-          echo "Created PACKAGE_GAME_DIRECTORY: $PACKAGE_GAME_DIRECTORY"
-        else
-          echo "PACKAGE_GAME_DIRECTORY already exists: $PACKAGE_GAME_DIRECTORY"
-        fi
+        foreach ($directory in $directories) {
+            if (-not (Test-Path -Path $directory)) {
+                New-Item -ItemType Directory -Path $directory
+                Write-Host "Created directory: $directory"
+            } else {
+                Write-Host "Directory already exists: $directory"
+            }
+        }
 
-        if [ ! -d "$PACKAGE_TOOLS_DIRECTORY" ]; then
-          mkdir -p "$PACKAGE_TOOLS_DIRECTORY"
-          echo "Created PACKAGE_TOOLS_DIRECTORY: $PACKAGE_TOOLS_DIRECTORY"
-        else
-          echo "PACKAGE_TOOLS_DIRECTORY already exists: $PACKAGE_TOOLS_DIRECTORY"
-        fi
-      shell: cmd
-
+    # Build Twitch Bot
     - name: Build Twitch Bot
+      shell: pwsh
       run: |
-        set TWITCH_BOT_LOCATION=${{ github.workspace }}/TwitchBot
-        set PACKAGE_LOCATION=${{ env.PACKAGE_DIRECTORY }}
-        set TWITCH_BOT="%TWITCH_BOT_LOCATION%\\target\\release\\TwitchBot.exe"
+        $TWITCH_BOT_LOCATION = "${{ github.workspace }}/TwitchBot"
+        $PACKAGE_LOCATION = $env:PACKAGE_DIRECTORY
+        $TWITCH_BOT = "$TWITCH_BOT_LOCATION\target\release\TwitchBot.exe"
 
-        cd "$TWITCH_BOT_LOCATION"
-
+        Set-Location -Path $TWITCH_BOT_LOCATION
         cargo build --release
 
-        echo Copying Twitch Bot from $TWITCH_BOT to $PACKAGE_LOCATION
-        copy $TWITCH_BOT $PACKAGE_LOCATION
-      shell: cmd
+        Write-Host "Copying Twitch Bot from $TWITCH_BOT to $PACKAGE_LOCATION"
+        Copy-Item -Path $TWITCH_BOT -Destination $PACKAGE_LOCATION -Force
 
+    # Build Chibi Game
     - name: Build Chibi Game
+      shell: pwsh
       run: |
-        GAME_LOCATION=${{ github.workspace }}/ChibiGame
-        PACKAGE_LOCATION=${{ env.PACKAGE_GAME_DIRECTORY }}
+        $GAME_LOCATION = "${{ github.workspace }}/ChibiGame"
+        $PACKAGE_LOCATION = $env:PACKAGE_GAME_DIRECTORY
 
-        cd "$GAME_LOCATION"
-
+        Set-Location -Path $GAME_LOCATION
         cargo build --target wasm32-unknown-unknown --release
 
-        echo Copying ChibiGame.wasm to $PACKAGE_LOCATION
-        cp "${GAME_LOCATION}/target/wasm32-unknown-unknown/release/ChibiGame.wasm" "$PACKAGE_LOCATION"
-        cp -r "${GAME_LOCATION}/assets/fonts" "${PACKAGE_LOCATION}/assets"
-      shell: cmd
+        Write-Host "Copying ChibiGame.wasm to $PACKAGE_LOCATION"
+        Copy-Item -Path "$GAME_LOCATION\target\wasm32-unknown-unknown\release\ChibiGame.wasm" -Destination $PACKAGE_LOCATION -Force
+        Copy-Item -Path "$GAME_LOCATION\assets\fonts" -Destination "$PACKAGE_LOCATION\assets" -Recurse -Force
 
-    # Step: Build Game Configurator
+    # Build Game Configurator
     - name: Build Game Configurator
+      shell: pwsh
       run: |
-        GAME_CONFIGURATOR_LOCATION=${{ github.workspace }}/GameConfigurator
-        PACKAGE_LOCATION=${{ env.PACKAGE_DIRECTORY }}
-        GAME_CONFIGURATOR="$GAME_CONFIGURATOR_LOCATION/build/release/GameConfigurator.exe"
-        PACKAGED_CONFIGURATOR="$PACKAGE_LOCATION/GameConfigurator.exe"
+        $GAME_CONFIGURATOR_LOCATION = "${{ github.workspace }}/GameConfigurator"
+        $PACKAGE_LOCATION = $env:PACKAGE_DIRECTORY
+        $GAME_CONFIGURATOR = "$GAME_CONFIGURATOR_LOCATION\build\release\GameConfigurator.exe"
+        $PACKAGED_CONFIGURATOR = "$PACKAGE_LOCATION\GameConfigurator.exe"
 
-        cd "$GAME_CONFIGURATOR_LOCATION"
-
+        Set-Location -Path $GAME_CONFIGURATOR_LOCATION
         qmake6 -makefile
-
         make -j4
 
-        echo "Copying GameConfigurator to package"
-        cp "$GAME_CONFIGURATOR" "$PACKAGE_LOCATION"
+        Write-Host "Copying GameConfigurator to package"
+        Copy-Item -Path $GAME_CONFIGURATOR -Destination $PACKAGE_LOCATION -Force
 
-        echo "Deploying configurator"
-        windeployqt --release --qmldir "$GAME_CONFIGURATOR_LOCATION/qml" --plugindir "$PACKAGE_LOCATION/Plugins" "$PACKAGED_CONFIGURATOR"
-      shell: cmd
+        Write-Host "Deploying configurator"
+        windeployqt --release --qmldir "$GAME_CONFIGURATOR_LOCATION\qml" --plugindir "$PACKAGE_LOCATION\Plugins" "$PACKAGED_CONFIGURATOR"
 
-    # Step: Build WASM Runner
+    # Build WASM Runner
     - name: Build WASM Runner
+      shell: pwsh
       run: |
-        WASM_RUNNER_LOCATION=${{ github.workspace }}/tools/wasm-server-runner
-        PACKAGE_LOCATION=${{ env.PACKAGE_TOOLS_DIRECTORY }}
+        $WASM_RUNNER_LOCATION = "${{ github.workspace }}/tools/wasm-server-runner"
+        $PACKAGE_LOCATION = $env:PACKAGE_TOOLS_DIRECTORY
 
-        cd "$WASM_RUNNER_LOCATION"
-
+        Set-Location -Path $WASM_RUNNER_LOCATION
         cargo build --release
 
-        echo "Copying wasm-server-runner to package location"
-        cp "$WASM_RUNNER_LOCATION/target/release/wasm-server-runner" "$PACKAGE_LOCATION"
-      shell: cmd
+        Write-Host "Copying wasm-server-runner to package location"
+        Copy-Item -Path "$WASM_RUNNER_LOCATION\target\release\wasm-server-runner" -Destination $PACKAGE_LOCATION -Force
