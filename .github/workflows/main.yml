@@ -25,7 +25,7 @@ jobs:
 
     # Set up environment variables
     - name: Set up environment variables
-      shell: pwsh
+      shell: powershell
       run: |
         $env:PROJECT_LOCATION = "${{ github.workspace }}"
         $env:WASM_SERVER_RUNNER = "${{ github.workspace }}/tools/wasm-server-runner"
@@ -38,7 +38,7 @@ jobs:
 
     # Setup Package folders
     - name: Setup Package folders
-      shell: pwsh
+      shell: powershell
       run: |
         $directories = @(
             $env:PACKAGE_DIRECTORY,
@@ -57,7 +57,7 @@ jobs:
 
     # Build Twitch Bot
     - name: Build Twitch Bot
-      shell: pwsh
+      shell: powershell
       run: |
         $TWITCH_BOT_LOCATION = "${{ github.workspace }}/TwitchBot"
         $PACKAGE_LOCATION = $env:PACKAGE_DIRECTORY
@@ -71,7 +71,7 @@ jobs:
 
     # Build Chibi Game
     - name: Build Chibi Game
-      shell: pwsh
+      shell: powershell
       run: |
         $GAME_LOCATION = "${{ github.workspace }}/ChibiGame"
         $PACKAGE_LOCATION = $env:PACKAGE_GAME_DIRECTORY
@@ -85,7 +85,7 @@ jobs:
 
     # Build Game Configurator
     - name: Build Game Configurator
-      shell: pwsh
+      shell: powershell
       run: |
         $GAME_CONFIGURATOR_LOCATION = "${{ github.workspace }}/GameConfigurator"
         $PACKAGE_LOCATION = $env:PACKAGE_DIRECTORY
@@ -104,7 +104,7 @@ jobs:
 
     # Build WASM Runner
     - name: Build WASM Runner
-      shell: pwsh
+      shell: powershell
       run: |
         $WASM_RUNNER_LOCATION = "${{ github.workspace }}/tools/wasm-server-runner"
         $PACKAGE_LOCATION = $env:PACKAGE_TOOLS_DIRECTORY
