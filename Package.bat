@@ -7,7 +7,7 @@ set PROJECT_LOCATION=%~dp0
 set WASM_SERVER_RUNNER=%~dp0tools/wasm-server-runner
 set GAME_CONFIGURATOR=%~dp0GameConfigurator
 set GAME=%~dp0ChibiGame
-set CHAT_BOT=%~dp0ChatBot
+set TWITCH_BOT=%~dp0TwitchBot
 
 rem Install submodule...
 echo Setup submodules...
@@ -32,25 +32,12 @@ if not exist %PACKAGE_TOOLS_DIRECTORY% (
 )
 
 rem Setup requirements
-echo "Setup scoop"
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+echo "Install rust requirements"
+rustup target add wasm32-unknown-unknown
 
-echo "Install QT"
-scoop install extras/qt-creator
-
-echo "Install RUST"
-scoop install main/rust
-
-echo "Install python"
-scoop install main/python
-
-echo "Install pyinstaller"
-python -m pip install pyinstaller
-
-rem Build chat bot
-echo Build chat bot
-call "%~dp0tools/Scripts/Build/Win64/BuildChatBot.bat" %CHAT_BOT% %PACKAGE_DIRECTORY%
+rem Build twitch bot
+echo Build twitch bot
+call "%~dp0tools/Scripts/Build/Win64/BuildTwitchBot.bat" %TWITCH_BOT% %PACKAGE_DIRECTORY%
 
 rem Build chibi game
 echo Build chibi game

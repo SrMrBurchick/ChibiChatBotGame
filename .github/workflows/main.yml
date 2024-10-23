@@ -25,31 +25,25 @@ jobs:
       uses: actions/checkout@v3
 
     # Set the PowerShell execution policy to allow scripts to run
-    - name: Set PowerShell execution policy
-      run: |
-        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-      shell: powershell
-
-    # Install dependencies (if any, using Chocolatey for example)
-    - name: Install dependencies
-      run: |
-        scoop bucket add main
-        scoop install main/git
-        scoop install main/cmake
-        scoop bucket add extras
-        scoop install extras/qt-creator
-        scoop install main/rust
-        scoop install main/rustup
-      shell: powershell
-
-    # # Example of a build step (assuming you're building with MSBuild)
-    # - name: Build Solution
+    # - name: Set PowerShell execution policy
     #   run: |
-    #     msbuild.exe YourSolution.sln /p:Configuration=Release
-    #   shell: cmd
+    #     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+    #   shell: powershell
     #
-    # # Run tests (modify according to your test setup)
-    # - name: Run Unit Tests
+    # # Install dependencies (if any, using Chocolatey for example)
+    # - name: Install dependencies
     #   run: |
-    #     .\path\to\test\binary.exe --run-tests
-    #   shell: cmd
+    #     scoop bucket add main
+    #     scoop install main/git
+    #     scoop install main/cmake
+    #     scoop bucket add extras
+    #     scoop install extras/qt-creator
+    #     scoop install main/rust
+    #     scoop install main/rustup
+    #   shell: powershell
+
+    # Run package
+    - name: Build package
+      run: |
+        ./Package.bat
+      shell: powershell
