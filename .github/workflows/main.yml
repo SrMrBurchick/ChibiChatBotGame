@@ -23,6 +23,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # Set the PowerShell execution policy to allow scripts to run
+    - name: Set PowerShell execution policy
+      run: |
+        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+      shell: powershell
+
     # Run a PowerShell script (can be used to build or test your project)
     - name: Install scoop.sh
       run: |
