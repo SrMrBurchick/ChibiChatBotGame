@@ -1,6 +1,7 @@
 name: Windows Release
 jobs:
   build:
+      runs-on: shindows
       steps:
       - name: Run Test
       - run: echo Tobi pizda
