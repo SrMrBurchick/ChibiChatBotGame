@@ -1,7 +1,51 @@
-name: Windows Release
+name: Windows Self-hosted CI
+
+# Trigger the workflow on push or pull request
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+# Define the job
 jobs:
   build:
-      runs-on: shindows
-      steps:
-      - name: Run Test
-      - run: echo Tobi pizda
+
+    # Specify the OS and the type of runner (self-hosted, windows)
+    runs-on: self-hosted
+    # Alternatively, if you have labeled your runner, you can use:
+    # runs-on: [self-hosted, windows]
+
+    steps:
+    # Checkout the repository code
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Run a PowerShell script (can be used to build or test your project)
+    - name: Run PowerShell script
+      run: |
+        Write-Host "Running on self-hosted Windows runner"
+        Write-Host "Directory listing:"
+        Get-ChildItem
+      shell: powershell
+
+    # Install dependencies (if any, using Chocolatey for example)
+    - name: Install dependencies
+      run: |
+        choco install git
+        choco install cmake
+      shell: powershell
+
+    # Example of a build step (assuming you're building with MSBuild)
+    - name: Build Solution
+      run: |
+        msbuild.exe YourSolution.sln /p:Configuration=Release
+      shell: cmd
+
+    # Run tests (modify according to your test setup)
+    - name: Run Unit Tests
+      run: |
+        .\path\to\test\binary.exe --run-tests
+      shell: cmd
