@@ -37,6 +37,7 @@ jobs:
         echo "PACKAGE_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame" >> $GITHUB_ENV
         echo "PACKAGE_GAME_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame/Game" >> $GITHUB_ENV
         echo "PACKAGE_TOOLS_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame/Tools" >> $GITHUB_ENV
+      shell: cmd
 
     # Step 3: Setup Package directory
     - name: Setup Package folder
@@ -44,6 +45,7 @@ jobs:
         mkdir -p $PACKAGE_DIRECTORY
         mkdir -p $PACKAGE_GAME_DIRECTORY
         mkdir -p $PACKAGE_TOOLS_DIRECTORY
+      shell: cmd
 
     - name: Build Twitch Bot
       run: |
@@ -61,6 +63,7 @@ jobs:
         # Copy chat bot to package
         echo Copying Twitch Bot from $TWITCH_BOT to $PACKAGE_LOCATION
         copy $TWITCH_BOT $PACKAGE_LOCATION
+      shell: cmd
 
     - name: Build Chibi Game
       run: |
@@ -78,6 +81,7 @@ jobs:
         echo Copying ChibiGame.wasm to $PACKAGE_LOCATION
         cp "${GAME_LOCATION}/target/wasm32-unknown-unknown/release/ChibiGame.wasm" "$PACKAGE_LOCATION"
         cp -r "${GAME_LOCATION}/assets/fonts" "${PACKAGE_LOCATION}/assets"
+      shell: cmd
 
     # Step: Build Game Configurator
     - name: Build Game Configurator
@@ -104,6 +108,7 @@ jobs:
         # Deploy configurator
         echo "Deploying configurator"
         windeployqt --release --qmldir "$GAME_CONFIGURATOR_LOCATION/qml" --plugindir "$PACKAGE_LOCATION/Plugins" "$PACKAGED_CONFIGURATOR"
+      shell: cmd
 
     # Step: Build WASM Runner
     - name: Build WASM Runner
@@ -121,3 +126,4 @@ jobs:
         # Copy binary to the package folder
         echo "Copying wasm-server-runner to package location"
         cp "$WASM_RUNNER_LOCATION/target/release/wasm-server-runner" "$PACKAGE_LOCATION"
+      shell: cmd
