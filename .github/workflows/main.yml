@@ -41,7 +41,6 @@ jobs:
 
     - name: Setup Package folder
       run: |
-        # Check if PACKAGE_DIRECTORY does not exist, then create it
         if [ ! -d "$PACKAGE_DIRECTORY" ]; then
           mkdir -p "$PACKAGE_DIRECTORY"
           echo "Created PACKAGE_DIRECTORY: $PACKAGE_DIRECTORY"
@@ -49,7 +48,6 @@ jobs:
           echo "PACKAGE_DIRECTORY already exists: $PACKAGE_DIRECTORY"
         fi
 
-        # Check if PACKAGE_GAME_DIRECTORY does not exist, then create it
         if [ ! -d "$PACKAGE_GAME_DIRECTORY" ]; then
           mkdir -p "$PACKAGE_GAME_DIRECTORY"
           echo "Created PACKAGE_GAME_DIRECTORY: $PACKAGE_GAME_DIRECTORY"
@@ -57,7 +55,6 @@ jobs:
           echo "PACKAGE_GAME_DIRECTORY already exists: $PACKAGE_GAME_DIRECTORY"
         fi
 
-        # Check if PACKAGE_TOOLS_DIRECTORY does not exist, then create it
         if [ ! -d "$PACKAGE_TOOLS_DIRECTORY" ]; then
           mkdir -p "$PACKAGE_TOOLS_DIRECTORY"
           echo "Created PACKAGE_TOOLS_DIRECTORY: $PACKAGE_TOOLS_DIRECTORY"
@@ -68,35 +65,27 @@ jobs:
 
     - name: Build Twitch Bot
       run: |
-        # Init environments
         set TWITCH_BOT_LOCATION=${{ github.workspace }}/TwitchBot
         set PACKAGE_LOCATION=${{ env.PACKAGE_DIRECTORY }}
         set TWITCH_BOT="%TWITCH_BOT_LOCATION%\\target\\release\\TwitchBot.exe"
 
-        # Go to chat bot location
         cd "$TWITCH_BOT_LOCATION"
 
-        # Build
         cargo build --release
 
-        # Copy chat bot to package
         echo Copying Twitch Bot from $TWITCH_BOT to $PACKAGE_LOCATION
         copy $TWITCH_BOT $PACKAGE_LOCATION
       shell: cmd
 
     - name: Build Chibi Game
       run: |
-        # Init environments
         GAME_LOCATION=${{ github.workspace }}/ChibiGame
         PACKAGE_LOCATION=${{ env.PACKAGE_GAME_DIRECTORY }}
 
-        # Go to game location
         cd "$GAME_LOCATION"
 
-        # Build
         cargo build --target wasm32-unknown-unknown --release
 
-        # Copy game to package
         echo Copying ChibiGame.wasm to $PACKAGE_LOCATION
         cp "${GAME_LOCATION}/target/wasm32-unknown-unknown/release/ChibiGame.wasm" "$PACKAGE_LOCATION"
         cp -r "${GAME_LOCATION}/assets/fonts" "${PACKAGE_LOCATION}/assets"
@@ -105,26 +94,20 @@ jobs:
     # Step: Build Game Configurator
     - name: Build Game Configurator
       run: |
-        # Init environments
         GAME_CONFIGURATOR_LOCATION=${{ github.workspace }}/GameConfigurator
         PACKAGE_LOCATION=${{ env.PACKAGE_DIRECTORY }}
         GAME_CONFIGURATOR="$GAME_CONFIGURATOR_LOCATION/build/release/GameConfigurator.exe"
         PACKAGED_CONFIGURATOR="$PACKAGE_LOCATION/GameConfigurator.exe"
 
-        # Go to game configurator location
         cd "$GAME_CONFIGURATOR_LOCATION"
 
-        # Generate makefile
         qmake6 -makefile
 
-        # Build
         make -j4
 
-        # Copy GameConfigurator to package
         echo "Copying GameConfigurator to package"
         cp "$GAME_CONFIGURATOR" "$PACKAGE_LOCATION"
 
-        # Deploy configurator
         echo "Deploying configurator"
         windeployqt --release --qmldir "$GAME_CONFIGURATOR_LOCATION/qml" --plugindir "$PACKAGE_LOCATION/Plugins" "$PACKAGED_CONFIGURATOR"
       shell: cmd
@@ -132,17 +115,13 @@ jobs:
     # Step: Build WASM Runner
     - name: Build WASM Runner
       run: |
-        # Init environments
         WASM_RUNNER_LOCATION=${{ github.workspace }}/tools/wasm-server-runner
         PACKAGE_LOCATION=${{ env.PACKAGE_TOOLS_DIRECTORY }}
 
-        # Go to wasm server runner location
         cd "$WASM_RUNNER_LOCATION"
 
-        # Build
         cargo build --release
 
-        # Copy binary to the package folder
         echo "Copying wasm-server-runner to package location"
         cp "$WASM_RUNNER_LOCATION/target/release/wasm-server-runner" "$PACKAGE_LOCATION"
       shell: cmd
