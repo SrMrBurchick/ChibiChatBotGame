@@ -39,12 +39,31 @@ jobs:
         echo "PACKAGE_TOOLS_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame/Tools" >> $GITHUB_ENV
       shell: cmd
 
-    # Step 3: Setup Package directory
     - name: Setup Package folder
       run: |
-        mkdir -p $PACKAGE_DIRECTORY
-        mkdir -p $PACKAGE_GAME_DIRECTORY
-        mkdir -p $PACKAGE_TOOLS_DIRECTORY
+        # Check if PACKAGE_DIRECTORY does not exist, then create it
+        if [ ! -d "$PACKAGE_DIRECTORY" ]; then
+          mkdir -p "$PACKAGE_DIRECTORY"
+          echo "Created PACKAGE_DIRECTORY: $PACKAGE_DIRECTORY"
+        else
+          echo "PACKAGE_DIRECTORY already exists: $PACKAGE_DIRECTORY"
+        fi
+
+        # Check if PACKAGE_GAME_DIRECTORY does not exist, then create it
+        if [ ! -d "$PACKAGE_GAME_DIRECTORY" ]; then
+          mkdir -p "$PACKAGE_GAME_DIRECTORY"
+          echo "Created PACKAGE_GAME_DIRECTORY: $PACKAGE_GAME_DIRECTORY"
+        else
+          echo "PACKAGE_GAME_DIRECTORY already exists: $PACKAGE_GAME_DIRECTORY"
+        fi
+
+        # Check if PACKAGE_TOOLS_DIRECTORY does not exist, then create it
+        if [ ! -d "$PACKAGE_TOOLS_DIRECTORY" ]; then
+          mkdir -p "$PACKAGE_TOOLS_DIRECTORY"
+          echo "Created PACKAGE_TOOLS_DIRECTORY: $PACKAGE_TOOLS_DIRECTORY"
+        else
+          echo "PACKAGE_TOOLS_DIRECTORY already exists: $PACKAGE_TOOLS_DIRECTORY"
+        fi
       shell: cmd
 
     - name: Build Twitch Bot
