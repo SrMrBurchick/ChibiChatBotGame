@@ -23,27 +23,101 @@ jobs:
     # Checkout the repository code
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        submodules: 'true'  # Automatically initialize and update submodules
 
-    # Set the PowerShell execution policy to allow scripts to run
-    # - name: Set PowerShell execution policy
-    #   run: |
-    #     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-    #   shell: powershell
-    #
-    # # Install dependencies (if any, using Chocolatey for example)
-    # - name: Install dependencies
-    #   run: |
-    #     scoop bucket add main
-    #     scoop install main/git
-    #     scoop install main/cmake
-    #     scoop bucket add extras
-    #     scoop install extras/qt-creator
-    #     scoop install main/rust
-    #     scoop install main/rustup
-    #   shell: powershell
 
-    # Run package
-    - name: Build package
+    - name: Set up environment variables
       run: |
-        ./Package.bat
-      shell: powershell
+        echo "PROJECT_LOCATION=${{ github.workspace }}" >> $GITHUB_ENV
+        echo "WASM_SERVER_RUNNER=${{ github.workspace }}/tools/wasm-server-runner" >> $GITHUB_ENV
+        echo "GAME_CONFIGURATOR=${{ github.workspace }}/GameConfigurator" >> $GITHUB_ENV
+        echo "GAME=${{ github.workspace }}/ChibiGame" >> $GITHUB_ENV
+        echo "TWITCH_BOT=${{ github.workspace }}/TwitchBot" >> $GITHUB_ENV
+        echo "PACKAGE_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame" >> $GITHUB_ENV
+        echo "PACKAGE_GAME_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame/Game" >> $GITHUB_ENV
+        echo "PACKAGE_TOOLS_DIRECTORY=${{ github.workspace }}/ChibiChatBotGame/Tools" >> $GITHUB_ENV
+
+    # Step 3: Setup Package directory
+    - name: Setup Package folder
+      run: |
+        mkdir -p $PACKAGE_DIRECTORY
+        mkdir -p $PACKAGE_GAME_DIRECTORY
+        mkdir -p $PACKAGE_TOOLS_DIRECTORY
+
+    - name: Build Twitch Bot
+      run: |
+        # Init environments
+        set TWITCH_BOT_LOCATION=${{ github.workspace }}/TwitchBot
+        set PACKAGE_LOCATION=${{ env.PACKAGE_DIRECTORY }}
+        set TWITCH_BOT="%TWITCH_BOT_LOCATION%\\target\\release\\TwitchBot.exe"
+
+        # Go to chat bot location
+        cd "$TWITCH_BOT_LOCATION"
+
+        # Build
+        cargo build --release
+
+        # Copy chat bot to package
+        echo Copying Twitch Bot from $TWITCH_BOT to $PACKAGE_LOCATION
+        copy $TWITCH_BOT $PACKAGE_LOCATION
+
+    - name: Build Chibi Game
+      run: |
+        # Init environments
+        GAME_LOCATION=${{ github.workspace }}/ChibiGame
+        PACKAGE_LOCATION=${{ env.PACKAGE_GAME_DIRECTORY }}
+
+        # Go to game location
+        cd "$GAME_LOCATION"
+
+        # Build
+        cargo build --target wasm32-unknown-unknown --release
+
+        # Copy game to package
+        echo Copying ChibiGame.wasm to $PACKAGE_LOCATION
+        cp "${GAME_LOCATION}/target/wasm32-unknown-unknown/release/ChibiGame.wasm" "$PACKAGE_LOCATION"
+        cp -r "${GAME_LOCATION}/assets/fonts" "${PACKAGE_LOCATION}/assets"
+
+    # Step: Build Game Configurator
+    - name: Build Game Configurator
+      run: |
+        # Init environments
+        GAME_CONFIGURATOR_LOCATION=${{ github.workspace }}/GameConfigurator
+        PACKAGE_LOCATION=${{ env.PACKAGE_DIRECTORY }}
+        GAME_CONFIGURATOR="$GAME_CONFIGURATOR_LOCATION/build/release/GameConfigurator.exe"
+        PACKAGED_CONFIGURATOR="$PACKAGE_LOCATION/GameConfigurator.exe"
+
+        # Go to game configurator location
+        cd "$GAME_CONFIGURATOR_LOCATION"
+
+        # Generate makefile
+        qmake6 -makefile
+
+        # Build
+        make -j4
+
+        # Copy GameConfigurator to package
+        echo "Copying GameConfigurator to package"
+        cp "$GAME_CONFIGURATOR" "$PACKAGE_LOCATION"
+
+        # Deploy configurator
+        echo "Deploying configurator"
+        windeployqt --release --qmldir "$GAME_CONFIGURATOR_LOCATION/qml" --plugindir "$PACKAGE_LOCATION/Plugins" "$PACKAGED_CONFIGURATOR"
+
+    # Step: Build WASM Runner
+    - name: Build WASM Runner
+      run: |
+        # Init environments
+        WASM_RUNNER_LOCATION=${{ github.workspace }}/tools/wasm-server-runner
+        PACKAGE_LOCATION=${{ env.PACKAGE_TOOLS_DIRECTORY }}
+
+        # Go to wasm server runner location
+        cd "$WASM_RUNNER_LOCATION"
+
+        # Build
+        cargo build --release
+
+        # Copy binary to the package folder
+        echo "Copying wasm-server-runner to package location"
+        cp "$WASM_RUNNER_LOCATION/target/release/wasm-server-runner" "$PACKAGE_LOCATION"
