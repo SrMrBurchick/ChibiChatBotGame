@@ -24,28 +24,32 @@ jobs:
       uses: actions/checkout@v3
 
     # Run a PowerShell script (can be used to build or test your project)
-    - name: Run PowerShell script
+    - name: Install scoop.sh
       run: |
-        Write-Host "Running on self-hosted Windows runner"
-        Write-Host "Directory listing:"
-        Get-ChildItem
+        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+        Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
       shell: powershell
 
     # Install dependencies (if any, using Chocolatey for example)
     - name: Install dependencies
       run: |
-        choco install git
-        choco install cmake
+        scoop bucket add main
+        scoop install main/git
+        scoop install main/cmake
+        scoop bucket add extras
+        scoop install extras/qt-creator
+        scoop install main/rust
+        scoop install main/rustup
       shell: powershell
 
-    # Example of a build step (assuming you're building with MSBuild)
-    - name: Build Solution
-      run: |
-        msbuild.exe YourSolution.sln /p:Configuration=Release
-      shell: cmd
-
-    # Run tests (modify according to your test setup)
-    - name: Run Unit Tests
-      run: |
-        .\path\to\test\binary.exe --run-tests
-      shell: cmd
+    # # Example of a build step (assuming you're building with MSBuild)
+    # - name: Build Solution
+    #   run: |
+    #     msbuild.exe YourSolution.sln /p:Configuration=Release
+    #   shell: cmd
+    #
+    # # Run tests (modify according to your test setup)
+    # - name: Run Unit Tests
+    #   run: |
+    #     .\path\to\test\binary.exe --run-tests
+    #   shell: cmd
