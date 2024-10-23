@@ -36,19 +36,22 @@ jobs:
         $env:PACKAGE_GAME_DIRECTORY = "${{ github.workspace }}/ChibiChatBotGame/Game"
         $env:PACKAGE_TOOLS_DIRECTORY = "${{ github.workspace }}/ChibiChatBotGame/Tools"
 
+
     # Setup Package folders
     - name: Setup Package folders
       shell: powershell
       run: |
+        # Initialize the array with valid paths
         $directories = @(
             $env:PACKAGE_DIRECTORY,
             $env:PACKAGE_GAME_DIRECTORY,
             $env:PACKAGE_TOOLS_DIRECTORY
-        )
+        ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }  # Filter out null or empty paths
 
+        # Check and create directories
         foreach ($directory in $directories) {
             if (-not (Test-Path -Path $directory)) {
-                New-Item -ItemType Directory -Path $directory
+                New-Item -ItemType Directory -Path $directory -Force
                 Write-Host "Created directory: $directory"
             } else {
                 Write-Host "Directory already exists: $directory"
