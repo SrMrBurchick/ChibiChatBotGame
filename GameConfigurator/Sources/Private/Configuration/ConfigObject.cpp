@@ -1,6 +1,7 @@
 #include "Configuration/ConfigObject.h"
 #include "Managers/NotificationsManager.h"
 #include "System/Logger.h"
+#include "System/FontSelector.h"
 #include "Managers/ActionsManager.h"
 
 #include <QClipboard>
@@ -40,6 +41,7 @@ constexpr char MESSAGE_TEXT_BORDER_COLOR[] = "text-border-color";
 constexpr char MESSAGE_FONT_SETTINGS[] = "font";
 constexpr char MESSAGE_FONT_SIZE[] = "size";
 constexpr char MESSAGE_FONT_TYPE[] = "type";
+constexpr char MESSAGE_FONT_PATH[] = "path";
 
 // Movement speed
 constexpr char MOVEMENT_SPEED[] = "movement-speed";
@@ -157,6 +159,9 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
         if (JsonFontSettings.contains(MESSAGE_FONT_SIZE)) {
             SystemSettings.Message.FontSize = JsonFontSettings[MESSAGE_FONT_SIZE].toInt();
         }
+        if (JsonFontSettings.contains(MESSAGE_FONT_TYPE)) {
+            SystemSettings.Message.Font = JsonFontSettings[MESSAGE_FONT_TYPE].toString();
+        }
     }
 
     if (JsonMessageSettings.contains(MESSAGE_TEXT_BORDER_COLOR)) {
@@ -238,6 +243,8 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     // Message settings
     JsonMessageSettings[MESSAGE_TEXT_COLOR] = SystemSettings.Message.MessageTextColor.name();
     JsonMessageFontSettings[MESSAGE_FONT_SIZE] = SystemSettings.Message.FontSize;
+    JsonMessageFontSettings[MESSAGE_FONT_TYPE] = SystemSettings.Message.Font;
+    JsonMessageFontSettings[MESSAGE_FONT_PATH] = QString("fonts/") + CBFontSelector::GetFontPath(SystemSettings.Message.Font).fileName();
     JsonMessageSettings[MESSAGE_FONT_SETTINGS] = JsonMessageFontSettings;
     JsonMessageSettings[MESSAGE_TEXT_BORDER_COLOR] = SystemSettings.Message.MessageBorderColor.name();
 
@@ -280,6 +287,8 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
 void ConfigObject::saveConfig()
 {
     SetBusy(true);
+    CopyFontToAssets();
+    CopyImageToAssets();
     SaveConfigToFile(QT_STRINGIFY(CONFIG_FILE));
     bConfigLoaded = true;
     SetBusy(false);
@@ -309,11 +318,20 @@ void ConfigObject::CopyImageToAssets()
     }
 
     QString SystemPath = SystemSettings.ImagePath;
+    LOG_INFO("Image path: %s", SystemSettings.ImagePath.toStdString().c_str());
+    if (SystemPath.contains("file:"))
+    {
 #ifdef Q_OS_WIN
-    SystemPath.remove("file:///");
+        SystemPath.remove("file:///");
 #else
-    SystemPath.remove("file://");
+        SystemPath.remove("file://");
 #endif
+    } else if (SystemPath.contains("qrc:/")) {
+        // Reduce removing qrc in file name
+        SystemPath.remove(0, QString("qrc").length());
+    }
+
+    LOG_INFO("SystemPath path: %s", SystemPath.toStdString().c_str());
     if (image.load(SystemPath)) {
         image.save(QT_STRINGIFY(GAME_ASSET_IMAGE_PATH));
     }
@@ -466,4 +484,9 @@ void ConfigObject::SetBusy(bool isBusy)
 {
     bIsBusy = isBusy;
     emit busyUpdated();
+}
+
+void ConfigObject::CopyFontToAssets()
+{
+    CBFontSelector::CopyFontToLocalDir(SystemSettings.Message.Font, QT_STRINGIFY(GAME_ASSET_FONTS_FOLDER));
 }

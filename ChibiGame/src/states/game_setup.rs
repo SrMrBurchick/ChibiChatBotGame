@@ -91,8 +91,8 @@ pub fn setup_game(
         });
 
     // Setup UI
-    let font_handle: Handle<Font> = asset_server.load("fonts/ComicSansMS.ttf");
     let msg_settings = config.get_message_settings();
+    let font_handle: Handle<Font> = asset_server.load(msg_settings.font_path);
     commands.insert_resource(UISettings {
         font: font_handle,
         message_color: msg_settings.message_color,

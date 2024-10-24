@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Qt.labs.platform
+
 import Buttons
 import Delegates
 import Panels
@@ -202,9 +204,11 @@ Item {
                 delegate: predefinedDelegate
 
                 onCountChanged: {
-                    predefinedColumn.height = contentItem.children[0].height * count
-                    predefinedColumn.height += spacing * count
-                    predefinedColumn.height += addActionButton.height
+                    if (predefinedColumn != undefined) {
+                        predefinedColumn.height = contentItem.children[0].height * count
+                        predefinedColumn.height += spacing * count
+                        predefinedColumn.height += addActionButton.height
+                    }
                 }
             }
 
@@ -283,6 +287,23 @@ Item {
                 }
             }
 
+            PropertyComboBoxDelegate {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 10
+
+                defaultValue: Config.systemConfig.messageSettings.font
+                fieldName: "Font:"
+                targetModel: FontSelector.getSystemFonts()
+                onValueChanged:(value) => {
+                    Config.systemConfig.messageSettings.font = value
+                }
+
+                Component.onCompleted: {
+                    setDisplayText(Config.systemConfig.messageSettings.font)
+                }
+            }
+
             PropertyIntDelegate {
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -332,9 +353,11 @@ Item {
         settingsModel.append({"name": "Twitch Settings", "component": twitchBotSettings})
         settingsModel.append({"name": "Game settings", "component": gameSettings})
         settingsModel.append({"name": "Predefined actions", "component": predefinedActions})
+        console.log("PADLO! ", Config.systemConfig.messageSettings.font);
     }
 
     function saveBotConfig() {
+        console.log("Tobi pizda")
         Config.saveConfig()
     }
 }

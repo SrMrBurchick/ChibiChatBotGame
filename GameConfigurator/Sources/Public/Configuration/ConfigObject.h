@@ -42,12 +42,14 @@ class MessageSettings : public QObject {
     Q_PROPERTY(int fontSize MEMBER FontSize);
     Q_PROPERTY(QColor messageColor MEMBER MessageTextColor)
     Q_PROPERTY(QColor messageBorderColor MEMBER MessageBorderColor)
+    Q_PROPERTY(QString font MEMBER Font)
 
 public:
 
     int FontSize = 24;
     QColor MessageTextColor = "red";
     QColor MessageBorderColor = "black";
+    QString Font;
 };
 
 class TwitchBotSettings : public QObject {
@@ -198,6 +200,7 @@ signals:
 
 protected:
     void CopyImageToAssets();
+    void CopyFontToAssets();
     void SetBusy(bool isBusy);
 
     bool bConfigLoaded = false;

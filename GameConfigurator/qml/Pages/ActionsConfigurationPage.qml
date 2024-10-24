@@ -27,6 +27,7 @@ Item {
         onAccepted: {
             console.log(selectedFile)
             image.source = selectedFile
+            Config.systemConfig.imagePath = selectedFile
             // Config.saveSpriteSheetPath(selectedFile)
         }
     }

@@ -17,6 +17,7 @@
 #include "Managers/TwitchManager.h"
 #include "Core/Action.h"
 #include "System/Logger.h"
+#include "System/FontSelector.h"
 #include "Managers/TwitchNetworkAccessManager.h"
 #include "Core/Twitch/ChannelPointsReward.h"
 #include "Models/Twitch/ChannelPointsRewardsModel.h"
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
     QScopedPointer<ProcessManager> Manager(new ProcessManager);
     QScopedPointer<ActionsManager> ActionsManagerComp(new ActionsManager);
     QScopedPointer<TwitchManager> Twitch(new TwitchManager);
+    QScopedPointer<CBFontSelector> FontSelector(new CBFontSelector);
     QPointer<TwitchNetworkAccessManager> TwitchNtwrk (new TwitchNetworkAccessManager);
     QPointer<IProcess> Game(new GameProcess);
     QPointer<IProcess> Bot(new BotProcess);
@@ -46,9 +48,10 @@ int main(int argc, char *argv[])
 
     engine.addImportPath(":/qml");
 
+    Logger::SetLoggerEnabled(true);
     // Setup config signals
     QObject::connect(Config.get(), &ConfigObject::loggerEnabled, [&](bool Enabled) {
-        Logger::SetLoggerEnabled(Enabled);
+        // Logger::SetLoggerEnabled(Enabled);
         Config->SaveLogging(Enabled);
     });
 
@@ -66,6 +69,7 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("Managers", 1, 0, "ActionsManager", ActionsManagerComp.get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "TwitchManager", Twitch.get());
+    qmlRegisterSingletonInstance("Managers", 1, 0, "FontSelector", FontSelector.get());
 
     // Types
     qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");

@@ -26,7 +26,8 @@ pub struct SystemConfigData {
 #[derive(Debug)]
 pub struct MessageSettings {
     pub message_color: String,
-    pub font_size: f32
+    pub font_size: f32,
+    pub font_path: String
 }
 
 #[derive(Debug, Component)]
@@ -406,7 +407,8 @@ impl Config {
     pub fn get_message_settings(&self) -> MessageSettings {
         let mut settings = MessageSettings{
             font_size: 24.0,
-            message_color: String::from("#f32344")
+            message_color: String::from("#f32344"),
+            font_path: String::from("fonts/ComicSansMS.ttf")
         };
 
         match self.get_value("message-settings") {
@@ -417,6 +419,7 @@ impl Config {
 
                 if msg_settings.has_key("font") {
                     settings.font_size = msg_settings["font"]["size"].as_f32().unwrap();
+                    settings.font_path = msg_settings["font"]["path"].to_string();
                 }
             },
             Err(_) => {},

@@ -21,9 +21,9 @@ public:
     template <typename... Args>
     static void log(LogLevel Level, const char* format, Args&&... args)
     {
-        if (!GetLogger().bIsEnabled) {
-            return;
-        }
+        // if (!GetLogger().bIsEnabled) {
+        //     return;
+        // }
 
         QString logMessage = formatLogMessage(Level, format, std::forward<Args>(args)...);
         GetLogger().LogToConsole(logMessage);
