@@ -13,12 +13,6 @@ Item {
 
     signal openConfig()
 
-
-    GameRunningDelegate {
-        id: gameRunningDelegate
-        anchors.top: menu.top
-    }
-
     ColumnLayout {
         anchors.centerIn: parent
         spacing: 24

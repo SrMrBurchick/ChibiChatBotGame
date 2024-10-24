@@ -15,6 +15,7 @@ ProcessManager::~ProcessManager()
 
 bool ProcessManager::TryToRunProcess(eProcessType Process)
 {
+    SetBusy(true);
     if (!ProcessesList.contains(Process)) {
         return false;
     }
@@ -24,6 +25,7 @@ bool ProcessManager::TryToRunProcess(eProcessType Process)
 
 bool ProcessManager::TryToStopProcess(eProcessType Process)
 {
+    SetBusy(true);
     if (!ProcessesList.contains(Process)) {
         return false;
     }
@@ -40,6 +42,7 @@ void ProcessManager::ForceStopProcess(eProcessType Process)
 
 void ProcessManager::StopAll()
 {
+    SetBusy(true);
     for (QPointer<IProcess> Process : ProcessesList) {
         Process->Kill();
     }
@@ -59,6 +62,7 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
     QObject::connect(
         Process->GetProcess().get(), &QProcess::finished,
         [=]() {
+            SetBusy(false);
             switch (Process->GetType()) {
                 case eProcessType::Game:
                     emit gameEnded();
@@ -78,6 +82,7 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
                     emit gameStarted();
                     break;
                 case eProcessType::Bot:
+                    SetBusy(false);
                     emit botStarted();
                     break;
             }
@@ -86,6 +91,7 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
 
     if (Process->GetType() == eProcessType::Game) {
         QObject::connect((GameProcess*)(Process.get()), &GameProcess::gameRunningAt, [=](QString GameInfo){
+            SetBusy(false);
             emit this->gameRunningAt(GameInfo);
         });
     }
@@ -97,6 +103,7 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
 
 void ProcessManager::runBot()
 {
+    SetBusy(true);
     if (TryToRunProcess(eProcessType::Bot)) {
         NotificationsManager::SendNotification("Bot process", "Bot is running");
     } else {
@@ -112,6 +119,7 @@ void ProcessManager::runBot()
 
 void ProcessManager::runGame()
 {
+    SetBusy(true);
     if (TryToRunProcess(eProcessType::Game)) {
         NotificationsManager::SendNotification("Game process", "Game running");
     } else {
@@ -168,4 +176,10 @@ void ProcessManager::stopGameRunning()
     }
 
     ProcessesList[eProcessType::Game]->Kill();
+}
+
+void ProcessManager::SetBusy(bool isBusy)
+{
+    bIsBusy = isBusy;
+    emit busyUpdated();
 }

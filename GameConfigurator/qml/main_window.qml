@@ -7,6 +7,7 @@ import SystemTools
 import Managers
 import Base
 import ConfigComponent
+import Delegates
 
 ApplicationWindow {
     id: root
@@ -87,10 +88,15 @@ ApplicationWindow {
         }
     }
 
+    GameRunningDelegate {
+        id: gameRunningDelegate
+        anchors.top: root.top
+    }
+
     ChibiBusyIndicator {
         id: busy
         anchors.centerIn: parent
-        running: Config.isBusy || TwitchManager.isBusy
+        running: Config.isBusy || TwitchManager.isBusy || ProcessManager.isBusy
     }
 
     WorkerScript {

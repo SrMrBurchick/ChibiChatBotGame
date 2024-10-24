@@ -7,6 +7,8 @@
 
 class ProcessManager : public QObject {
     Q_OBJECT
+
+    Q_PROPERTY(bool isBusy MEMBER bIsBusy NOTIFY busyUpdated)
 public:
     explicit ProcessManager(QObject* Parent = nullptr);
     virtual ~ProcessManager();
@@ -33,7 +35,12 @@ signals:
     void botStarted();
     void botEnded();
     void gameRunningAt(QString Address);
+    void busyUpdated();
+
+protected:
+    void SetBusy(bool isBusy);
 
 private:
     QMap<eProcessType, QPointer<IProcess>> ProcessesList;
+    bool bIsBusy = false;
 };
