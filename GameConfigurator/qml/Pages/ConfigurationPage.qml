@@ -38,6 +38,12 @@ Item {
 
         BaseButton {
             scaler: 1.5
+            text: "Modules settings"
+            onClicked: goModulesConfiguration()
+        }
+
+        BaseButton {
+            scaler: 1.5
             text: "Back"
             onClicked: goBack()
         }
@@ -59,4 +65,5 @@ Item {
     signal goActionsConfiguration()
     signal goChatBotConfiguration()
     signal goTwitchConfiguration()
+    signal goModulesConfiguration()
 }

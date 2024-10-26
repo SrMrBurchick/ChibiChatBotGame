@@ -96,7 +96,7 @@ ApplicationWindow {
     ChibiBusyIndicator {
         id: busy
         anchors.centerIn: parent
-        running: Config.isBusy || TwitchManager.isBusy || ProcessManager.isBusy
+        running: Config.isBusy || TwitchManager.isBusy || ProcessManager.isBusy || ModulesManager.isBusy
     }
 
     WorkerScript {
@@ -109,8 +109,9 @@ ApplicationWindow {
                 stack.push(commonConfig)
             } else if (messageObject.reply == "TwitchConfig") {
                 stack.push(twitchConfig)
+            } else if (messageObject.reply == "ModulesConfig") {
+                stack.push(modulesConfig)
             }
-
         }
     }
 
@@ -135,6 +136,9 @@ ApplicationWindow {
             onGoTwitchConfiguration: {
                 worker.sendMessage({'page': "TwitchConfig"})
             }
+            onGoModulesConfiguration: {
+                worker.sendMessage({'page': "ModulesConfig"})
+            }
             onGoBack: {
                 stack.pop()
             }
@@ -158,6 +162,13 @@ ApplicationWindow {
     Component {
         id: twitchConfig
         TwitchConfigurationPage {
+            rootStack: stack
+        }
+    }
+
+    Component {
+        id: modulesConfig
+        ModulesConfigurationPage {
             rootStack: stack
         }
     }

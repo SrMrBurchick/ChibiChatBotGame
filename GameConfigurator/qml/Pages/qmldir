@@ -5,3 +5,6 @@ ActionsConfigurationPage 1.0 ActionsConfigurationPage.qml
 CommonConfigurationPage 1.0 CommonConfigurationPage.qml
 TwitchConfigurationPage 1.0 TwitchConfigurationPage.qml
 ChannelPointsConfigurationPage 1.0 TwitchComponents/ChannelPointsConfigurationPage.qml
+ModulesConfigurationPage 1.0 ModulesConfigurationPage.qml
+ModulesList 1.0 ModulesComponents/ModulesList.qml
+ModulePreviewPanel 1.0 ModulesComponents/ModulePreviewPanel.qml

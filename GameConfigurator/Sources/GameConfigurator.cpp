@@ -15,12 +15,18 @@
 #include "Models/SpriteSheet.h"
 #include "Managers/ActionsManager.h"
 #include "Managers/TwitchManager.h"
+#include "Managers/ModulesManger.h"
 #include "Core/Action.h"
 #include "System/Logger.h"
 #include "System/FontSelector.h"
 #include "Managers/TwitchNetworkAccessManager.h"
 #include "Core/Twitch/ChannelPointsReward.h"
 #include "Models/Twitch/ChannelPointsRewardsModel.h"
+#include "Core/Modules/Module.h"
+#include "Core/Modules/Outputs/ModuleOutput.h"
+#include "Core/Modules/Binds/ModuleBindConfig.h"
+#include "Core/Modules/Binds/ModuleBindResultConfig.h"
+#include "Core/Modules/Binds/ModuleBindResultPool.h"
 
 int main(int argc, char *argv[])
 {
@@ -38,6 +44,7 @@ int main(int argc, char *argv[])
     QScopedPointer<ActionsManager> ActionsManagerComp(new ActionsManager);
     QScopedPointer<TwitchManager> Twitch(new TwitchManager);
     QScopedPointer<CBFontSelector> FontSelector(new CBFontSelector);
+    QScopedPointer<CBModulesManager> ModulesManager(new CBModulesManager);
     QPointer<TwitchNetworkAccessManager> TwitchNtwrk (new TwitchNetworkAccessManager);
     QPointer<IProcess> Game(new GameProcess);
     QPointer<IProcess> Bot(new BotProcess);
@@ -70,6 +77,7 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("Managers", 1, 0, "NotificationsManager", NotificationsManager::GetManager().get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "TwitchManager", Twitch.get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "FontSelector", FontSelector.get());
+    qmlRegisterSingletonInstance("Managers", 1, 0, "ModulesManager", ModulesManager.get());
 
     // Types
     qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
@@ -81,6 +89,11 @@ int main(int argc, char *argv[])
     qmlRegisterType<GameSettings>("ConfigComponent", 1, 0, "GameSettings");
     qmlRegisterType<MessageSettings>("ConfigComponent", 1, 0, "MessageSettings");
     qmlRegisterType<GameSettings>("ConfigComponent", 1, 0, "GameSettings");
+    qmlRegisterType<CBModule>("ModuleSettings", 1, 0, "Module");
+    qmlRegisterType<CBModuleOutput>("ModuleSettings", 1, 0, "ModuleOutput");
+    qmlRegisterType<CBModuleBindConfig>("ModuleSettings", 1, 0, "ModuleBindConfig");
+    qmlRegisterType<CBModuleBindResultConfig>("ModuleSettings", 1, 0, "ModuleBindResultConfig");
+    qmlRegisterType<CBModuleBindResultPool>("ModuleSettings", 1, 0, "ModuleBindResultPool");
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

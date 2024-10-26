@@ -247,3 +247,15 @@ void ActionsManager::initByConfig(const ConfigObject* Config)
 
     Config->InitActionsManager(this);
 }
+
+const QVector<QString> ActionsManager::getActionsName() const
+{
+    QVector<QString> Names;
+    for (QSharedPointer<Action> Item : Actions) {
+        if (!Item.isNull()) {
+            Names.push_back(Item->getName());
+        }
+    }
+
+    return Names;
+}

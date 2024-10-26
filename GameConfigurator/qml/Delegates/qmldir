@@ -15,3 +15,6 @@ PropertyComboBoxDelegate 1.0 PropertyComboBoxDelegate.qml
 GameRunningDelegate 1.0 GameRunningDelegate.qml
 ChannelPointsRewardDelegate 1.0 Twitch/ChannelPointsRewardDelegate.qml
 ChannelPointsRewardNameDelegate 1.0 Twitch/ChannelPointsRewardNameDelegate.qml
+ModuleListDelegate 1.0 Modules/ModuleListDelegate.qml
+ModuleBindListDelegate 1.0 Modules/ModuleBindListDelegate.qml
+ModuleResultConfigDelegate 1.0 Modules/ModuleResultConfigDelegate.qml

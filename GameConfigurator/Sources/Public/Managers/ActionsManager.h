@@ -38,6 +38,7 @@ public:
     Q_INVOKABLE const QVector<QString> getTwitchDefaultAction() const;
     Q_INVOKABLE const QVector<QString> getPossibleActionsToAdd() const;
     Q_INVOKABLE const QVector<QString> getPossiblePredefinedActionsToAdd() const;
+    Q_INVOKABLE const QVector<QString> getActionsName() const;
 
     Q_INVOKABLE Action* getSelectedAction() const;
 

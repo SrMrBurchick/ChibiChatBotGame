@@ -35,6 +35,7 @@ DEFINES += GAME_ASSET_FONTS_FOLDER="./Game/assets/fonts"
 DEFINES += WASM_SERVER_RUNNER="./Tools/wasm-server-runner"
 DEFINES += GAME_PATH="./Game"
 DEFINES += GAME="./Game/ChibiGame.wasm"
+DEFINES += MODULES_FOLDER="./Modules"
 
 # Check if the target OS is Windows
 win32 {

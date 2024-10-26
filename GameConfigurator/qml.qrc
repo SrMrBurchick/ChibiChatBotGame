@@ -20,8 +20,11 @@
         <file>qml/Pages/ActionsConfigurationPage.qml</file>
         <file>qml/Pages/CommonConfigurationPage.qml</file>
         <file>qml/Pages/TwitchConfigurationPage.qml</file>
+        <file>qml/Pages/ModulesConfigurationPage.qml</file>
 
         <file>qml/Pages/TwitchComponents/ChannelPointsConfigurationPage.qml</file>
+        <file>qml/Pages/ModulesComponents/ModulesList.qml</file>
+        <file>qml/Pages/ModulesComponents/ModulePreviewPanel.qml</file>
 
         <file>qml/Panels/qmldir</file>
         <file>qml/Panels/LeftPanel.qml</file>
@@ -51,6 +54,9 @@
         <file>qml/Delegates/GameRunningDelegate.qml</file>
         <file>qml/Delegates/Twitch/ChannelPointsRewardDelegate.qml</file>
         <file>qml/Delegates/Twitch/ChannelPointsRewardNameDelegate.qml</file>
+        <file>qml/Delegates/Modules/ModuleListDelegate.qml</file>
+        <file>qml/Delegates/Modules/ModuleBindListDelegate.qml</file>
+        <file>qml/Delegates/Modules/ModuleResultConfigDelegate.qml</file>
 
         <!-- Dialogs -->
         <file>qml/Dialogs/qmldir</file>
@@ -59,6 +65,7 @@
         <file>qml/Dialogs/AddPredefinedActionDialog.qml</file>
         <file>qml/Dialogs/AuthorizationDialog.qml</file>
         <file>qml/Dialogs/ShowHelpDialog.qml</file>
+        <file>qml/Dialogs/BindModuleAction.qml</file>
 
         <!-- Images -->
         <file>qml/Images/trash_can.png</file>
