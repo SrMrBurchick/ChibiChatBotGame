@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QSharedPointer>
 
+class ConfigObject;
 class CBModule;
 
 class CBModulesManager: public QObject {
@@ -27,6 +28,8 @@ public:
     // Modifiers
     Q_INVOKABLE void initModules();
     Q_INVOKABLE void selectModule(int Index);
+    Q_INVOKABLE void saveConfig(ConfigObject* Config);
+    Q_INVOKABLE void parseConfig(ConfigObject* Config);
 
     // Getters
     Q_INVOKABLE int getModulesCount() const;
@@ -37,6 +40,7 @@ signals:
     void busyUpdated();
     void moduleSelected();
     void modulesSynced();
+    void initialized();
 
 protected:
     // ================================ C++ ====================================
@@ -50,5 +54,6 @@ protected:
 
 private:
     bool bIsBusy = false;
+    bool bInitialized = false;
     QVector<QSharedPointer<CBModule>> Modules;
 };

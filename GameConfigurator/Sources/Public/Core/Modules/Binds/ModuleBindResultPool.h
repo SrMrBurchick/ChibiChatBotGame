@@ -8,6 +8,7 @@ class CBModuleBindResult;
 class ActionsManager;
 class CBModulesManager;
 class Action;
+class QJsonObject;
 
 class CBModuleBindResultPool: public QObject {
     Q_OBJECT
@@ -22,9 +23,11 @@ public:
     virtual ~CBModuleBindResultPool();
 
     static QSharedPointer<CBModuleBindResultPool> CreatePool(const QString& Postfix);
+    void ParseConfig(const QJsonObject& Config);
 
     // Getters
     bool CanBindAction(const QSharedPointer<Action>& TargetAction) const;
+    QJsonObject GenerateConfig() const;
 
     // ================================ QML ====================================
     // Modifiers

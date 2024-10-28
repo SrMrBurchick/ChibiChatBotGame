@@ -13,6 +13,8 @@ class CBModuleInputParam;
 class CBModuleOutput;
 class CBModuleBindConfig;
 
+class QJsonObject;
+
 class CBModule: public QObject {
     Q_OBJECT
 
@@ -29,6 +31,7 @@ public:
     virtual ~CBModule();
 
     bool ParseConfig(const QJsonDocument& JsonData);
+    bool ParseGameConfig(const QJsonObject& Config);
 
     // Getters
     bool IsSelected() const;
@@ -36,6 +39,7 @@ public:
     const QString& GetVersion() const;
     const QString& GetPath() const;
     bool HasBindedAction(QSharedPointer<Action> TargetAction) const;
+    QJsonObject GenerateConfig() const;
 
     // ================================ QML ====================================
     // Modifiers
@@ -54,6 +58,9 @@ public:
 signals:
     void selectionChanged();
     void bindsUpdated();
+
+protected:
+    QSharedPointer<CBModuleBindConfig> GetBindByAction(const QString& TargetAction) const;
 
 private:
     QString Name;

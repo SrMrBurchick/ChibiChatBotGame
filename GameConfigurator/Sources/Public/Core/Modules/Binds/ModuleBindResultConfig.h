@@ -6,6 +6,7 @@
 #include "Core/Modules/Outputs/ModuleOutput.h"
 
 class CBModuleBindResultPool;
+class QJsonObject;
 
 class CBModuleBindResultConfig: public QObject {
     Q_OBJECT
@@ -19,7 +20,13 @@ public:
     explicit CBModuleBindResultConfig(QObject* Parent = nullptr);
     virtual ~CBModuleBindResultConfig();
 
+    QJsonObject GenerateConfig() const;
+    void ParseConfig(const QJsonObject& Config);
     static QSharedPointer<CBModuleBindResultConfig> CreateResultConfig(const QSharedPointer<CBModuleOutput>& Output);
+
+    // Getters
+    QSharedPointer<CBModuleBindResultPool> GetPoolByPostfix(const QString& Postfix);
+    bool HasTargetOutputFromConfig(const QJsonObject& Config);
 
     // ================================ QML ====================================
     // Modifiers

@@ -90,6 +90,10 @@ constexpr char ACTION_CONFIG_TEXT_DISPLAY_TIME[] = "display-time";
 constexpr char ACTION_CONFIG_TEXT_COLOR[] = "color";
 constexpr char ACTION_CONFIG_TEXT_SIZE[] = "size";
 
+// Modules
+constexpr char MODULES[] = "modules";
+
+
 ConfigObject::ConfigObject(QObject* Parent)
     : QObject(Parent)
 {
@@ -196,6 +200,11 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
         ActionsArray = ConfigMap[ACTIONS_SETTINGS].toJsonArray();
     }
 
+    // Init Modules
+    if (ConfigMap.contains(MODULES)) {
+        ModulesConfig = ConfigMap[MODULES].toJsonArray();
+    }
+
     // Init predefined actions
     if (!JsonPredefinedActions.isEmpty() && !PredefinedActionsModel.isNull()) {
         for (QJsonValueConstRef Item : JsonPredefinedActions) {
@@ -272,6 +281,7 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     Config[SCREEN_RESOLUTION] = JsonScreenResolution;
     Config[PREDEFINED_ACTIONS_SETTINGS] = JsonPredefinedActions;
     Config[ACTIONS_SETTINGS] = ActionsArray;
+    Config[MODULES] = ModulesConfig;
 
     QFile ConfigFile(ConfigFileName);
     if (ConfigFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -489,4 +499,14 @@ void ConfigObject::SetBusy(bool isBusy)
 void ConfigObject::CopyFontToAssets()
 {
     CBFontSelector::CopyFontToLocalDir(SystemSettings.Message.Font, QT_STRINGIFY(GAME_ASSET_FONTS_FOLDER));
+}
+
+void ConfigObject::SaveModules(const QJsonArray& Modules)
+{
+    ModulesConfig = Modules;
+}
+
+const QJsonArray& ConfigObject::GetModulesConfig() const
+{
+    return ModulesConfig;
 }

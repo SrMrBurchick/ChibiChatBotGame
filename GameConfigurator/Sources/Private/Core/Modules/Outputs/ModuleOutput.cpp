@@ -34,3 +34,18 @@ const QString& CBModuleOutput::GetName() const
 {
     return Name;
 }
+
+const QString CBModuleOutput::GetTypeString() const
+{
+    switch (GetType()) {
+        case EOutputType::eBool:
+            return "bool";
+        case EOutputType::eNumber:
+            return "number";
+        case EOutputType::eString:
+            return "string";
+        default:
+            break;
+    }
+    return "";
+}

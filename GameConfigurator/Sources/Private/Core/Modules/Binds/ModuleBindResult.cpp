@@ -2,6 +2,9 @@
 #include "Core/Action.h"
 
 #include <QQmlEngine>
+#include <QJsonObject>
+
+constexpr char NAME[] = "name";
 
 CBModuleBindResult::CBModuleBindResult(QObject* Parent)
     : QObject(Parent)
@@ -50,4 +53,24 @@ bool CBModuleBindResult::IsBindedTo(const QSharedPointer<Action> NewAction) cons
     }
 
     return false;
+}
+
+QJsonObject CBModuleBindResult::GenerateConfig() const
+{
+    QJsonObject Config;
+
+    if (!TargetAction.isNull()) {
+        Config.insert(NAME, TargetAction->getName());
+    }
+
+    return Config;
+}
+
+QString CBModuleBindResult::GetTargetActionNameFromConfig(const QJsonObject& Config)
+{
+    if (Config.contains(NAME)) {
+        return Config[NAME].toString();
+    }
+
+    return "";
 }

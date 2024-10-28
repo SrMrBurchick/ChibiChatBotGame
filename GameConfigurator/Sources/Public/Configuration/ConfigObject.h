@@ -158,6 +158,7 @@ public:
 
     void SaveLogging(bool Logging);
     void SaveActions(const QVector<QSharedPointer<Action>>& Actions);
+    void SaveModules(const QJsonArray& Modules);
 
     // Getters
     SpriteSize* getSpriteSize() {
@@ -183,6 +184,8 @@ public:
         QQmlEngine::setObjectOwnership(OutModel, QQmlEngine::CppOwnership);
         return OutModel;
     }
+
+    const QJsonArray& GetModulesConfig() const;
 
     //============================ QML ========================================
     // Modifiers
@@ -213,6 +216,7 @@ protected:
     ActionsMap Map;
 
     QJsonArray ActionsArray;
+    QJsonArray ModulesConfig;
 
     bool bIsBusy = false;
 };

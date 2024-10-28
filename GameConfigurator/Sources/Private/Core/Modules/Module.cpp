@@ -6,6 +6,7 @@
 #include "Managers/ActionsManager.h"
 
 #include "System/Logger.h"
+#include "System/AccessPoint.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -17,6 +18,7 @@ constexpr char VERSION[] = "version";
 constexpr char PATH[] = "path";
 constexpr char INPUT_PARAMS[] = "input_params";
 constexpr char OUTPUT_PARAMS[] = "output_params";
+constexpr char BINDS[] = "binds";
 
 CBModule::CBModule(QObject* Parent)
     : QObject(Parent)
@@ -200,4 +202,71 @@ void CBModule::removeBindConfig(int Index)
     Binds.remove(Index);
 
     emit bindsUpdated();
+}
+
+QSharedPointer<CBModuleBindConfig> CBModule::GetBindByAction(const QString& TargetAction) const
+{
+    if (ActionsManager* Manager = CBAccessPoint::GetActionsManager()) {
+        QSharedPointer<Action> BindAction = Manager->GetActionByName(TargetAction);
+
+        for (const QSharedPointer<CBModuleBindConfig>& Bind : Binds) {
+            if (Bind.isNull()) {
+                continue;
+            }
+
+            if (Bind->IsBindedToAction(BindAction)) {
+                return Bind;
+            }
+        }
+    }
+
+
+    return nullptr;
+}
+
+QJsonObject CBModule::GenerateConfig() const
+{
+    QJsonObject Config;
+    QJsonArray BindsConfig;
+    for (const QSharedPointer<CBModuleBindConfig>& Bind : Binds) {
+        if (!Bind.isNull()) {
+            QJsonObject BindConfig = Bind->GenerateConfig();
+            if (!BindConfig.isEmpty()) {
+                BindsConfig.push_back(BindConfig);
+            }
+        }
+    }
+
+    if (!BindsConfig.isEmpty()) {
+        Config.insert(NAME, Name);
+        Config.insert(PATH, Path);
+        Config.insert(BINDS, BindsConfig);
+    }
+
+    return Config;
+}
+
+bool CBModule::ParseGameConfig(const QJsonObject& Config)
+{
+    if (Config.contains(NAME) && Config.contains(PATH)) {
+        if ((Name != Config[NAME].toString()) || (Path != Config[PATH].toString())) {
+            return false;
+        }
+
+        setSelected(true);
+        if (Config.contains(BINDS)) {
+            for (QJsonValueConstRef Value : Config[BINDS].toArray()) {
+                QString TargetActionName = CBModuleBindConfig::GetTargetActionFromConfig(Value.toObject());
+                if (ActionsManager* Manager = CBAccessPoint::GetActionsManager()) {
+                    bindNewAction(Manager, TargetActionName);
+                    if (QSharedPointer<CBModuleBindConfig> Bind = GetBindByAction(TargetActionName)) {
+                        Bind->ParseConfig(Value.toObject());
+                    }
+                }
+            }
+        }
+        setSelected(false);
+    }
+
+    return false;
 }

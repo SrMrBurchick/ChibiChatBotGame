@@ -95,11 +95,20 @@ Item {
                     Layout.rightMargin: 10
 
                     onClicked: {
-                        // rootStack.pop()
+                        if (ModulesManager != undefined) {
+                            ModulesManager.saveConfig(Config);
+                        }
                     }
                 }
             }
 
+        }
+    }
+
+    Connections {
+        target: ModulesManager
+        onInitialized: {
+            ModulesManager.parseConfig(Config)
         }
     }
 

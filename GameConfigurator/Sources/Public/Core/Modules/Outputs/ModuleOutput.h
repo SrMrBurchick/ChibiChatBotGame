@@ -23,6 +23,7 @@ public:
     virtual int GetPoolsCount() const;
     virtual QSharedPointer<CBModuleBindResultPool> CreatePool(int Index) const;
 
+    const QString GetTypeString() const;
     const QString& GetName() const;
 
 private:

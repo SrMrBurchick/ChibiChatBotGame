@@ -5,6 +5,12 @@
 #include "System/Logger.h"
 
 #include <QQmlEngine>
+#include <QJsonObject>
+#include <QJsonArray>
+
+constexpr char NAME[] = "name";
+constexpr char POOLS[] = "pools";
+constexpr char TYPE[] = "type";
 
 CBModuleBindResultConfig::CBModuleBindResultConfig(QObject* Parent)
     : QObject(Parent)
@@ -64,4 +70,65 @@ CBModuleBindResultPool* CBModuleBindResultConfig::getPool(int Index) const
     }
 
     return nullptr;
+}
+
+QSharedPointer<CBModuleBindResultPool> CBModuleBindResultConfig::GetPoolByPostfix(const QString& Postfix)
+{
+    for (QSharedPointer<CBModuleBindResultPool>& Pool : Pools) {
+        if (!Pool.isNull() && Pool->getPoolPostfix() == Postfix) {
+            return Pool;
+        }
+    }
+
+    return nullptr;
+}
+
+QJsonObject CBModuleBindResultConfig::GenerateConfig() const
+{
+    QJsonObject Config;
+    QJsonArray PoolsConfig;
+
+    if (!TargetOutput.isNull()) {
+        for (const QSharedPointer<CBModuleBindResultPool>& Pool : Pools) {
+            if (!Pool.isNull() && Pool->getResultsCount() > 0) {
+                QJsonObject PoolConfig = Pool->GenerateConfig();
+                if (!PoolConfig.isEmpty()) {
+                    PoolsConfig.push_back(PoolConfig);
+                }
+            }
+        }
+
+        if (!PoolsConfig.isEmpty()) {
+            Config.insert(NAME, TargetOutput->GetName());
+            Config.insert(TYPE, TargetOutput->GetTypeString());
+            Config.insert(POOLS, PoolsConfig);
+        }
+    }
+
+    return Config;
+}
+
+bool CBModuleBindResultConfig::HasTargetOutputFromConfig(const QJsonObject& Config)
+{
+    if (!TargetOutput.isNull()) {
+        if (Config.contains(NAME) && Config.contains(TYPE)) {
+            return TargetOutput->GetName() == Config[NAME].toString() && TargetOutput->GetTypeString() == Config[TYPE].toString();
+        }
+    }
+
+    return false;
+}
+
+void CBModuleBindResultConfig::ParseConfig(const QJsonObject& Config)
+{
+    if (Config.contains(POOLS)) {
+        for (QJsonValueConstRef Value : Config[POOLS].toArray()) {
+            for (QSharedPointer<CBModuleBindResultPool>& Pool : Pools) {
+                if (!Pool.isNull()) {
+                    Pool->ParseConfig(Value.toObject());
+                }
+            }
+
+        }
+    }
 }

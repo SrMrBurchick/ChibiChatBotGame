@@ -8,6 +8,7 @@
 
 class CBModuleBindResultConfig;
 class CBModuleOutput;
+class QJsonObject;
 
 class CBModuleBindConfig: public QObject {
     Q_OBJECT
@@ -27,6 +28,9 @@ public:
 
     // Getters
     bool IsSelected() const;
+    QJsonObject GenerateConfig() const;
+    static QString GetTargetActionFromConfig(const QJsonObject& Config);
+    bool ParseConfig(const QJsonObject& Config);
 
     // ================================ QML ====================================
     // Modifiers

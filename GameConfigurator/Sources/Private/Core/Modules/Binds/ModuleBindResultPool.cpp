@@ -2,6 +2,7 @@
 #include "Core/Modules/Binds/ModuleBindResult.h"
 
 #include "System/Logger.h"
+#include "System/AccessPoint.h"
 
 #include "Managers/ModulesManger.h"
 #include "Managers/ActionsManager.h"
@@ -10,6 +11,11 @@
 #include "Core/Modules/Module.h"
 
 #include <QQmlEngine>
+#include <QJsonObject>
+#include <QJsonArray>
+
+constexpr char POSTFIX [] = "postfix";
+constexpr char RESULTS [] = "results";
 
 CBModuleBindResultPool::CBModuleBindResultPool(QObject* Parent)
     : QObject(Parent)
@@ -131,4 +137,41 @@ void CBModuleBindResultPool::ChangeResultPosition(int OldPosition)
     Results.swapItemsAt(OldPosition, NewPosition);
     NewPosition = -1;
     emit bindsUpdated();
+}
+
+QJsonObject CBModuleBindResultPool::GenerateConfig() const
+{
+    QJsonObject Config;
+    QJsonArray ResultsJSON;
+    for (const QSharedPointer<CBModuleBindResult>& Result : Results) {
+        if (!Result.isNull()) {
+            QJsonObject ResultConfig = Result->GenerateConfig();
+            if (!ResultConfig.isEmpty()) {
+                ResultsJSON.push_back(ResultConfig);
+            }
+        }
+    }
+
+    if (!ResultsJSON.isEmpty()) {
+        Config.insert(POSTFIX, PoolPostfix);
+        Config.insert(RESULTS, ResultsJSON);
+    }
+
+    return Config;
+}
+
+void CBModuleBindResultPool::ParseConfig(const QJsonObject& Config)
+{
+    if (Config.contains(POSTFIX) && Config.contains(RESULTS)) {
+        if (Config[POSTFIX].toString() == PoolPostfix) {
+            for (QJsonValueConstRef Value : Config[RESULTS].toArray()) {
+                QString TargetAction = CBModuleBindResult::GetTargetActionNameFromConfig(Value.toObject());
+                if (ActionsManager* Manager = CBAccessPoint::GetActionsManager()) {
+                    if (CBModulesManager* ModulesManager = CBAccessPoint::GetModulesManager()) {
+                        bindNewAction(Manager, ModulesManager, TargetAction);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -28,6 +28,7 @@
 #include "Core/Modules/Binds/ModuleBindResultConfig.h"
 #include "Core/Modules/Binds/ModuleBindResultPool.h"
 #include "Core/Modules/Binds/ModuleBindResult.h"
+#include "System/AccessPoint.h"
 
 int main(int argc, char *argv[])
 {
@@ -105,6 +106,11 @@ int main(int argc, char *argv[])
     ActionsManagerComp->addNewAction("Прабить");
     ActionsManagerComp->addNewAction("Забить");
     ActionsManagerComp->addNewAction("Промазать");
+
+    // AccessPoint initialization
+    if (QPointer<CBAccessPoint> AccessPoint = CBAccessPoint::GetAccessPoint()) {
+        AccessPoint->SetQMLEngine(engine);
+    }
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

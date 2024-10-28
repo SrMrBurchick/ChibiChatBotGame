@@ -2,6 +2,7 @@
 
 #include "Managers/NotificationsManager.h"
 #include "Core/Modules/Module.h"
+#include "Configuration/ConfigObject.h"
 
 #include "System/Logger.h"
 
@@ -9,6 +10,7 @@
 #include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QQmlEngine>
 
 constexpr char CONFIG_FILE_NAME [] = "ModuleConfig";
@@ -73,6 +75,11 @@ void CBModulesManager::SearchModules()
                 }
             }
         }
+    }
+
+    if (!bInitialized) {
+        bInitialized = true;
+        emit initialized();
     }
 
     emit modulesSynced();
@@ -172,3 +179,42 @@ int CBModulesManager::getModulesCount() const
     return Modules.count();
 }
 
+void CBModulesManager::saveConfig(ConfigObject* Config)
+{
+    SetBusy(true);
+    QJsonArray ModulesConfig;
+    for (const QSharedPointer<CBModule>& Module : Modules) {
+        if (!Module.isNull() && (Module->getBindsCount() > 0)) {
+            QJsonObject ModuleConfig = Module->GenerateConfig();
+            if (!ModuleConfig.isEmpty()) {
+                ModulesConfig.push_back(ModuleConfig);
+            }
+        }
+    }
+
+    if (Config && !ModulesConfig.isEmpty()) {
+        Config->SaveModules(ModulesConfig);
+        Config->saveConfig();
+    }
+
+    SetBusy(false);
+}
+
+void CBModulesManager::parseConfig(ConfigObject* Config)
+{
+    if (!Config) {
+        return;
+    }
+
+    SetBusy(true);
+
+    for (QJsonValueConstRef Value : Config->GetModulesConfig()) {
+        for (QSharedPointer<CBModule>& Module : Modules) {
+            if (!Module.isNull()) {
+                Module->ParseGameConfig(Value.toObject());
+            }
+        }
+    }
+
+    SetBusy(false);
+}

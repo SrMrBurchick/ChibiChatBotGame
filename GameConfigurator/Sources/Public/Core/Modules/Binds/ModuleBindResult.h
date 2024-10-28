@@ -5,6 +5,7 @@
 #include <QVector>
 
 class Action;
+class QJsonObject;
 
 class CBModuleBindResult: public QObject {
     Q_OBJECT
@@ -18,9 +19,11 @@ public:
     virtual ~CBModuleBindResult();
 
     static QSharedPointer<CBModuleBindResult> CreateResult(const QSharedPointer<Action>& TargetAction);
+    static QString GetTargetActionNameFromConfig(const QJsonObject& Config);
 
     // Getters
     virtual bool IsBindedTo(const QSharedPointer<Action> NewAction) const;
+    QJsonObject GenerateConfig() const;
 
     // ================================ QML ====================================
     // Modifiers
