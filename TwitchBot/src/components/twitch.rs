@@ -7,7 +7,9 @@ use crate::parsers::{
         convert_twitch_type_to_enum, EventType, RequestSender
     }
 };
-use crate::components::action::Action;
+use crate::components::{
+    action::Action, module::Module
+};
 
 #[derive(Debug, Clone)]
 pub struct Twitch {
@@ -18,7 +20,8 @@ pub struct Twitch {
     pub actions: Vec<Action>,
     pub isConnected: bool,
     pub isSubscribed: bool,
-    sender: Option<crossbeam_channel::Sender<Action>>
+    sender: Option<crossbeam_channel::Sender<Action>>,
+    pub modules: Vec<Module>
 }
 
 impl Twitch {
@@ -31,7 +34,8 @@ impl Twitch {
             actions: vec![],
             isConnected: false,
             isSubscribed: false,
-            sender: None
+            sender: None,
+            modules: vec![]
         }
     }
 
@@ -86,9 +90,35 @@ impl Twitch {
                     // Do nothing
                 }
                 _ => {
+                    let mut action_to_execute: Action = Action::new();
+
+                    for module in self.modules.iter() {
+                        if module.is_binded_to_action(action) {
+                            let new_action = module.execute(&action);
+
+                            match new_action.action_event_type {
+                                EventType::Unknown => {
+                                }
+                                _ => {
+                                    action_to_execute = new_action.clone();
+                                    break;
+                                },
+                            }
+                        }
+                    }
+
+                    match action_to_execute.action_event_type {
+                        EventType::Unknown => {
+                            action_to_execute = action.clone();
+                        }
+                        _ => {
+                            action.action_event_type = EventType::Unknown;
+                        },
+                    }
+
                     match &self.sender {
                         Some(request_sender) => {
-                            match request_sender.send(action.clone()) {
+                            match request_sender.send(action_to_execute.clone()) {
                                 Ok(_) => {
                                     println!("Action sent! {:?}", action.clone());
                                 },

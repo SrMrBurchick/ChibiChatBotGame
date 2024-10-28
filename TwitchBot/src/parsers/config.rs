@@ -2,7 +2,7 @@ use std::error::Error;
 use std::fs;
 use json::{self, JsonValue};
 
-use crate::components::{action::Action, twitch::Twitch};
+use crate::components::{action::Action, twitch::Twitch, module::Module};
 
 
 #[derive(Debug, Clone)]
@@ -119,6 +119,19 @@ impl Config {
         return actions;
     }
 
+    fn init_modules(&self, json_modules: &JsonValue) -> Vec<Module> {
+        let mut modules: Vec<Module> = vec![];
+        if json_modules.is_array() {
+            for element in json_modules.members() {
+                let mut module: Module = Module::new();
+                module.parse_config(element);
+                modules.push(module);
+            }
+        }
+
+        return modules;
+    }
+
     pub fn init_twitch(&self, twitch: &mut Twitch) {
         match get_value(&self.content, "actions") {
             Ok(actions) => {
@@ -153,6 +166,14 @@ impl Config {
             },
             Err(_) => {},
         }
+
+        match get_value(&self.content, "modules") {
+            Ok(modules) => {
+                twitch.modules = self.init_modules(&modules);
+            },
+            Err(_) => {},
+        }
+
     }
 
     pub fn init(&mut self, content: JsonValue) {

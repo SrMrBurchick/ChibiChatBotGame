@@ -8,7 +8,7 @@ pub struct Action {
     pub reward_to_listen: String,
     pub event_type: String,
     pub user_input: String,
-    pub action_event_type: EventType
+    pub action_event_type: EventType,
 }
 
 impl Action {
