@@ -84,6 +84,7 @@ impl OutputParam {
     }
 
     pub fn parse_config(&mut self, config: &JsonValue) {
+        println!("Parse output config = {}", config.dump().as_str());
         match get_value(&config, "name") {
             Ok(value) => {
                 self.name = value.to_string();
@@ -270,6 +271,8 @@ impl ModuleBindResult {
     }
 
     pub fn parse_result(&self, result: &JsonValue) -> String {
+        println!("Parese module result = {:?}", result.dump().clone());
+        println!("target_output = {:?}", self.target_output.name.clone());
         match get_value(&result, self.target_output.name.as_str()) {
             Ok(value) => {
                 for pool in self.pools.iter() {
@@ -308,9 +311,11 @@ impl ModuleBind {
         match get_value(&config, "results") {
             Ok(value) => {
                 if value.is_array() {
-                    let mut result: ModuleBindResult = ModuleBindResult::new();
-                    result.parse_config(&value);
-                    self.results.push(result);
+                    for element in value.members() {
+                        let mut result: ModuleBindResult = ModuleBindResult::new();
+                        result.parse_config(element);
+                        self.results.push(result);
+                    }
                 }
             },
             Err(_) => {},
@@ -333,18 +338,28 @@ impl Module {
 
     pub fn execute(&self, action: &Action) -> Action {
         let mut result_action = Action::new();
-        let mut module_process = Command::new(Path::new(self.module_directory.as_str()).join(self.path.as_str()));
+        let mut path = String::default();
 
-        // Args initialization TODO
-        for param in self.input_params.clone() {
-            module_process.arg(param.name.clone());
-            module_process.arg(param.value.clone());
+        match Path::new(self.module_directory.as_str()).join(self.path.as_str()).to_str() {
+            Some(value) => {
+                println!("Execute process = {}", value);
+                path = String::from(value);
+            },
+            None => {},
         }
+
+        let mut module_process = Command::new(path.as_str());
+        // Args initialization TODO
+        // for param in self.input_params.clone() {
+        //     module_process.arg(param.name.clone());
+        //     module_process.arg(param.value.clone());
+        // }
 
         match module_process.output() {
             Ok(output) => {
                 match str::from_utf8(&output.stdout) {
                     Ok(data) => {
+                        println!("Received output form module {}", data);
                         match json::parse(data) {
                             Ok(json_data) => {
                                 for bind in self.binds.iter() {
@@ -353,6 +368,7 @@ impl Module {
                                             let action_name = result.parse_result(&json_data);
                                             if !action_name.is_empty() {
                                                 result_action.name = action_name;
+                                                println!("Match action = {:?}", result_action.clone());
                                                 return result_action;
                                             }
                                         }

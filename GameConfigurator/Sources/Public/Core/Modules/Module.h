@@ -30,7 +30,7 @@ public:
     explicit CBModule(QObject* Parent = nullptr);
     virtual ~CBModule();
 
-    bool ParseConfig(const QJsonDocument& JsonData);
+    bool ParseConfig(const QJsonDocument& JsonData, const QString& ModuleDirectory);
     bool ParseGameConfig(const QJsonObject& Config);
 
     // Getters
@@ -66,6 +66,8 @@ private:
     QString Name;
     QString Version;
     QString Path;
+    QString ConfigFile;
+    QString ModuleDirectory;
 
     QList<QSharedPointer<CBModuleOutput>> Outputs;
     QList<QSharedPointer<CBModuleInputParam>> Inputs;

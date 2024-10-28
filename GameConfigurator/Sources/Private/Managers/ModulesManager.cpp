@@ -69,7 +69,7 @@ void CBModulesManager::SearchModules()
             }
 
             if (QSharedPointer<CBModule> NewModule = QSharedPointer<CBModule>::create()) {
-                if (NewModule->ParseConfig(JsonConfig) && !IsModuleExists(NewModule)) {
+                if (NewModule->ParseConfig(JsonConfig, FileInfo.absolutePath()) && !IsModuleExists(NewModule)) {
                     Modules.push_back(NewModule);
                     NotificationsManager::SendNotification("Modules Manager", "Added New Module");
                 }

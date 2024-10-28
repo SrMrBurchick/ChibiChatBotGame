@@ -202,7 +202,7 @@ Item {
 
     Component {
         id: twitchSettings
-        ColumnLayout {
+        RowLayout {
             width: parent.width
 
             PropertyComboBoxDelegate {
@@ -245,6 +245,16 @@ Item {
                 Component.onCompleted: {
                     if (ActionsManager && TwitchManager) {
                         updateDisplayText()
+                    }
+                }
+            }
+
+            RemoveButton {
+                width: 40
+                height: 40
+                onClicked: {
+                    if (actionConfig) {
+                        actionConfig.rewardID = ""
                     }
                 }
             }

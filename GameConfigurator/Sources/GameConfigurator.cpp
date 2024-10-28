@@ -99,13 +99,13 @@ int main(int argc, char *argv[])
     qmlRegisterType<CBModuleBindResult>("ModuleSettings", 1, 0, "ModuleBindResult");
 
     // Tests
-    ActionsManagerComp->addNewAction("walk");
-    ActionsManagerComp->addNewAction("climb");
-    ActionsManagerComp->addNewAction("fall");
-    ActionsManagerComp->addNewAction("standby");
-    ActionsManagerComp->addNewAction("Прабить");
-    ActionsManagerComp->addNewAction("Забить");
-    ActionsManagerComp->addNewAction("Промазать");
+    // ActionsManagerComp->addNewAction("walk");
+    // ActionsManagerComp->addNewAction("climb");
+    // ActionsManagerComp->addNewAction("fall");
+    // ActionsManagerComp->addNewAction("standby");
+    // ActionsManagerComp->addNewAction("Прабить");
+    // ActionsManagerComp->addNewAction("Забить");
+    // ActionsManagerComp->addNewAction("Промазать");
 
     // AccessPoint initialization
     if (QPointer<CBAccessPoint> AccessPoint = CBAccessPoint::GetAccessPoint()) {

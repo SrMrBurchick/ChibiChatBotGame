@@ -90,40 +90,24 @@ impl Twitch {
                     // Do nothing
                 }
                 _ => {
-                    let mut action_to_execute: Action = Action::new();
+                    let mut action_to_execute: Action = action.clone();
+                    println!("Try to execute action: {:?}", action.clone());
 
                     for module in self.modules.iter() {
                         if module.is_binded_to_action(action) {
-                            let new_action = module.execute(&action);
-
-                            match new_action.action_event_type {
-                                EventType::Unknown => {
-                                }
-                                _ => {
-                                    action_to_execute = new_action.clone();
-                                    break;
-                                },
-                            }
+                            action_to_execute = module.execute(&action);
                         }
                     }
 
-                    match action_to_execute.action_event_type {
-                        EventType::Unknown => {
-                            action_to_execute = action.clone();
-                        }
-                        _ => {
-                            action.action_event_type = EventType::Unknown;
-                        },
-                    }
-
+                    println!("Action to execute = {:?}", action_to_execute.clone());
                     match &self.sender {
                         Some(request_sender) => {
                             match request_sender.send(action_to_execute.clone()) {
                                 Ok(_) => {
-                                    println!("Action sent! {:?}", action.clone());
+                                    println!("Action sent! {:?}", action_to_execute.clone());
                                 },
                                 Err(_) => {
-                                    println!("Failed to send action! {:?}", action.clone());
+                                    println!("Failed to send action! {:?}", action_to_execute.clone());
                                 },
                             };
 

@@ -19,6 +19,7 @@ constexpr char PATH[] = "path";
 constexpr char INPUT_PARAMS[] = "input_params";
 constexpr char OUTPUT_PARAMS[] = "output_params";
 constexpr char BINDS[] = "binds";
+constexpr char MODULE_PATH[] = "directory";
 
 CBModule::CBModule(QObject* Parent)
     : QObject(Parent)
@@ -31,7 +32,7 @@ CBModule::~CBModule()
 
 }
 
-bool CBModule::ParseConfig(const QJsonDocument& JsonData)
+bool CBModule::ParseConfig(const QJsonDocument& JsonData, const QString& Directory)
 {
     QJsonObject ConfigObject = JsonData.object();
 
@@ -53,6 +54,8 @@ bool CBModule::ParseConfig(const QJsonDocument& JsonData)
             }
         }
     }
+
+    ModuleDirectory = Directory;
 
     return !Name.isEmpty() || !Version.isEmpty() || !Path.isEmpty();
 }
@@ -240,6 +243,7 @@ QJsonObject CBModule::GenerateConfig() const
     if (!BindsConfig.isEmpty()) {
         Config.insert(NAME, Name);
         Config.insert(PATH, Path);
+        Config.insert(MODULE_PATH, ModuleDirectory);
         Config.insert(BINDS, BindsConfig);
     }
 
