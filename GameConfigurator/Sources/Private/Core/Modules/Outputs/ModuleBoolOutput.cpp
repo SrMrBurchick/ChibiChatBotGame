@@ -1,6 +1,8 @@
 #include "Core/Modules/Outputs/ModuleBoolOutput.h"
 #include "Core/Modules/Binds/ModuleBindResultPool.h"
 
+#include "System/Logger.h"
+
 constexpr bool ON_FALSE = 0;
 constexpr bool ON_TRUE = 1;
 constexpr char FALSE_POSTFIX[] = "OnFalse";
@@ -29,6 +31,7 @@ int CBModuleBoolOutput::GetPoolsCount() const
 
 QSharedPointer<CBModuleBindResultPool> CBModuleBoolOutput::CreatePool(int Index) const
 {
+    LOG_INFO("Create bool pool");
     switch (Index) {
         case ON_FALSE:
             return CBModuleBindResultPool::CreatePool(FALSE_POSTFIX);

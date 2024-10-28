@@ -53,6 +53,7 @@ Rectangle {
                     delegate = targetDelegate
                 }
 
+                valueChanged(comboBox.currentText)
                 calculateMaxWidth()
             }
         }

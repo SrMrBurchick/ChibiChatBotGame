@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 
 class ActionsManager;
+class Action;
 
 class CBModuleInputParam;
 class CBModuleOutput;
@@ -34,6 +35,7 @@ public:
     const QString& GetName() const;
     const QString& GetVersion() const;
     const QString& GetPath() const;
+    bool HasBindedAction(QSharedPointer<Action> TargetAction) const;
 
     // ================================ QML ====================================
     // Modifiers
@@ -42,6 +44,7 @@ public:
     Q_INVOKABLE void bindNewAction(ActionsManager* Manager, const QString& ActionName);
     Q_INVOKABLE void selectBind(int Index);
     Q_INVOKABLE CBModuleBindConfig* getSelectedBindConfig();
+    Q_INVOKABLE void removeBindConfig(int Index);
 
     // Getters
     Q_INVOKABLE int getBindsCount() const;

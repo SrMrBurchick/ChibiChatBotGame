@@ -119,15 +119,9 @@ void CBModule::bindNewAction(ActionsManager* Manager, const QString& ActionName)
         return;
     }
 
-    for (const QSharedPointer<CBModuleBindConfig>& Bind : Binds) {
-        if (Bind.isNull()) {
-            continue;
-        }
-
-        if (Bind->IsBindedToAction(BindAction)) {
-            LOG_WARNING("Action %s already binded", BindAction->getName().toStdString().c_str());
-            return;
-        }
+    if (HasBindedAction(BindAction)) {
+        LOG_WARNING("Action %s already binded", BindAction->getName().toStdString().c_str());
+        return;
     }
 
     if (QSharedPointer<CBModuleBindConfig> NewBind = CBModuleBindConfig::CreateBindConfig(BindAction, Outputs)) {
@@ -182,3 +176,28 @@ CBModuleBindConfig* CBModule::getSelectedBindConfig()
     return nullptr;
 }
 
+bool CBModule::HasBindedAction(QSharedPointer<Action> TargetAction) const
+{
+    for (const QSharedPointer<CBModuleBindConfig>& Bind : Binds) {
+        if (Bind.isNull()) {
+            continue;
+        }
+
+        if (Bind->IsBindedToAction(TargetAction)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void CBModule::removeBindConfig(int Index)
+{
+    if (Index < 0 && Index >= Outputs.count()) {
+        return;
+    }
+
+    Binds.remove(Index);
+
+    emit bindsUpdated();
+}

@@ -18,3 +18,5 @@ ChannelPointsRewardNameDelegate 1.0 Twitch/ChannelPointsRewardNameDelegate.qml
 ModuleListDelegate 1.0 Modules/ModuleListDelegate.qml
 ModuleBindListDelegate 1.0 Modules/ModuleBindListDelegate.qml
 ModuleResultConfigDelegate 1.0 Modules/ModuleResultConfigDelegate.qml
+ModuleBindPoolDelegate 1.0 Modules/ModuleBindPoolDelegate.qml
+ModuleResultDelegate 1.0 Modules/ModuleResultDelegate.qml

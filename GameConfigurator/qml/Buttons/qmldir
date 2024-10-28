@@ -1,3 +1,4 @@
 module Buttons
 ImageSelect 1.0 ImageSelect.qml
 BaseButton 1.0 BaseButton.qml
+RemoveButton 1.0 RemoveButton.qml

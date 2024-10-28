@@ -27,6 +27,7 @@
 #include "Core/Modules/Binds/ModuleBindConfig.h"
 #include "Core/Modules/Binds/ModuleBindResultConfig.h"
 #include "Core/Modules/Binds/ModuleBindResultPool.h"
+#include "Core/Modules/Binds/ModuleBindResult.h"
 
 int main(int argc, char *argv[])
 {
@@ -94,6 +95,16 @@ int main(int argc, char *argv[])
     qmlRegisterType<CBModuleBindConfig>("ModuleSettings", 1, 0, "ModuleBindConfig");
     qmlRegisterType<CBModuleBindResultConfig>("ModuleSettings", 1, 0, "ModuleBindResultConfig");
     qmlRegisterType<CBModuleBindResultPool>("ModuleSettings", 1, 0, "ModuleBindResultPool");
+    qmlRegisterType<CBModuleBindResult>("ModuleSettings", 1, 0, "ModuleBindResult");
+
+    // Tests
+    ActionsManagerComp->addNewAction("walk");
+    ActionsManagerComp->addNewAction("climb");
+    ActionsManagerComp->addNewAction("fall");
+    ActionsManagerComp->addNewAction("standby");
+    ActionsManagerComp->addNewAction("Прабить");
+    ActionsManagerComp->addNewAction("Забить");
+    ActionsManagerComp->addNewAction("Промазать");
 
     const QUrl url(QStringLiteral("qrc:/main_window.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

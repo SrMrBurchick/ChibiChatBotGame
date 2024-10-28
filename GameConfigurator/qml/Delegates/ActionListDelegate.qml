@@ -5,6 +5,7 @@ import Base
 import Dialogs
 import Panels
 import Managers
+import Buttons
 
 Rectangle {
     id: root
@@ -45,24 +46,16 @@ Rectangle {
 
     }
 
-    Rectangle {
+    RemoveButton {
         id: deleteItem
         width: 30
         height: 30
-        color: "transparent"
         anchors.right: root.right
         anchors.top: root.top
         anchors.margins: 10
 
-        MouseArea {
-            anchors.fill: parent
-            Image {
-                anchors.fill: parent
-                source: Style.trashCanImage
-            }
-            onClicked: {
-                removeElement(index)
-            }
+        onClicked: {
+            removeElement(index)
         }
     }
 

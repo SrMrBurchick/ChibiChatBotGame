@@ -3,6 +3,7 @@
 #include "Core/Modules/Binds/ModuleBindResultConfig.h"
 
 #include "Core/Action.h"
+#include "System/Logger.h"
 
 
 #include <QQmlEngine>
@@ -36,6 +37,7 @@ QSharedPointer<CBModuleBindConfig> CBModuleBindConfig::CreateBindConfig(const QS
 
         for (const QSharedPointer<CBModuleOutput>& Output : Outputs) {
             if (QSharedPointer<CBModuleBindResultConfig> Result = CBModuleBindResultConfig::CreateResultConfig(Output)) {
+                LOG_INFO("Add new result config for output = %s", Output->GetName().toStdString().c_str());
                 NewConfig->Configs.push_back(Result);
             }
         }

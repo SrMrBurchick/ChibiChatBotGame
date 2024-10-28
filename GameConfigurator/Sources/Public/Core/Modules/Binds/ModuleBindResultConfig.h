@@ -11,6 +11,7 @@ class CBModuleBindResultConfig: public QObject {
     Q_OBJECT
 
     Q_PROPERTY(CBModuleOutput* targetOutput READ getTargetOutput)
+    Q_PROPERTY(int poolsCount READ getPoolsCount)
 
 public:
     // ================================ C++ ====================================
@@ -25,7 +26,8 @@ public:
 
     // Getters
     Q_INVOKABLE CBModuleOutput* getTargetOutput() const;
-
+    Q_INVOKABLE int getPoolsCount() const;
+    Q_INVOKABLE CBModuleBindResultPool* getPool(int Index) const;
 
 private:
     QSharedPointer<CBModuleOutput> TargetOutput;

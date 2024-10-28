@@ -13,6 +13,7 @@
         <file>qml/Buttons/qmldir</file>
         <file>qml/Buttons/ImageSelect.qml</file>
         <file>qml/Buttons/BaseButton.qml</file>
+        <file>qml/Buttons/RemoveButton.qml</file>
 
         <file>qml/Pages/qmldir</file>
         <file>qml/Pages/MainPage.qml</file>
@@ -57,6 +58,8 @@
         <file>qml/Delegates/Modules/ModuleListDelegate.qml</file>
         <file>qml/Delegates/Modules/ModuleBindListDelegate.qml</file>
         <file>qml/Delegates/Modules/ModuleResultConfigDelegate.qml</file>
+        <file>qml/Delegates/Modules/ModuleBindPoolDelegate.qml</file>
+        <file>qml/Delegates/Modules/ModuleResultDelegate.qml</file>
 
         <!-- Dialogs -->
         <file>qml/Dialogs/qmldir</file>
@@ -70,6 +73,8 @@
         <!-- Images -->
         <file>qml/Images/trash_can.png</file>
         <file>qml/Images/trash_can_dark_theme.png</file>
+        <file>qml/Images/trash_can_hovered.png</file>
+        <file>qml/Images/trash_can_dark_theme_hovered.png</file>
         <file>qml/Images/sprite-sheet.png</file>
         <file>qml/Images/copy.png</file>
         <file>qml/Images/copy_white.png</file>

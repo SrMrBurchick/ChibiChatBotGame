@@ -38,7 +38,6 @@ Item {
                 id: previewPanel
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                // Layout.preferredHeight: modulesList.height
             }
         }
 

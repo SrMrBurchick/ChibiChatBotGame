@@ -55,17 +55,16 @@ BasePanel {
                 fieldName: "Version:"
                 defaultText: module ? module.version : ""
             }
-
         }
 
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.margins: 10
 
             BaseText {
                 font.pixelSize : 24
                 text: "Module bindings"
-                Layout.topMargin: 20
                 Layout.alignment: Qt.AlignHCenter
             }
 
@@ -73,12 +72,18 @@ BasePanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                ListView {
+                ScrollView {
                     anchors.fill: parent
-                    anchors.margins: 10
-                    spacing: 10
-                    model: module.bindsCount
-                    delegate: ModuleBindListDelegate {
+                    clip: true
+
+                    ListView {
+                        anchors.fill: parent
+                        spacing: 20
+                        model: module.bindsCount
+                        delegate: ModuleBindListDelegate {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                        }
                     }
                 }
             }
@@ -102,6 +107,8 @@ BasePanel {
         target: ModulesManager
         onModuleSelected: {
             root.module = ModulesManager.getSelectedModule();
+
+            console.log("New module selected =", root.module)
         }
     }
 

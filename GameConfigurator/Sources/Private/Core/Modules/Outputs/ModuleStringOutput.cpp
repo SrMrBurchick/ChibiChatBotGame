@@ -1,5 +1,6 @@
 #include "Core/Modules/Outputs/ModuleStringOutput.h"
 #include "Core/Modules/Binds/ModuleBindResultPool.h"
+#include "System/Logger.h"
 
 constexpr char STRING_POSTFIX[] = "String";
 
@@ -26,5 +27,6 @@ int CBModuleStringOutput::GetPoolsCount() const
 
 QSharedPointer<CBModuleBindResultPool> CBModuleStringOutput::CreatePool(int Index) const
 {
+    LOG_INFO("Create string pool");
     return CBModuleBindResultPool::CreatePool(STRING_POSTFIX);
 }

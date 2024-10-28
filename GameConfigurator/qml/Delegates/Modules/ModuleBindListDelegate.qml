@@ -6,70 +6,73 @@ import Dialogs
 import Panels
 import Managers
 import ModuleSettings
+import Delegates
+import Buttons
 
 Rectangle {
     id: root
 
     property ModuleBindConfig moduleBindConfig: undefined
-    property bool isExpanded: false
-    property bool isEnabled: true
 
-    color: Style.actionListItemBGColor
+    color: Style.settingsDelegateBGColor
+    height: panel.height
 
-    width: parent.width
-    height: isExpanded ? panel.height + contentLoader.height + 5 : panel.height
+    border.width: 5
+    border.color: Style.propertyDelegateBorderColor
+    radius: 20
 
-    RowLayout {
+    ColumnLayout {
         id: panel
         spacing: 10
+        width: root.width
 
-        BaseText {
-            text: moduleBindConfig ? moduleBindConfig.targetAction.name : ""
-            Layout.leftMargin: 5
-            font.pixelSize: 32
-            font.bold: true
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.margins: 10
+            spacing: 10
+
+            BaseText {
+                text: moduleBindConfig ? moduleBindConfig.targetAction.name : ""
+                font.pixelSize: 32
+                font.bold: true
+            }
+
+            RemoveButton {
+                height: 40
+                width: 40
+                Layout.alignment: Qt.AlignVCenter
+                onClicked: {
+                    console.log("Remove clicked");
+                    if (ModulesManager != undefined) {
+                        var module = ModulesManager.getSelectedModule();
+                        module.removeBindConfig(index)
+                    }
+                }
+            }
         }
 
-        BaseText {
-            text: root.isExpanded ? "▼" : "►"
-            font.pixelSize: 32
-            font.bold: true
-
-            MouseArea {
+        Column {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.margins: 20
+            spacing: 10
+            Repeater {
                 anchors.fill: parent
-                onClicked: {
-                    root.isExpanded = !root.isExpanded
+                model: root.moduleBindConfig.resultsConfigCount
+                delegate: ModuleResultConfigDelegate {
+                    // anchors.horizontalCenter: parent.horizontalCenter
+                    // width: parent.width / 2.0
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    moduleBindConfig: root.moduleBindConfig
                 }
             }
         }
 
     }
 
-    // MouseArea {
-    //     anchors.fill: parent
-    //     onClicked: {
-    //         if (ModulesManager != undefined) {
-    //             var module = ModulesManager.getSelectedModule();
-    //             module.selectBind(index)
-    //         }
-    //     }
-    // }
-
-    Loader {
-        id: contentLoader
-        visible: root.isExpanded
-        anchors.top: panel.bottom
-        width: root.width
-        sourceComponent: Rectangle {
-
-        }
-        // onLoaded: {
-        //     componentLoaded(component)
-        // }
-    }
-
-    // signal componentLoaded(Component loaded_component)
     Component.onCompleted: {
+        console.log("Create module bind")
         if (ModulesManager != undefined) {
             var module = ModulesManager.getSelectedModule();
             moduleBindConfig = module.getBindConfig(index)

@@ -2,6 +2,8 @@
 #include "Core/Modules/Outputs/ModuleOutput.h"
 #include "Core/Modules/Binds/ModuleBindResultPool.h"
 
+#include "System/Logger.h"
+
 #include <QQmlEngine>
 
 CBModuleBindResultConfig::CBModuleBindResultConfig(QObject* Parent)
@@ -20,10 +22,9 @@ QSharedPointer<CBModuleBindResultConfig> CBModuleBindResultConfig::CreateResultC
     if (QSharedPointer<CBModuleBindResultConfig> NewBind = QSharedPointer<CBModuleBindResultConfig>::create()) {
         if (!Output.isNull()) {
             NewBind->TargetOutput = Output;
-            const int PoolsCount = Output->GetPoolsCount();
-            if (PoolsCount > 0) {
-                for (int Index = 0; Index < PoolsCount; ++Index) {
-                    NewBind->Pools.push_back(Output->CreatePool(Index));
+            for (int Index = 0; Index < Output->GetPoolsCount(); ++Index) {
+                if (QSharedPointer<CBModuleBindResultPool> NewPool = Output->CreatePool(Index)) {
+                    NewBind->Pools.push_back(NewPool);
                 }
             }
 
@@ -39,6 +40,27 @@ CBModuleOutput* CBModuleBindResultConfig::getTargetOutput() const
     if (!TargetOutput.isNull()) {
         QQmlEngine::setObjectOwnership(TargetOutput.data(), QQmlEngine::CppOwnership);
         return TargetOutput.data();
+    }
+
+    return nullptr;
+}
+
+int CBModuleBindResultConfig::getPoolsCount() const
+{
+    return Pools.count();
+}
+
+CBModuleBindResultPool* CBModuleBindResultConfig::getPool(int Index) const
+{
+    LOG_INFO("Try to get pool by index %d, PoolsCount = %d", Index, Pools.count());
+    if (Index < 0 || Index >= Pools.count()) {
+        return nullptr;
+    }
+
+    if (QSharedPointer<CBModuleBindResultPool> Pool = Pools[Index]) {
+        LOG_INFO("Select pool = %s", Pool->getPoolPostfix().toStdString().c_str());
+        QQmlEngine::setObjectOwnership(Pool.data(), QQmlEngine::CppOwnership);
+        return Pool.data();
     }
 
     return nullptr;

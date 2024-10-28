@@ -1,5 +1,6 @@
 #include "Core/Modules/Outputs/ModuleNumberOutput.h"
 #include "Core/Modules/Binds/ModuleBindResultPool.h"
+#include "System/Logger.h"
 
 constexpr char NUMBER_POSTFIX [] = "Number";
 
@@ -26,5 +27,6 @@ int CBModuleNumberOutput::GetPoolsCount() const
 
 QSharedPointer<CBModuleBindResultPool> CBModuleNumberOutput::CreatePool(int Index) const
 {
+    LOG_INFO("Create number pool");
     return CBModuleBindResultPool::CreatePool(NUMBER_POSTFIX);
 }

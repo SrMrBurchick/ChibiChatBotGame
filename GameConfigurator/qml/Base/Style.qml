@@ -97,9 +97,12 @@ QtObject {
 
     readonly property string lightTrashCanImage: "qrc:qml/Images/trash_can.png"
     readonly property string darkTrashCanImage: "qrc:qml/Images/trash_can_dark_theme.png"
+    readonly property string lightTrashCanImageHovered: "qrc:qml/Images/trash_can_hovered.png"
+    readonly property string darkTrashCanImageHovered: "qrc:qml/Images/trash_can_dark_theme_hovered.png"
     readonly property string darkCopyImage: "qrc:qml/Images/copy_white.png"
     readonly property string lightCopyImage: "qrc:qml/Images/copy.png"
     readonly property string trashCanImage: bIsDarkTheme ? darkTrashCanImage : lightTrashCanImage
+    readonly property string trashCanHoveredImage: bIsDarkTheme ? darkTrashCanImageHovered : lightTrashCanImageHovered
     readonly property string copyImage: bIsDarkTheme ? darkCopyImage : lightCopyImage
     readonly property string twitchIcon: "qrc:qml/Images/twitch-logo.png"
     readonly property string gearIcon: "qrc:qml/Images/gear_icon.png"

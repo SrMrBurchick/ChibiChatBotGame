@@ -11,5 +11,12 @@ enum class EConditionOperators {
     eEqual = 0,
     eGreater,
     eLower,
-    eNotEqual
+    eNotEqual,
+    eUnknown
+};
+
+enum class EExecutionType {
+    eRandom = 0,
+    eSequence,
+    eUnknown
 };
