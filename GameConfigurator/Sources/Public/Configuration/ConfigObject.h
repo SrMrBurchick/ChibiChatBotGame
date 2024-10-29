@@ -67,6 +67,7 @@ class TwitchSettings : public QObject{
     Q_OBJECT
     Q_PROPERTY(TwitchBotSettings* bot READ getBot)
     Q_PROPERTY(QString channelName MEMBER ChannelName)
+    Q_PROPERTY(QString banwords MEMBER Banwords)
 
 public:
     TwitchBotSettings Bot;
@@ -80,6 +81,7 @@ public:
     QString OAuthToken = "";
     QString ChannelName = "";
     QString UserId = "";
+    QString Banwords = "";
 };
 
 class GameSettings : public QObject {

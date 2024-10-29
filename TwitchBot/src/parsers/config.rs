@@ -4,7 +4,6 @@ use json::{self, JsonValue};
 
 use crate::components::{action::Action, twitch::Twitch, module::Module};
 
-
 #[derive(Debug, Clone)]
 pub struct Config {
     pub host: String,
@@ -149,20 +148,37 @@ impl Config {
                     Err(_) => {},
                 }
 
-                match get_value(&settings, "client-id") {
-                    Ok(value) => {
-                        twitch.client_id = value.to_string();
+                match std::env::var("CLIENT_ID") {
+                    Ok(var) => {
+                        twitch.client_id = var;
                     },
-                    Err(_) => {},
+                    Err(e) => {
+                        println!("Failed to read  {:?}", e);
+                    }
                 }
 
                 match get_value(&settings, "user-id") {
                     Ok(value) => {
                         twitch.user_id = value.to_string();
                     },
-                    Err(_) => {},
+                    Err(e) => {},
                 }
 
+                match get_value(&settings, "bot-settings") {
+                    Ok(bot) => {
+                        match get_value(&bot, "banwords") {
+                            Ok(value) => {
+                                if value.is_array() {
+                                    for banword in value.members() {
+                                        twitch.banwords.push(banword.to_string());
+                                    }
+                                }
+                            },
+                            Err(_) => {},
+                        }
+                    },
+                    Err(_) => {},
+                }
             },
             Err(_) => {},
         }

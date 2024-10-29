@@ -1,6 +1,9 @@
 #include "Managers/ProcessManager.h"
 #include "Managers/NotificationsManager.h"
 #include "Managers/Processes/GameProcess.h"
+#include "Managers/Processes/BotProcess.h"
+
+#include "System/Logger.h"
 
 ProcessManager::ProcessManager(QObject* Parent)
     :QObject(Parent)
@@ -82,12 +85,24 @@ bool ProcessManager::AddProcess(QPointer<IProcess> Process)
                     emit gameStarted();
                     break;
                 case eProcessType::Bot:
-                    SetBusy(false);
                     emit botStarted();
                     break;
             }
         }
     );
+
+    if (Process->GetType() == eProcessType::Bot) {
+        QObject::connect((BotProcess*)(Process.get()), &BotProcess::botStatusChanged, [this](int Status, const QString& Type){
+            LOG_INFO("Received chatbot status = %d, type = %s", Status, Type.toStdString().c_str());
+            SetBusy(false);
+            if (Status != 202) {
+                NotificationsManager::SendNotification("Bot process", QString::asprintf("Failed to subscribe!\n%s", Type.toStdString().c_str()));
+                stopBotRunning();
+            } else {
+                NotificationsManager::SendNotification("Bot process", QString::asprintf("Successfully subscribed!\n%s", Type.toStdString().c_str()));
+            }
+        });
+    }
 
     if (Process->GetType() == eProcessType::Game) {
         QObject::connect((GameProcess*)(Process.get()), &GameProcess::gameRunningAt, [=](QString GameInfo){

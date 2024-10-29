@@ -21,7 +21,8 @@ pub struct Twitch {
     pub isConnected: bool,
     pub isSubscribed: bool,
     sender: Option<crossbeam_channel::Sender<Action>>,
-    pub modules: Vec<Module>
+    pub modules: Vec<Module>,
+    pub banwords: Vec<String>
 }
 
 impl Twitch {
@@ -35,7 +36,8 @@ impl Twitch {
             isConnected: false,
             isSubscribed: false,
             sender: None,
-            modules: vec![]
+            modules: vec![],
+            banwords: vec![]
         }
     }
 
@@ -91,7 +93,22 @@ impl Twitch {
                 }
                 _ => {
                     let mut action_to_execute: Action = action.clone();
-                    println!("Try to execute action: {:?}", action.clone());
+
+                    let action_json = action.get_action_json();
+                    match get_value(&action_json, "message") {
+                        Ok(message) => {
+                            let input_to_check = message.to_string().to_lowercase();
+                            println!("Check input {:?} for banwords {:?}", input_to_check, self.banwords);
+                            for banword in self.banwords.iter() {
+                                if input_to_check.contains(banword.as_str()) {
+                                    action.action_event_type = EventType::Unknown;
+                                    return;
+                                }
+                            }
+
+                        },
+                        Err(_) => {},
+                    }
 
                     for module in self.modules.iter() {
                         if module.is_binded_to_action(action) {
@@ -110,11 +127,11 @@ impl Twitch {
                                     println!("Failed to send action! {:?}", action_to_execute.clone());
                                 },
                             };
-
-                            action.action_event_type = EventType::Unknown;
                         },
                         None => {},
                     }
+
+                    action.action_event_type = EventType::Unknown;
                 },
             }
         }
@@ -163,6 +180,16 @@ impl Twitch {
         match response {
             Ok(data) => {
                 println!("Subscribtion result {:?}", data);
+                match body.get("type") {
+                    Some(sub_type) => {
+                        println!("TWITCH_SUB_STATUS={}", data.status());
+                        println!("TWITCH_SUB_TYPE={}", sub_type.to_string());
+
+                        // println!("TWITCH_SUB_STATUS=\{\"status\":{:?}, \"type\":\"{}\"\}", data.status(), sub_type.to_string());
+                    },
+
+                    None => {},
+                };
             },
             Err(_) => {},
         }

@@ -28,7 +28,6 @@ constexpr char TWITCH_SETTINGS[] = "twitch-settings";
 constexpr char TWITCH_BOT_SETTINGS[] = "twitch-bot-settings";
 constexpr char TWITCH_CHANNEL[] = "twitch-channel";
 constexpr char TWITCH_OAUTH[] = "oauth-token";
-constexpr char TWITCH_CLIENT_ID[] = "client-id";
 constexpr char TWITCH_USER_ID[] = "user-id";
 
 // Action execution time
@@ -54,6 +53,7 @@ constexpr char BOT_SETTINGS[] = "bot-settings";
 constexpr char BOT_SETTINGS_URL[] = "url";
 constexpr char BOT_SETTINGS_PORT[] = "port";
 constexpr char BOT_USER[] = "any-user";
+constexpr char BANWORDS[] = "banwords";
 
 // Table settings fields
 constexpr char TABLE_SETTINGS[] = "table-size";
@@ -133,10 +133,22 @@ void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
     if (JsonTwitchSettings.contains(TWITCH_CHANNEL) && JsonTwitchSettings.contains(TWITCH_OAUTH)) {
         SystemSettings.Twitch.ChannelName = JsonTwitchSettings[TWITCH_CHANNEL].toString();
         SystemSettings.Twitch.OAuthToken = JsonTwitchSettings[TWITCH_OAUTH].toString();
-        if (JsonTwitchSettings.contains(TWITCH_BOT_SETTINGS)) {
-            QVariantMap JsonTwitchBotSettings = JsonTwitchSettings[TWITCH_BOT_SETTINGS].toMap();
+        if (JsonTwitchSettings.contains(BOT_SETTINGS)) {
+            QVariantMap JsonTwitchBotSettings = JsonTwitchSettings[BOT_SETTINGS].toMap();
             SystemSettings.Twitch.Bot.WebSockURL = JsonTwitchBotSettings[BOT_SETTINGS_URL].toString();
             SystemSettings.Twitch.Bot.WebSockPort = JsonTwitchBotSettings[BOT_SETTINGS_PORT].toInt();
+            for (QJsonValueConstRef BanwordJSON : JsonTwitchBotSettings[BANWORDS].toJsonArray()) {
+                QString Banword = BanwordJSON.toString();
+                SystemSettings.Twitch.Banwords = QString::asprintf(
+                    "%s, %s", SystemSettings.Twitch.Banwords.toStdString().c_str(),
+                    Banword.toStdString().c_str()
+                );
+            }
+
+            if (SystemSettings.Twitch.Banwords.startsWith(",")) {
+                SystemSettings.Twitch.Banwords.remove(0, 1);
+            }
+
         }
 
     }
@@ -232,9 +244,18 @@ void ConfigObject::SaveConfigToFile(const QString& ConfigFileName)
     JsonTwitchSettings[TWITCH_CHANNEL] = SystemSettings.Twitch.ChannelName;
     JsonTwitchSettings[TWITCH_OAUTH] = SystemSettings.Twitch.OAuthToken;
     JsonTwitchSettings[TWITCH_USER_ID] = SystemSettings.Twitch.UserId;
-    JsonTwitchSettings[TWITCH_CLIENT_ID] = QT_STRINGIFY(CLIENT_ID);
     JsonTwitchBotSettings[BOT_SETTINGS_URL] = SystemSettings.Twitch.Bot.WebSockURL;
     JsonTwitchBotSettings[BOT_SETTINGS_PORT] = SystemSettings.Twitch.Bot.WebSockPort;
+
+    QJsonArray Banwords;
+    for (QString& Banword : SystemSettings.Twitch.Banwords.split(",")) {
+        if (Banword.startsWith(" ")) {
+            Banword.remove(0, 1);
+        }
+        Banwords.push_back(Banword);
+    }
+    JsonTwitchBotSettings[BANWORDS] = Banwords;
+
     JsonTwitchSettings[BOT_SETTINGS] = JsonTwitchBotSettings;
 
     // Table settings

@@ -81,6 +81,48 @@ Item {
 
     }
 
+    Component {
+        id: helperDelegate
+        Rectangle {
+            color: "transparent"
+            width: helperValue.width + 40
+            height: 50
+            RowLayout {
+                anchors.fill: parent
+                spacing: 5
+                BaseText {
+                    id: helperValue
+                    text: value
+                    color: Style.textColor
+                    font.pixelSize: 40
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
+            }
+        }
+    }
+
+    ListModel {
+        id: helperContent
+        ListElement {
+            value: "Provide list of banwords, if someone in chat will wrote one of word that is in list than that message will no be displayed"
+        }
+        ListElement {
+            value: "Words splits by ','"
+        }
+
+        ListElement {
+            value: "Example:[I use arch, HVP, widnows, emacs]"
+        }
+
+    }
+
+    ShowHelpDialog {
+        id: helpDialog
+        customDelegate: helperDelegate
+        customModel: helperContent
+    }
+
 
     Component {
         id: twitchBotSettings
@@ -121,6 +163,22 @@ Item {
                 defaultValue: Config.systemConfig.twitchSettings.bot.port
                 onValueChanged:(value) => {
                     Config.systemConfig.twitchSettings.bot.port = value
+                }
+            }
+
+            PropertyDelegate {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 10
+                isHelp: true
+
+                fieldName: "Banwords:"
+                defaultText: Config.systemConfig.twitchSettings.banwords
+                onValueChanged:(text) => {
+                    Config.systemConfig.twitchSettings.banwords = text
+                }
+                onHelpClicked:{
+                    helpDialog.open()
                 }
             }
         }

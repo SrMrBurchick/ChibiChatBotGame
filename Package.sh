@@ -33,9 +33,5 @@ ${PROJECT_LOCATION}/tools/Scripts/Build/Linux/BuildGameConfigurator.sh ${GAME_CO
 ######################### Build Game ###########################################
 ${PROJECT_LOCATION}/tools/Scripts/Build/Linux/BuildGame.sh ${GAME} ${PACKAGE_GAME_DIRECTORY}
 
-## Copy game runner script to package directory
-cp ${PROJECT_LOCATION}/tools/Scripts/Runners/Linux/RunGame.sh ${PACKAGE_DIRECTORY}
-cp ${PROJECT_LOCATION}/tools/Scripts/Runners/Linux/RunChatBot.sh ${PACKAGE_DIRECTORY}
-
 ######################### Build Twitch bot #####################################
 ${PROJECT_LOCATION}/tools/Scripts/Build/Linux/BuildTwitchBot.sh ${TWITCH_BOT} ${PACKAGE_DIRECTORY}

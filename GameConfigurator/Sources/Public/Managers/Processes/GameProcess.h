@@ -7,7 +7,7 @@ class GameProcess: public IProcess {
 public:
     GameProcess();
     virtual ~GameProcess();
-    virtual bool RunProcess();
+    virtual bool RunProcess() override;
 
 signals:
     void gameRunningAt(QString Address);
