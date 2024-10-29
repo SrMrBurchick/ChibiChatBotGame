@@ -89,6 +89,9 @@ jobs:
         $GAME_CONFIGURATOR = "$GAME_CONFIGURATOR_LOCATION\build\release\GameConfigurator.exe"
         $PACKAGED_CONFIGURATOR = "$PACKAGE_LOCATION\GameConfigurator.exe"
 
+        qmake6 -makefile
+        make
+
         Write-Host "Deploying configurator"
         windeployqt --release --qmldir "$GAME_CONFIGURATOR_LOCATION\qml" --plugindir "$PACKAGE_LOCATION\Plugins" "$PACKAGED_CONFIGURATOR"
 
