@@ -464,7 +464,7 @@ void ConfigObject::InitActionsManager(ActionsManager* Manager) const
                         && JsonActionConfig.contains(ACTION_CONFIG_INTERRUPT)
                         && JsonActionConfig.contains(ACTION_CONFIG_TWITCH_EVENT_TYPE)) {
                         Config->bCanInterrupt = JsonActionConfig[ACTION_CONFIG_INTERRUPT].toBool();
-                        Config->ChannelPointsRewardID = JsonActionConfig[ACTION_CONFIG_TWITCH_REWARD_ID].toString();
+                        Config->setRewardId(JsonActionConfig[ACTION_CONFIG_TWITCH_REWARD_ID].toString());
                         Config->EventType = JsonActionConfig[ACTION_CONFIG_TWITCH_EVENT_TYPE].toString();
 
                         if (JsonActionConfig.contains(ACTION_CONFIG_TEXT_SETTINGS)) {

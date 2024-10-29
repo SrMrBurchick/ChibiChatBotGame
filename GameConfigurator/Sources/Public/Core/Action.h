@@ -33,8 +33,12 @@ public:
     QString ChannelPointsRewardID;
     QString EventType;
 
+    //============================ QML ========================================
+    // Modifiers
+    Q_INVOKABLE void setRewardId(const QString& NewRewardID);
+
 signals:
-    void rewardUpdated(const QString& newRewardID);
+    void rewardUpdated();
 };
 
 class Action : public QObject {

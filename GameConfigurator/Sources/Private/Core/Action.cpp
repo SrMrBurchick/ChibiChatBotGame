@@ -179,3 +179,10 @@ void Action::MarkRemoved()
 {
     emit beginRemove();
 }
+
+
+void ActionConfig::setRewardId(const QString& NewRewardID)
+{
+    ChannelPointsRewardID = NewRewardID;
+    emit rewardUpdated();
+}

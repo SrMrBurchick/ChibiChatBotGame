@@ -222,7 +222,7 @@ Item {
                     console.log("Selected: ", value)
 
                     if (actionConfig) {
-                        actionConfig.rewardID = value
+                        actionConfig.setRewardId(value)
                     }
                 }
 
@@ -239,7 +239,7 @@ Item {
                         }
                     }
 
-                    setDisplayText(displayText)
+                    rewardsComboBox.setDisplayText(displayText)
                 }
 
                 Component.onCompleted: {
@@ -254,7 +254,8 @@ Item {
                 height: 40
                 onClicked: {
                     if (actionConfig) {
-                        actionConfig.rewardID = ""
+                        actionConfig.setRewardId("")
+                        rewardsComboBox.updateDisplayText()
                     }
                 }
             }
