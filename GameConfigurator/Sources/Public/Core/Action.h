@@ -74,6 +74,7 @@ public:
 
     // Event
     void MarkSelected();
+    void MarkRemoved();
 
 signals:
     void newSpriteAdded(int Column, int Row);
@@ -83,6 +84,7 @@ signals:
 
     void spriteSequenceUpdated();
     void nameChanged(const QString& NewName);
+    void beginRemove();
 
 protected:
     void MarkConfigUpdated();

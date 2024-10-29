@@ -63,7 +63,12 @@ Item {
                         Layout.fillWidth: true
                         text: timer.running ? "Pause" : "Play"
                         onClicked: {
-                            timer.running = !timer.running
+                            var selectedAction = ActionsManager.getSelectedAction()
+                            if (selectedAction != undefined) {
+                                if (selectedAction.getTotalSpritesCounts() > 0) {
+                                    timer.running = !timer.running
+                                }
+                            }
                         }
                     }
                 }

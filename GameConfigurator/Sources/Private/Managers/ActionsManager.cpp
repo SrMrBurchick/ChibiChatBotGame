@@ -53,6 +53,10 @@ void ActionsManager::removeActionById(int Index)
     if (Index >= 0 && Index <= Actions.count())
     {
         LOG_INFO("Remove action at = %d", Index);
+        if (QSharedPointer<Action> ActionToRemove = Actions[Index]) {
+            ActionToRemove->beginRemove();
+        }
+
         Actions.removeAt(Index);
 
         emit actionsUpdated();
@@ -63,6 +67,10 @@ void ActionsManager::removeAction(QSharedPointer<Action> ActionToRemove)
 {
     LOG_INFO("Remove action");
     Actions.removeOne(ActionToRemove);
+
+    if (!ActionToRemove.isNull()) {
+        ActionToRemove->beginRemove();
+    }
 
     emit actionsUpdated();
 }

@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QVector>
 #include <QSharedPointer>
+#include <QWeakPointer>
 
 class CBModuleBindResult;
 class ActionsManager;
@@ -46,6 +47,7 @@ signals:
     void bindsUpdated();
 
 protected:
+    void RemoveBindByAction(const QWeakPointer<Action> ActionToRemove);
     void ChangeResultPosition(int OldPosition);
 
 private:

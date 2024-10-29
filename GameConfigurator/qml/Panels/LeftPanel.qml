@@ -7,6 +7,7 @@ import Dialogs
 import ActionsModels
 import Base
 import ConfigComponent
+import Managers
 
 Item {
     id: root
@@ -125,7 +126,7 @@ Item {
     }
 
     Component.onCompleted: {
-        root.showTableSettings = !Config.isConfigLoaded()
+        root.showTableSettings = ActionsManager.getActionsCount() <= 0
     }
 
     signal addAction()

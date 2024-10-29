@@ -62,6 +62,21 @@ const QString& CBModuleBindResultPool::getPoolPostfix() const
     return PoolPostfix;
 }
 
+void CBModuleBindResultPool::RemoveBindByAction(const QWeakPointer<Action> ActionToRemove)
+{
+    QSharedPointer<CBModuleBindResult> BindResult = nullptr;
+    for (const QSharedPointer<CBModuleBindResult>& Result : Results) {
+        if (Result->IsBindedTo(ActionToRemove)) {
+            BindResult = Result;
+            break;
+        }
+    }
+
+    if (!BindResult.isNull()) {
+        Results.removeOne(BindResult);
+    }
+}
+
 void CBModuleBindResultPool::bindNewAction(ActionsManager* Manager, CBModulesManager* ModulesManager, const QString& ActionName)
 {
     if (!Manager || !ModulesManager) {
@@ -75,6 +90,12 @@ void CBModuleBindResultPool::bindNewAction(ActionsManager* Manager, CBModulesMan
                 if (CanBindAction(NewAction)) {
                     if (QSharedPointer<CBModuleBindResult> NewResult = CBModuleBindResult::CreateResult(NewAction)) {
                         Results.push_back(NewResult);
+
+                        QWeakPointer<Action> ActionToRemoveWeak = NewAction.toWeakRef();
+                        QObject::connect(NewAction.data(), &Action::beginRemove, [this, ActionToRemoveWeak](){
+                            RemoveBindByAction(ActionToRemoveWeak);
+                        });
+
                         emit bindsUpdated();
                     }
                 }

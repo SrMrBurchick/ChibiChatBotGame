@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Base
 import Dialogs
 import Delegates
+import Buttons
 
 Rectangle {
     id: root
@@ -50,21 +51,12 @@ Rectangle {
             }
         }
 
-        Rectangle {
+        RemoveButton {
             width: 20
             height: 20
-            color: "transparent"
             anchors.verticalCenter: parent.verticalCenter
-
-            MouseArea {
-                anchors.fill: parent
-                Image {
-                    anchors.fill: parent
-                    source: Style.trashCanImage
-                }
-                onClicked: {
-                    removeElement(index);
-                }
+            onClicked: {
+                removeElement(index);
             }
         }
     }

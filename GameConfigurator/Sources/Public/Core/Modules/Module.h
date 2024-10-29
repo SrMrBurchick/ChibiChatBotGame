@@ -5,6 +5,7 @@
 #include <QList>
 #include <QVector>
 #include <QJsonDocument>
+#include <QWeakPointer>
 
 class ActionsManager;
 class Action;
@@ -61,6 +62,7 @@ signals:
 
 protected:
     QSharedPointer<CBModuleBindConfig> GetBindByAction(const QString& TargetAction) const;
+    void RemoveBindByAction(const QWeakPointer<Action>& ActionToRemove);
 
 private:
     QString Name;

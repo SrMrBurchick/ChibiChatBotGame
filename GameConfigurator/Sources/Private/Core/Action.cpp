@@ -174,3 +174,8 @@ ActionConfig* Action::getConfig()
     QQmlEngine::setObjectOwnership(OutConfig, QQmlEngine::CppOwnership);
     return OutConfig;
 }
+
+void Action::MarkRemoved()
+{
+    emit beginRemove();
+}

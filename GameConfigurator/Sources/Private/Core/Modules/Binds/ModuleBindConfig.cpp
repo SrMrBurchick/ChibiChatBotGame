@@ -20,7 +20,11 @@ CBModuleBindConfig::CBModuleBindConfig(QObject* Parent)
 
 CBModuleBindConfig::~CBModuleBindConfig()
 {
-
+    if (!TargetAction.isNull()) {
+        LOG_INFO("Remove Module Bind config for action = %s", TargetAction->getName().toStdString().c_str());
+    } else {
+        LOG_INFO("Remove Module Bind config");
+    }
 }
 
 bool CBModuleBindConfig::IsBindedToAction(QSharedPointer<Action> NewAction) const

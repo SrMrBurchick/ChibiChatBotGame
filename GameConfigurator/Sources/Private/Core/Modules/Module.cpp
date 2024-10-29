@@ -129,11 +129,37 @@ void CBModule::bindNewAction(ActionsManager* Manager, const QString& ActionName)
         return;
     }
 
+    QWeakPointer<Action> ActionToRemoveWeak = BindAction.toWeakRef();
+    QObject::connect(BindAction.data(), &Action::beginRemove, [this, ActionToRemoveWeak](){
+        RemoveBindByAction(ActionToRemoveWeak);
+    });
+
     if (QSharedPointer<CBModuleBindConfig> NewBind = CBModuleBindConfig::CreateBindConfig(BindAction, Outputs)) {
         Binds.push_back(NewBind);
     }
 
     emit bindsUpdated();
+}
+
+void CBModule::RemoveBindByAction(const QWeakPointer<Action>& ActionToRemove)
+{
+    QSharedPointer<CBModuleBindConfig> BindToRemove = nullptr;
+    for (const QSharedPointer<CBModuleBindConfig>& Bind : Binds) {
+        if (Bind.isNull()) {
+            continue;
+        }
+
+        if (Bind->IsBindedToAction(ActionToRemove)) {
+            BindToRemove = Bind;
+            break;
+        }
+    }
+
+    if (!BindToRemove.isNull()) {
+        Binds.removeOne(BindToRemove);
+
+        emit bindsUpdated();
+    }
 }
 
 CBModuleBindConfig* CBModule::getBindConfig(int Index) const
