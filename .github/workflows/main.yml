@@ -95,10 +95,6 @@ jobs:
         $GAME_CONFIGURATOR = "$GAME_CONFIGURATOR_LOCATION\build\release\GameConfigurator.exe"
         $PACKAGED_CONFIGURATOR = "$PACKAGE_LOCATION\GameConfigurator.exe"
 
-        Write-Host "Copying GameConfigurator to package"
-        Copy-Item -Path $GAME_CONFIGURATOR -Destination $PACKAGE_LOCATION -Force
-
-
         Write-Host "Deploying configurator"
         windeployqt --release --qmldir "$GAME_CONFIGURATOR_LOCATION\qml" --plugindir "$PACKAGE_LOCATION\Plugins" "$PACKAGED_CONFIGURATOR"
 
