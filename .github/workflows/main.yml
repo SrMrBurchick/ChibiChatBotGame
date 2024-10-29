@@ -3,12 +3,6 @@ name: Windows Self-hosted CI
 # Trigger the workflow on push or pull request
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - dev
-  pull_request:
-    branches:
-      - dev
 
 # Define the job
 jobs:
