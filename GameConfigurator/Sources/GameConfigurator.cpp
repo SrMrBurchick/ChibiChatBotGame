@@ -2,6 +2,7 @@
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QtWebEngineQuick/QtWebEngineQuick>
 
 #include "Configuration/ConfigObject.h"
 #include "Managers/NotificationsManager.h"
@@ -35,6 +36,8 @@ int main(int argc, char *argv[])
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+
+    QtWebEngineQuick::initialize();
 
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
