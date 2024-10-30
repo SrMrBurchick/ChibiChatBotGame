@@ -105,10 +105,6 @@ ConfigObject::~ConfigObject()
     saveConfig();
 }
 
-float round(float Value) {
-    return qRound(Value * 100.f) / 100.f;
-}
-
 void ConfigObject::ParseJsonDocument(const QJsonDocument& ConfigDocument)
 {
     QVariantMap ConfigMap = ConfigDocument.toVariant().toMap();

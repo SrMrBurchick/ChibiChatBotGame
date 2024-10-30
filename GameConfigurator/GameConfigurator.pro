@@ -3,7 +3,7 @@
 ######################################################################
 
 QT += core quick quickcontrols2 gui network webenginequick
-CONFIG += c++21
+CONFIG += c++20
 CONFIG += debug_and_release
 
 TEMPLATE = app
@@ -15,8 +15,6 @@ HEADERS += $$files(Sources/Public/*.h, true)
 SOURCES += $$files(Sources/*.cpp, true)
 
 # GTest
-
-
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -59,7 +57,7 @@ UI_DIR = $$DESTDIR/.ui
 CREDENTIALS_READER = ./Scripts/add_credentials.py
 JSON_FILE = $$PWD/credentials.json
 
-DEFINES += $$system(python3 $$CREDENTIALS_READER $$JSON_FILE)
+DEFINES += $$system(python $$CREDENTIALS_READER $$JSON_FILE)
 
 # Add the script to the build process
 QMAKE_EXTRA_COMPILERS += define_compiler
