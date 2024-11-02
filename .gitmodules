@@ -8,7 +8,3 @@
 [submodule "Modules/Randomizer"]
 	path = Modules/Randomizer
 	url = git@github.com:SrMrBurchick/ChibiGameRandomizer.git
-[submodule "tools/qt6"]
-	path = tools/qt6
-	url = git://code.qt.io/qt/qt5.git
-    branch = 6.8.0
