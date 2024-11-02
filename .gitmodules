@@ -8,3 +8,6 @@
 [submodule "Modules/Randomizer"]
 	path = Modules/Randomizer
 	url = git@github.com:SrMrBurchick/ChibiGameRandomizer.git
+[submodule "tools/qt6_installer"]
+	path = tools/qt6_installer
+	url = git://code.qt.io/installer-framework/installer-framework.git
