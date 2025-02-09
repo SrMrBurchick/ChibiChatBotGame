@@ -4,6 +4,8 @@
 #include "Managers/NotificationsManager.h"
 #include "Core/Twitch/ChannelPointsReward.h"
 #include "Managers/NotificationsManager.h"
+#include "System/AccessPoint.h"
+#include "System/HttpsServer.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -13,6 +15,9 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QQmlEngine>
+#include <QUrl>
+#include <QUrlQuery>
+
 
 TwitchManager::TwitchManager(QObject* Parent)
     :QObject(Parent)
@@ -21,7 +26,6 @@ TwitchManager::TwitchManager(QObject* Parent)
 
 TwitchManager::~TwitchManager()
 {
-
 }
 
 void TwitchManager::SetNetworkManager(TwitchNetworkAccessManager* Manager)
@@ -162,11 +166,40 @@ void TwitchManager::authorize()
         return;
     }
 
-    emit authorizationURLReady(NetworkManager->GetAuthorizationURL());
+    if (CBHttpsServer* Server = CBAccessPoint::GetHttpsServer()) {
+        SetBusy(true);
+        Server->Start();
+        QDesktopServices::openUrl(NetworkManager->GetAuthorizationURL());
+    }
+
+    // emit authorizationURLReady(NetworkManager->GetAuthorizationURL());
+}
+
+void TwitchManager::onChannelAppCodeReceived(const QString& AppCode)
+{
+    if (NetworkManager == nullptr) {
+        LOG_WARNING("TwitchManager: Network Manager not initialized");
+        SetBusy(false);
+        return;
+    }
+
+
+    QNetworkRequest TokenRequest;
+    TokenRequest.setUrl(QUrl("https://id.twitch.tv/oauth2/token"));
+    QUrlQuery Query(QUrl(NetworkManager->GetTokenRequestURL(AppCode)));
+    if (QNetworkReply* Reply = NetworkManager->post(TokenRequest, Query.toString(QUrl::FullyEncoded).toUtf8())) {
+        QObject::connect(Reply, &QNetworkReply::finished, this, [Reply, this](){
+            userAuthorized(TwitchNetworkAccessManager::ParseToken(Reply->readAll()));
+        });
+    }
 }
 
 void TwitchManager::userAuthorized(const QString& Token)
 {
+    if (CBHttpsServer* Server = CBAccessPoint::GetHttpsServer()) {
+        Server->Stop();
+    }
+
     if (!Token.isEmpty() && Token.length() == 30) {
         UserOAuthToken = Token;
         NotificationsManager::SendNotification("Twitch Manager", "Successfully authorized");

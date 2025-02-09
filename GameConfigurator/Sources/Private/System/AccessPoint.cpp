@@ -3,6 +3,7 @@
 #include "Managers/ActionsManager.h"
 #include "Managers/TwitchManager.h"
 #include "Managers/ModulesManger.h"
+#include "System/HttpsServer.h"
 
 #include <QQmlEngine>
 
@@ -55,6 +56,17 @@ CBModulesManager* CBAccessPoint::GetModulesManager()
     if (QPointer<CBAccessPoint> AccessPoint = GetAccessPoint()) {
         if (QQmlEngine* Engine = AccessPoint->QmlEngine) {
             return Engine->singletonInstance<CBModulesManager*>("Managers", "ModulesManager");
+        }
+    }
+
+    return nullptr;
+}
+
+CBHttpsServer* CBAccessPoint::GetHttpsServer()
+{
+    if (QPointer<CBAccessPoint> AccessPoint = GetAccessPoint()) {
+        if (QQmlEngine* Engine = AccessPoint->QmlEngine) {
+            return Engine->singletonInstance<CBHttpsServer*>("Managers", "HttpsServer");
         }
     }
 

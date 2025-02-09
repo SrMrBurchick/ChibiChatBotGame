@@ -4,6 +4,10 @@
 #include <QSharedPointer>
 #include <QMap>
 
+#include <QOAuthHttpServerReplyHandler>
+#include <QOAuth2AuthorizationCodeFlow>
+
+
 #include "Configuration/ConfigObject.h"
 
 class TwitchNetworkAccessManager;
@@ -63,6 +67,7 @@ public slots:
     void onConnectionFailed();
     void onResponseReceived(bool isSuccessful);
     void onChannelNameReceived(const QString& NewChannelName);
+    void onChannelAppCodeReceived(const QString& AppCode);
 
 protected:
     void ParseChannelPointsRewards(const QJsonArray& Rewards);
@@ -76,4 +81,7 @@ private:
     QString ChannelName;
     QString UserOAuthToken;
     bool bIsBusy = false;
+    //
+    QOAuth2AuthorizationCodeFlow Oauth2Flow;
+    QOAuthHttpServerReplyHandler* OauthHandler = nullptr;
 };

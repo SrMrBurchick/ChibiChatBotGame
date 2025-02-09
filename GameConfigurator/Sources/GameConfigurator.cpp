@@ -30,6 +30,10 @@
 #include "Core/Modules/Binds/ModuleBindResultPool.h"
 #include "Core/Modules/Binds/ModuleBindResult.h"
 #include "System/AccessPoint.h"
+#include "System/HttpsServer.h"
+
+#include <QHttpServer>
+#include <QTcpServer>
 
 int main(int argc, char *argv[])
 {
@@ -51,6 +55,7 @@ int main(int argc, char *argv[])
     QScopedPointer<CBFontSelector> FontSelector(new CBFontSelector);
     QScopedPointer<CBModulesManager> ModulesManager(new CBModulesManager);
     QPointer<TwitchNetworkAccessManager> TwitchNtwrk (new TwitchNetworkAccessManager);
+    QScopedPointer<CBHttpsServer> HttpsServer (new CBHttpsServer);
     QPointer<IProcess> Game(new GameProcess);
     QPointer<IProcess> Bot(new BotProcess);
 
@@ -83,6 +88,7 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("Managers", 1, 0, "TwitchManager", Twitch.get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "FontSelector", FontSelector.get());
     qmlRegisterSingletonInstance("Managers", 1, 0, "ModulesManager", ModulesManager.get());
+    qmlRegisterSingletonInstance("Managers", 1, 0, "HttpsServer", HttpsServer.get());
 
     // Types
     qmlRegisterType<Action>("ActionsManagerComponent", 1, 0, "Action");
@@ -100,6 +106,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<CBModuleBindResultConfig>("ModuleSettings", 1, 0, "ModuleBindResultConfig");
     qmlRegisterType<CBModuleBindResultPool>("ModuleSettings", 1, 0, "ModuleBindResultPool");
     qmlRegisterType<CBModuleBindResult>("ModuleSettings", 1, 0, "ModuleBindResult");
+
+    // Connections
+    QObject::connect(HttpsServer.get(), &CBHttpsServer::codeReceived, Twitch.get(), &TwitchManager::onChannelAppCodeReceived);
+
 
     // Tests
     // ActionsManagerComp->addNewAction("walk");

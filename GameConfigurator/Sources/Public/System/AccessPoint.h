@@ -6,6 +6,7 @@
 class ActionsManager;
 class TwitchManager;
 class CBModulesManager;
+class CBHttpsServer;
 class QQmlEngine;
 
 class CBAccessPoint: public QObject {
@@ -22,6 +23,7 @@ public:
     static ActionsManager* GetActionsManager();
     static TwitchManager* GetTwitchManager();
     static CBModulesManager* GetModulesManager();
+    static CBHttpsServer* GetHttpsServer();
 
 protected:
 

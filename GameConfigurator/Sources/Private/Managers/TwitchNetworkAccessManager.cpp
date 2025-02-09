@@ -10,19 +10,23 @@
 #include <QVariantMap>
 #include <QUrlQuery>
 
+#include <QOAuth2AuthorizationCodeFlow>
+
+
 constexpr char TWITCH_DATA_FIELD[] = "data";
 constexpr char TWITCH_ID_FIELD[] = "id";
 constexpr char TWITCH_ERROR_FIELD[] = "error";
 constexpr char TWITCH_MESSAGE_FIELD[] = "message";
 constexpr char TWITCH_BROADCASTER_ID_FIELD[] = "broadcasterId";
 constexpr char TWITCH_LOGIN_FIELD[] = "login";
+constexpr char TWITCH_ACCESS_TOKEN_FIELD[] = "access_token";
 
 
 // Data
 constexpr char TWITCH_ACCESS_SCOPES[] = "channel:read:redemptions channel:manage:redemptions moderator:read:followers channel:read:subscriptions channel:moderate moderation:read";
 
 TwitchNetworkAccessManager::TwitchNetworkAccessManager(QObject* Parent)
-    : QNetworkAccessManager(Parent)
+: QNetworkAccessManager(Parent)
 {
 
 }
@@ -119,6 +123,22 @@ void TwitchNetworkAccessManager::Get(const QString URL, std::function<void(const
     }
 }
 
+
+void TwitchNetworkAccessManager::RawPost(const QString URL, const QJsonObject& Data, std::function<void(const QJsonObject& Data)> Handler)
+{
+    QNetworkRequest Request;
+    Request.setUrl(QUrl(URL));
+
+    if (QNetworkReply* Reply = post(Request, QJsonDocument(Data).toJson())) {
+        QObject::connect(Reply, &QNetworkReply::finished, this, [Handler, Reply, this](){
+            QByteArray Data = Reply->readAll();
+            LOG_INFO("RawPost request =%s", Data.data());
+            QJsonDocument InfoDocument = QJsonDocument::fromJson(Data);
+            Handler(InfoDocument.object());
+        });
+    }
+}
+
 void TwitchNetworkAccessManager::Post(const QString URL, const QJsonObject& Data,  std::function<void(const QJsonArray& Data)> Handler)
 {
     QNetworkRequest Request = CreateDefaultRequestWithBroadcasterID(URL);
@@ -209,12 +229,37 @@ const QString TwitchNetworkAccessManager::GetAuthorizationURL() const
     return QString(
         "https://id.twitch.tv/oauth2/authorize"
         "?client_id=%1"
-        "&redirect_uri=https://localhost:1337"
-        "&response_type=token"
+        "&redirect_uri=http://localhost:3000"
+        "&response_type=code"
         "&force_verify=true"
         "&scope=%2"
         "&state=unique_state")
-        .arg(QT_STRINGIFY(CLIENT_ID), TWITCH_ACCESS_SCOPES);
+    .arg(QT_STRINGIFY(CLIENT_ID), TWITCH_ACCESS_SCOPES);
+}
+
+
+const QString TwitchNetworkAccessManager::GetTokenRequestURL(const QString& AuthCode)
+{
+    return QString(
+        "https://id.twitch.tv/oauth2/token"
+        "?client_id=%1"
+        "&client_secret=%2"
+        "&code=%3"
+        "&grant_type=authorization_code"
+        "&redirect_uri=http://localhost:3000"
+    ).arg(QT_STRINGIFY(CLIENT_ID), QT_STRINGIFY(CLIENT_SECRET), AuthCode);
+}
+
+void TwitchNetworkAccessManager::SetupAuthorizationFlow(QOAuth2AuthorizationCodeFlow& Flow)
+{
+    Flow.setAuthorizationUrl(QUrl("https://id.twitch.tv/oauth2/authorize"));
+    Flow.setAccessTokenUrl(QUrl("https://id.twitch.tv/oauth2/authorize"));
+    Flow.setClientIdentifier(QT_STRINGIFY(CLIENT_ID));
+    Flow.setScope(TWITCH_ACCESS_SCOPES);
+    Flow.setState("unique_state");
+    Flow.setProperty("redirect_uri", "https://localhost:3000");
+    Flow.setProperty("response_type", "token");
+    Flow.setProperty("force_verify", "true");
 }
 
 void TwitchNetworkAccessManager::SetupRedirectURI(const QString& URI)
@@ -261,4 +306,16 @@ void TwitchNetworkAccessManager::RequestChannelInfo(const QString& OAuthToken)
 QString TwitchNetworkAccessManager::GetOAuthToken() const
 {
     return QString("Bearer ") + (UserToken.isEmpty() ? QT_STRINGIFY(OAUTH_TOKEN) : UserToken);
+}
+
+QString TwitchNetworkAccessManager::ParseToken(const QString& Data)
+{
+    QString Token;
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(Data.toStdString().c_str());
+    QJsonObject jsonObj = jsonDoc.object();
+    if (jsonObj.contains(TWITCH_ACCESS_TOKEN_FIELD)) {
+        Token = jsonObj[TWITCH_ACCESS_TOKEN_FIELD].toString();
+    }
+
+    return Token;
 }
