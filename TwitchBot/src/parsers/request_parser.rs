@@ -48,6 +48,7 @@ pub enum EventType {
 
 pub fn convert_twitch_type_to_enum(twitch_type: String, data: &JsonValue) -> EventType {
     let mut event_type: EventType = EventType::Unknown;
+    println!("Convertin twitch event {:?}", data);
     match twitch_type.to_string().as_ref() {
         "channel.follow" => match get_value(&data, "user_name") {
             Ok(user_name) => {

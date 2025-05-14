@@ -170,7 +170,11 @@ impl Config {
                             Ok(value) => {
                                 if value.is_array() {
                                     for banword in value.members() {
-                                        twitch.banwords.push(banword.to_string());
+                                        let banword_str = banword.to_string();
+                                        if (!banword_str.is_empty()) {
+                                            println!("Added banword to check {:?}", banword_str.as_str());
+                                            twitch.banwords.push(banword.to_string());
+                                        }
                                     }
                                 }
                             },

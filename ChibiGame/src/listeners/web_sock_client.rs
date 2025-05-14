@@ -26,6 +26,14 @@ pub fn run_client(sender: Sender<ActionType>, url: String, port: u32) {
                     Err(err) => info!("error sending message: {:?}", err),
                 }
             });
+            let closed_socket_clone = socket.clone();
+            let onclose_callback = Closure::<dyn FnMut()>::new(move || {
+                info!("socket closed");
+            });
+            let onerror_callback = Closure::<dyn FnMut(_)>::new(move |e: web_sys::Event| {
+                info!("WebSocket error: {:?}", e);
+            });
+
             let onmessage_callback = Closure::<dyn FnMut(_)>::new(move |e: MessageEvent| {
                 // Handle difference Text/Binary,...
                 if let Ok(abuf) = e.data().dyn_into::<js_sys::ArrayBuffer>() {
@@ -43,17 +51,22 @@ pub fn run_client(sender: Sender<ActionType>, url: String, port: u32) {
                 }
             });
 
-            socket.set_onmessage(Some(onmessage_callback.as_ref().unchecked_ref()));
             socket.set_onopen(Some(onopen_callback.as_ref().unchecked_ref()));
+            socket.set_onclose(Some(onclose_callback.as_ref().unchecked_ref()));
+            socket.set_onmessage(Some(onmessage_callback.as_ref().unchecked_ref()));
+            socket.set_onerror(Some(onerror_callback.as_ref().unchecked_ref()));
 
             onopen_callback.forget();
+            onclose_callback.forget();
             onmessage_callback.forget();
+            onerror_callback.forget();
         }
         Err(e) => {
-            // println!("Filed to connect")
             info!("Failed to connect: {:?}", e);
         }
     }
+
+    info!("Close client");
 }
 
 fn parse_response(string: String) -> ActionType {

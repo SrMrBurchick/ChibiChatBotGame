@@ -34,6 +34,7 @@ impl Action {
             },
         }
 
+        println!("Prepare action!");
         self.action_event_type = event;
     }
 

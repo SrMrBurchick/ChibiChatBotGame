@@ -65,6 +65,7 @@ impl Twitch {
     fn parse_notification(&mut self, data: &JsonValue) {
         match get_value(&data, "subscription") {
             Ok(subscription) => {
+                println!("Parse subscription {:?}", subscription);
                 match get_value(&subscription, "type") {
                     Ok(event_type) => {
                         for action in self.actions.iter_mut() {
@@ -98,8 +99,8 @@ impl Twitch {
                     match get_value(&action_json, "message") {
                         Ok(message) => {
                             let input_to_check = message.to_string().to_lowercase();
-                            println!("Check input {:?} for banwords {:?}", input_to_check, self.banwords);
                             for banword in self.banwords.iter() {
+                                println!("Found banword: {:?}", banword.as_str());
                                 if input_to_check.contains(banword.as_str()) {
                                     action.action_event_type = EventType::Unknown;
                                     return;
@@ -149,6 +150,7 @@ impl Twitch {
                                         self.parse_welcome_message(&payload);
                                     },
                                     "notification" => {
+                                        println!("Parse notification");
                                         self.parse_notification(&payload);
                                     }
                                     _ => {},

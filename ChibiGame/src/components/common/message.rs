@@ -71,7 +71,6 @@ pub fn message_system(
             let mut is_running: bool = false;
 
             for (entity, mut transform) in message_query.iter_mut() {
-                info!("Message transform: {:?}", transform);
                 match timer_query.get_single_mut() {
                     Ok((timer_entity, mut timer)) => {
                         timer.timer.tick(time.delta());

@@ -28,8 +28,10 @@ async fn twitch_loop(mut client: Client<TlsStream<TcpStream>>, config: &Config, 
                         Ok(json_data) => {
                             let _ = twitch.parse_message(&json_data).await;
                             if twitch.isConnected && !twitch.isSubscribed {
+                                println!("Need to subscribe to events first!");
                                 twitch.subscribe_to_events().await;
                             } else {
+                                println!("Parse message");
                                 twitch.parse_message(&json_data).await;
                                 twitch.do_action();
                             }
